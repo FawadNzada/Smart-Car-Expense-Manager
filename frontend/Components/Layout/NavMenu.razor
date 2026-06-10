@@ -1,6 +1,8 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">frontend</a>
+        <a class="navbar-brand" href="">
+            Smart Expense Manager
+        </a>
     </div>
 </div>
 
@@ -8,23 +10,36 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav flex-column">
+
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                Home
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+            <a class="nav-link" href="#features">
+                Features
+            </a>
+        </div>
+
+        <div class="nav-item px-3">
+            <a class="nav-link" href="#about">
+                About
+            </a>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/login">
+                Login
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+            <NavLink class="nav-link" href="/register">
+                Register
             </NavLink>
         </div>
+
     </nav>
 </div>
-

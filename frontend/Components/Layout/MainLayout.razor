@@ -1,19 +1,38 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+    <header class="top-navbar">
+
+        <div class="logo">
+            Smart Expense Manager
         </div>
 
-        <article class="content px-4">
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/groups">Groups</a>
+            <a href="/expenses">Expenses</a>
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <a href="/statistics">Statistics</a>
+            <a href="/debts">Debts</a>
+            <a href="/profile">Profile</a>
+        </nav>
+
+        <div class="auth-buttons">
+            <a href="/login" class="btn-secondary">Login</a>
+            <a href="/register" class="btn-primary">Register</a>
+        </div>
+
+    </header>
+
+    <main>
+        <article class="content">
             @Body
         </article>
     </main>
+
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
