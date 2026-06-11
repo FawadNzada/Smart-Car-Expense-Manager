@@ -1,0 +1,45 @@
+h1 {
+    color: white;
+    margin-bottom: 20px;
+}
+
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.group-link {
+    text-decoration: none;
+}
+
+.group-card {
+    background-color: #12213f;
+    border-radius: 16px;
+    padding: 25px;
+    transition: 0.3s;
+}
+
+.group-card:hover {
+    transform: translateY(-5px);
+}
+
+.group-card h3 {
+    color: #22d3ee;
+    margin-bottom: 10px;
+}
+
+.group-card p {
+    color: white;
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: #22d3ee;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+}
