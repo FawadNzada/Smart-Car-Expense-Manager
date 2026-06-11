@@ -1,116 +1,159 @@
 # Projektauftrag – Diplomarbeit
 
 ## Projekttitel
-**Smart Expense Manager – Intelligente Verwaltung von Gruppenausgaben mit AI-Rechnungserkennung und Schuldenoptimierung**
 
----
+**Smart Car Expense Manager – Intelligente Verwaltung gemeinsamer Fahrzeugkosten mit KI-gestützter Rechnungserkennung und Schuldenoptimierung**
 
-## 1. Ausgangssituation / Problemstellung
+### 1. Ausgangssituation / Problemstellung
 
-In vielen Alltagssituationen entstehen gemeinsame Ausgaben, beispielsweise bei Urlaubsreisen, Wohngemeinschaften, Veranstaltungen oder gemeinsamen Restaurantbesuchen. Häufig übernimmt eine Person zunächst die Bezahlung, während die Kosten später unter den beteiligten Personen aufgeteilt werden sollen.
+In Wohngemeinschaften, Familien oder Freundesgruppen wird häufig ein Fahrzeug gemeinsam genutzt. Dabei entstehen laufend Kosten wie Treibstoff, Versicherung, Service, Reparaturen, Pickerl (§57a), Reifenwechsel, Parkgebühren oder Autobahnvignetten.
 
-Die Verwaltung dieser Ausgaben erfolgt oftmals manuell über Messaging-Apps, Notizen oder Tabellenkalkulationen. Dadurch entstehen häufig Probleme wie fehlende Übersicht, fehlerhafte Berechnungen oder Unklarheiten darüber, wer welchen Betrag schuldet.
+Die Verwaltung dieser Ausgaben erfolgt meist über Nachrichten, Tabellen oder mündliche Absprachen. Dadurch entsteht oft Unklarheit darüber, wer welche Kosten bereits bezahlt hat und welcher Betrag von den anderen Nutzern noch auszugleichen ist.
 
-Bestehende Anwendungen bieten zwar teilweise Funktionen zur Aufteilung von Rechnungen, verfügen jedoch oft nicht über intelligente Mechanismen zur automatischen Erkennung von Rechnungsdaten oder zur Optimierung der Zahlungsflüsse innerhalb einer Gruppe.
+Besonders bei langfristiger gemeinsamer Nutzung eines Fahrzeugs wird die Berechnung der tatsächlichen Kostenanteile schnell unübersichtlich und fehleranfällig.
 
----
+### 2. Projektziel
 
-## 2. Projektziel
+Ziel des Projekts ist die Entwicklung einer Softwarelösung zur Verwaltung gemeinsamer Fahrzeugkosten.
 
-Ziel des Projekts ist die Entwicklung einer Softwarelösung zur Verwaltung von Gruppenausgaben. Die Anwendung soll es ermöglichen, gemeinsame Kosten einfach zu erfassen, automatisch aufzuteilen und Schulden innerhalb einer Gruppe übersichtlich darzustellen.
+Die Anwendung soll alle fahrzeugbezogenen Ausgaben zentral erfassen und automatisch auf die beteiligten Personen aufteilen. Zusätzlich soll ein Optimierungsalgorithmus berechnen, welche Personen anderen Nutzern Geld schulden und wie diese Schulden mit möglichst wenigen Überweisungen beglichen werden können.
 
-Ein besonderes Merkmal der Anwendung ist die Integration einer KI-basierten Rechnungserkennung. Durch das Fotografieren einer Rechnung sollen relevante Informationen wie Betrag, Datum und Händler automatisch erkannt und in das System übernommen werden.
+Ein besonderes Merkmal der Anwendung ist die Integration von künstlicher Intelligenz zur automatischen Rechnungserkennung und Analyse von Fahrzeugkosten.
 
-Zusätzlich soll ein Optimierungsalgorithmus implementiert werden, der offene Schulden zwischen Gruppenmitgliedern so zusammenfasst, dass möglichst wenige Rückzahlungen erforderlich sind.
-
----
-
-## 3. Projektumfang
+### 3. Projektumfang
 
 Im Rahmen des Projekts soll eine Anwendung entwickelt werden, die folgende Funktionen umfasst:
 
-### Benutzerverwaltung
-- Registrierung und Anmeldung von Benutzern  
-- Verwaltung persönlicher Profile  
+#### Benutzerverwaltung
 
-### Gruppenverwaltung
-- Erstellung von Gruppen  
-- Einladung und Verwaltung von Gruppenmitgliedern  
+* Registrierung und Anmeldung von Benutzern
+* Verwaltung persönlicher Profile
 
-### Ausgabenverwaltung
-- Manuelles Hinzufügen von Ausgaben  
-- Aufteilung von Ausgaben auf mehrere Personen  
-- Speicherung und Anzeige der Ausgabenhistorie  
+#### Fahrzeugverwaltung
 
-### AI-Rechnungserkennung
-- Hochladen oder Fotografieren von Rechnungen  
-- Automatische Texterkennung (OCR)  
-- Extraktion relevanter Rechnungsinformationen  
+* Anlegen eines oder mehrerer gemeinsamer Fahrzeuge
+* Verwaltung von Fahrzeugdaten
+* Zuweisung von Benutzern zu Fahrzeugen
 
-### Schuldenberechnung
-- Berechnung individueller Kostenanteile  
-- Übersicht über offene Schulden innerhalb der Gruppe  
+#### Kostenverwaltung
 
-### Schuldenoptimierung
-- Algorithmus zur Minimierung von Zahlungsflüssen  
-- Darstellung der optimalen Rückzahlungen zwischen Gruppenmitgliedern  
+* Erfassung von Fahrzeugkosten
+* Kategorien wie:
 
-### Statistik und Auswertung
-- Visualisierung von Ausgaben nach Kategorien oder Zeiträumen  
-- Übersicht über individuelle Ausgaben innerhalb einer Gruppe  
+  * Tanken
+  * Versicherung
+  * Service
+  * Reparaturen
+  * Pickerl (§57a)
+  * Reifen
+  * Parkgebühren
+  * Vignette
+  * Sonstige Kosten
+* Speicherung der Ausgabenhistorie
 
----
+#### Kostenaufteilung
 
-## 4. Technische Umsetzung
+* Gleichmäßige oder individuelle Aufteilung von Kosten
+* Berücksichtigung unterschiedlicher Nutzungsanteile
 
-Die Anwendung soll auf Basis moderner Softwaretechnologien entwickelt werden.
+#### Schuldenberechnung
 
-### Backend
-- ASP.NET Core Web API (.NET)
+* Berechnung individueller Kostenanteile
+* Übersicht offener Forderungen und Verbindlichkeiten
 
-### Frontend
-- Mobile App mit .NET MAUI oder Weboberfläche mit Blazor
+#### Schuldenoptimierung
 
-### Datenbank
-- SQL Server
+* Algorithmus zur Minimierung der notwendigen Rückzahlungen
+* Berechnung optimaler Zahlungsflüsse zwischen den Nutzern
 
-### Weitere Technologien
-- OCR-Technologie zur Rechnungserkennung  
-- REST-API zur Kommunikation zwischen Client und Server  
+#### KI-Rechnungserkennung
 
----
+* Hochladen oder Fotografieren von Rechnungen
+* OCR-Texterkennung zur Extraktion von Rechnungsdaten
+* Automatische Erkennung von:
 
-## 5. Ergebnisse des Projekts
+  * Betrag
+  * Datum
+  * Händler/Werkstatt
+  * Rechnungsart
+* Automatische Zuordnung zu einer passenden Kostenkategorie
+* Übernahme der erkannten Daten in das System
+
+#### KI-Kostenanalyse
+
+* Analyse aller erfassten Fahrzeugkosten
+* Automatische Zusammenfassungen der Ausgaben
+* Erkennung von Kostenentwicklungen und Trends
+* Erstellung von Hinweisen wie:
+
+  * „Die Tankkosten sind im Vergleich zum Vormonat gestiegen.“
+  * „Reparaturen verursachen aktuell den größten Kostenanteil.“
+  * „Die durchschnittlichen Fahrzeugkosten betragen 380 € pro Monat.“
+
+#### Statistik und Auswertung
+
+* Übersicht der Gesamtkosten
+* Ausgaben nach Kategorien
+* Kostenentwicklung über Zeiträume
+* Individuelle Kostenanteile pro Nutzer
+* Grafische Darstellung wichtiger Kennzahlen
+
+### 4. Technische Umsetzung
+
+#### Backend
+
+* ASP.NET Core Web API (.NET)
+
+#### Frontend
+
+* Mobile App mit .NET MAUI
+  oder
+* Webanwendung mit Blazor
+
+#### Datenbank
+
+* Microsoft SQL Server
+
+#### Weitere Technologien
+
+* Entity Framework Core
+* REST-API zur Kommunikation zwischen Client und Server
+* OCR-Technologie zur Rechnungserkennung
+* KI-Modell oder AI-Service zur Analyse und Kategorisierung von Rechnungsdaten
+* Diagramm-Komponenten für statistische Auswertungen
+
+### 5. Ergebnisse des Projekts
 
 Am Ende des Projekts sollen folgende Ergebnisse vorliegen:
 
-- Eine funktionsfähige Anwendung zur Verwaltung von Gruppenausgaben  
-- Implementierung eines Algorithmus zur Schuldenoptimierung  
-- Integration einer AI-basierten Rechnungserkennung  
-- Dokumentation der Softwarearchitektur und Implementierung  
-- Präsentation und Demonstration der Anwendung  
+* Funktionsfähige Anwendung zur Verwaltung gemeinsamer Fahrzeugkosten
+* Implementierung eines Algorithmus zur Schuldenoptimierung
+* KI-gestützte Rechnungserkennung mittels OCR
+* Automatische Analyse und Zusammenfassung von Fahrzeugkosten
+* Statistische Auswertungen und Visualisierungen
+* Dokumentation der Softwarearchitektur und Implementierung
+* Präsentation und Demonstration der Anwendung
 
----
+### 6. Nutzen des Projekts
 
-## 6. Nutzen des Projekts
+Die entwickelte Anwendung ermöglicht eine transparente und faire Verwaltung gemeinsamer Fahrzeugkosten. Nutzer erhalten jederzeit einen Überblick über bereits bezahlte Ausgaben, offene Schulden und notwendige Ausgleichszahlungen.
 
-Die entwickelte Anwendung soll den Alltag von Nutzern erleichtern, indem sie eine transparente und automatisierte Verwaltung gemeinsamer Ausgaben ermöglicht. Dadurch können Missverständnisse vermieden, Berechnungsfehler reduziert und Rückzahlungen effizient organisiert werden.
+Durch die Integration künstlicher Intelligenz werden Rechnungen automatisch verarbeitet und Kostenentwicklungen analysiert. Dadurch wird der Verwaltungsaufwand reduziert und die gemeinsame Nutzung eines Fahrzeugs deutlich vereinfacht.
 
-Darüber hinaus demonstriert das Projekt die praktische Anwendung moderner Softwaretechnologien, algorithmischer Logik sowie künstlicher Intelligenz im Bereich der Finanzverwaltung.
+Darüber hinaus demonstriert das Projekt den praktischen Einsatz moderner Softwaretechnologien, Datenbankentwicklung, REST-Architekturen, algorithmischer Optimierung sowie künstlicher Intelligenz in einem realen Anwendungsszenario.
 
----
-
-## 7. Projektzeitraum
+### 7. Projektzeitraum
 
 Der Projektzeitraum entspricht dem vorgesehenen Zeitraum der Diplomarbeit und umfasst Analyse, Konzeption, Implementierung, Testphase und Dokumentation.
 
----
-
 ## Projektteam
+
 [Fawad, Sebi, Emily]
 
 ## Auftraggeber
-[Abenschule HTL Leonding - Fach: Systemprojektplanung]
+
+Abendschule HTL Leonding – Fach: Systemprojektplanung
 
 ## Betreuer
-[Prof. David Klewein]
+
+Prof. David Klewein
