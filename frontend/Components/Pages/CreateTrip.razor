@@ -1,0 +1,173 @@
+@page "/createtrip"
+
+<PageTitle>Log Trip</PageTitle>
+
+<div class="create-trip-page">
+
+    <a href="/trips" class="back-link">
+        ← Back to Trips
+    </a>
+
+    <div class="page-header">
+        <h1>Log Trip</h1>
+        <p>Add a completed vehicle trip.</p>
+    </div>
+
+    <div class="trip-layout">
+
+        <div class="trip-form-card">
+
+            <div class="card-heading">
+                <div class="heading-icon">🛣️</div>
+
+                <div>
+                    <h2>Trip Details</h2>
+                    <p>Enter the information for the completed trip.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-field full-width">
+                    <label>Vehicle</label>
+
+                    <select>
+                        <option>Volkswagen Golf</option>
+                        <option>BMW 3 Series</option>
+                        <option>Audi A4</option>
+                        <option>Mercedes C-Class</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label>Driver</label>
+                    <input type="text" placeholder="e.g. Sebastian" />
+                </div>
+
+                <div class="form-field">
+                    <label>Date</label>
+                    <input type="date" />
+                </div>
+
+                <div class="form-field">
+                    <label>Start Time</label>
+                    <input type="time" />
+                </div>
+
+                <div class="form-field">
+                    <label>End Time</label>
+                    <input type="time" />
+                </div>
+
+                <div class="form-field">
+                    <label>Start Mileage</label>
+
+                    <div class="input-suffix">
+                        <input type="number" placeholder="48250" />
+                        <span>km</span>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>End Mileage</label>
+
+                    <div class="input-suffix">
+                        <input type="number" placeholder="48284" />
+                        <span>km</span>
+                    </div>
+                </div>
+
+                <div class="form-field full-width">
+                    <label>Notes</label>
+                    <textarea placeholder="Optional notes about the trip..."></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+
+                <a href="/trips" class="cancel-btn">
+                    Cancel
+                </a>
+
+                <button class="save-btn">
+                    + Log Trip
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="trip-preview-card">
+
+            <div class="card-heading">
+                <div class="heading-icon">🚗</div>
+
+                <div>
+                    <h2>Trip Preview</h2>
+                    <p>This is how the trip will appear.</p>
+                </div>
+            </div>
+
+            <div class="preview-image">
+                <img src="images/vehicles/vw.png"
+                     alt="Volkswagen Golf" />
+            </div>
+
+            <div class="preview-content">
+
+                <div class="preview-title">
+                    <h2>Volkswagen Golf</h2>
+                    <span>L-123AB</span>
+                </div>
+
+                <div class="preview-info-grid">
+
+                    <div class="preview-info">
+                        <span>Driver</span>
+                        <strong>Sebastian</strong>
+                    </div>
+
+                    <div class="preview-info">
+                        <span>Date</span>
+                        <strong>24 Sep 2026</strong>
+                    </div>
+
+                    <div class="preview-info">
+                        <span>Distance</span>
+                        <strong>34 km</strong>
+                    </div>
+
+                    <div class="preview-info">
+                        <span>Duration</span>
+                        <strong>1h 10m</strong>
+                    </div>
+
+                </div>
+
+                <div class="mileage-summary">
+
+                    <div>
+                        <span>Start Mileage</span>
+                        <strong>48,250 km</strong>
+                    </div>
+
+                    <div class="mileage-arrow">
+                        →
+                    </div>
+
+                    <div>
+                        <span>End Mileage</span>
+                        <strong>48,284 km</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

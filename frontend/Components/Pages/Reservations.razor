@@ -2,39 +2,123 @@
 
 <PageTitle>Reservations</PageTitle>
 
-<h1>Reservations</h1>
+<div class="reservations-page">
 
-<a href="/createreservation" class="btn-primary">
-    + Create Reservation
-</a>
+    <div class="reservations-header">
+        <div>
+            <h1>Reservations</h1>
+            <p>Manage and view all vehicle reservations.</p>
+        </div>
 
-<div class="groups-grid">
-
-    <div class="group-card">
-        <h3>👤 Sebastian</h3>
-
-        <p>🚗 Volkswagen Golf</p>
-        <p>📅 Today</p>
-        <p>⏰ 15:00 - 18:00</p>
-        <p>✅ Active</p>
+        <a href="/createreservation" class="new-reservation-btn">
+            + New Reservation
+        </a>
     </div>
 
-    <div class="group-card">
-        <h3>👤 Lisa</h3>
-
-        <p>🚙 BMW 320d</p>
-        <p>📅 Tomorrow</p>
-        <p>⏰ 09:00 - 12:00</p>
-        <p>📌 Planned</p>
+    <div class="reservation-tabs">
+        <button class="tab active">All</button>
+        <button class="tab">Upcoming</button>
+        <button class="tab">Past</button>
+        <button class="tab">Cancelled</button>
     </div>
 
-    <div class="group-card">
-        <h3>👤 Max</h3>
+    <div class="reservations-list">
 
-        <p>🚘 Skoda Octavia</p>
-        <p>📅 Friday</p>
-        <p>⏰ 10:00 - 14:00</p>
-        <p>📌 Planned</p>
+        <div class="reservation-card">
+            <div class="reservation-car">
+                <img src="images/vehicles/vw.png"
+                     alt="Volkswagen Golf" />
+            </div>
+
+            <div class="reservation-main">
+                <h3>Volkswagen Golf</h3>
+                <span class="plate">L-123AB</span>
+            </div>
+
+            <div class="reservation-user">
+                <span class="label">Driver</span>
+                <strong>Sebastian</strong>
+            </div>
+
+            <div class="reservation-date">
+                <span class="label">Date</span>
+                <strong>Today</strong>
+            </div>
+
+            <div class="reservation-time">
+                <span class="label">Time</span>
+                <strong>15:00 - 18:00</strong>
+            </div>
+
+            <span class="status upcoming">
+                Upcoming
+            </span>
+        </div>
+
+
+        <div class="reservation-card">
+            <div class="reservation-car">
+                <img src="images/vehicles/bmw.png"
+                     alt="BMW 3 Series" />
+            </div>
+
+            <div class="reservation-main">
+                <h3>BMW 3 Series</h3>
+                <span class="plate">L-456CD</span>
+            </div>
+
+            <div class="reservation-user">
+                <span class="label">Driver</span>
+                <strong>Lisa</strong>
+            </div>
+
+            <div class="reservation-date">
+                <span class="label">Date</span>
+                <strong>Tomorrow</strong>
+            </div>
+
+            <div class="reservation-time">
+                <span class="label">Time</span>
+                <strong>09:00 - 12:00</strong>
+            </div>
+
+            <span class="status planned">
+                Planned
+            </span>
+        </div>
+
+
+        <div class="reservation-card">
+            <div class="reservation-car">
+                <img src="images/vehicles/audi.png"
+                     alt="Audi A4" />
+            </div>
+
+            <div class="reservation-main">
+                <h3>Audi A4</h3>
+                <span class="plate">L-789EF</span>
+            </div>
+
+            <div class="reservation-user">
+                <span class="label">Driver</span>
+                <strong>Max</strong>
+            </div>
+
+            <div class="reservation-date">
+                <span class="label">Date</span>
+                <strong>Friday</strong>
+            </div>
+
+            <div class="reservation-time">
+                <span class="label">Time</span>
+                <strong>10:00 - 14:00</strong>
+            </div>
+
+            <span class="status planned">
+                Planned
+            </span>
+        </div>
+
     </div>
 
 </div>

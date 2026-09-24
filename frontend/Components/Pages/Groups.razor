@@ -2,34 +2,171 @@
 
 <PageTitle>Groups</PageTitle>
 
-<h1>Groups</h1>
+<div class="groups-page">
 
-<a href="/groupcreate" class="btn-primary">
-    + Create Group
-</a>
+    <div class="groups-header">
+        <div>
+            <h1>Groups</h1>
+            <p>Manage your carsharing groups and members.</p>
+        </div>
 
-<div class="groups-grid">
-
-<a href="/groupdetails" class="group-link">
-    <div class="group-card">
-        <h3>🚗 Family Car</h3>
-        <p>4 Members</p>
+        <a href="/groupcreate" class="create-group-btn">
+            + Create Group
+        </a>
     </div>
-</a>
 
-<a href="/groupdetails" class="group-link">
-    <div class="group-card">
-        <h3>🏠 WG Linz</h3>
-        <p>3 Members</p>
+    <div class="groups-toolbar">
+
+        <input type="text"
+               class="group-search"
+               placeholder="Search groups..." />
+
+        <select class="group-filter">
+            <option>All Groups</option>
+            <option>Family</option>
+            <option>Friends</option>
+            <option>School</option>
+        </select>
+
     </div>
-</a>
 
-<a href="/groupdetails" class="group-link">
-    <div class="group-card">
-        <h3>🎓 HTL Team</h3>
-        <p>5 Members</p>
+
+    <div class="groups-grid">
+
+        <a href="/groupdetails" class="group-link">
+
+            <div class="group-card">
+
+                <div class="group-card-top">
+
+                    <div class="group-icon">
+                        🚗
+                    </div>
+
+                    <span class="member-badge">
+                        4 Members
+                    </span>
+
+                </div>
+
+                <div class="group-card-content">
+
+                    <h2>Family Car</h2>
+
+                    <p>
+                        Shared vehicle group for family members.
+                    </p>
+
+                    <div class="group-info-row">
+                        <span>Vehicles</span>
+                        <strong>2</strong>
+                    </div>
+
+                    <div class="group-info-row">
+                        <span>Open Debts</span>
+                        <strong>€45.00</strong>
+                    </div>
+
+                </div>
+
+                <div class="group-card-footer">
+                    View Group →
+                </div>
+
+            </div>
+
+        </a>
+
+
+        <a href="/groupdetails" class="group-link">
+
+            <div class="group-card">
+
+                <div class="group-card-top">
+
+                    <div class="group-icon">
+                        🏠
+                    </div>
+
+                    <span class="member-badge">
+                        3 Members
+                    </span>
+
+                </div>
+
+                <div class="group-card-content">
+
+                    <h2>WG Linz</h2>
+
+                    <p>
+                        Shared vehicle group for the apartment.
+                    </p>
+
+                    <div class="group-info-row">
+                        <span>Vehicles</span>
+                        <strong>1</strong>
+                    </div>
+
+                    <div class="group-info-row">
+                        <span>Open Debts</span>
+                        <strong>€22.00</strong>
+                    </div>
+
+                </div>
+
+                <div class="group-card-footer">
+                    View Group →
+                </div>
+
+            </div>
+
+        </a>
+
+
+        <a href="/groupdetails" class="group-link">
+
+            <div class="group-card">
+
+                <div class="group-card-top">
+
+                    <div class="group-icon">
+                        🎓
+                    </div>
+
+                    <span class="member-badge">
+                        5 Members
+                    </span>
+
+                </div>
+
+                <div class="group-card-content">
+
+                    <h2>HTL Team</h2>
+
+                    <p>
+                        Carsharing group for the school project team.
+                    </p>
+
+                    <div class="group-info-row">
+                        <span>Vehicles</span>
+                        <strong>2</strong>
+                    </div>
+
+                    <div class="group-info-row">
+                        <span>Open Debts</span>
+                        <strong>€68.00</strong>
+                    </div>
+
+                </div>
+
+                <div class="group-card-footer">
+                    View Group →
+                </div>
+
+            </div>
+
+        </a>
+
     </div>
-</a>
-
 
 </div>

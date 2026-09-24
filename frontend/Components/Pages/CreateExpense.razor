@@ -1,33 +1,222 @@
+@page "/createexpense"
 @page "/expensecreate"
 
 <PageTitle>Add Expense</PageTitle>
 
-<div class="auth-container">
+<div class="create-expense-page">
 
-    <div class="auth-card">
+    <a href="/expenses" class="back-link">
+        ← Back to Expenses
+    </a>
 
+    <div class="page-header">
         <h1>Add Expense</h1>
+        <p>Add a new vehicle expense to your carsharing group.</p>
+    </div>
 
-        <p>Add a new expense to your group.</p>
+    <div class="expense-layout">
 
-        <div class="form-group">
-            <label>Expense Name</label>
-            <input type="text" placeholder="Enter expense name" />
+        <!-- FORM -->
+        <div class="expense-form-card">
+
+            <div class="card-heading">
+                <div class="heading-icon">💰</div>
+
+                <div>
+                    <h2>Expense Details</h2>
+                    <p>Enter the information for the new expense.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-field full-width">
+                    <label>Vehicle</label>
+
+                    <select>
+                        <option>Volkswagen Golf</option>
+                        <option>BMW 3 Series</option>
+                        <option>Audi A4</option>
+                        <option>Mercedes C-Class</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label>Category</label>
+
+                    <select>
+                        <option>Fuel</option>
+                        <option>Parking</option>
+                        <option>Service</option>
+                        <option>Repair</option>
+                        <option>Insurance</option>
+                        <option>Pickerl (§57a)</option>
+                        <option>Tyres</option>
+                        <option>Vignette</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label>Amount</label>
+
+                    <div class="input-prefix">
+                        <span>€</span>
+
+                        <input type="number"
+                               step="0.01"
+                               min="0"
+                               placeholder="68.00" />
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Paid By</label>
+
+                    <input type="text"
+                           placeholder="e.g. Sebastian" />
+                </div>
+
+                <div class="form-field">
+                    <label>Date</label>
+
+                    <input type="date" />
+                </div>
+
+                <div class="form-field full-width">
+                    <label>Expense Name</label>
+
+                    <input type="text"
+                           placeholder="e.g. Fuel at Shell" />
+                </div>
+
+                <div class="form-field full-width">
+                    <label>Notes</label>
+
+                    <textarea placeholder="Optional notes about the expense..."></textarea>
+                </div>
+
+            </div>
+
+
+            <!-- RECEIPT -->
+            <div class="receipt-section">
+
+                <div>
+                    <h3>Receipt</h3>
+                    <p>Upload a receipt for automatic recognition later.</p>
+                </div>
+
+                <label class="upload-box">
+
+                    <div class="upload-icon">📄</div>
+
+                    <strong>Upload Receipt</strong>
+
+                    <span>
+                        PNG, JPG or PDF
+                    </span>
+
+                    <input type="file"
+                           accept=".png,.jpg,.jpeg,.pdf" />
+
+                </label>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a href="/expenses" class="cancel-btn">
+                    Cancel
+                </a>
+
+                <button class="save-btn">
+                    + Add Expense
+                </button>
+
+            </div>
+
         </div>
 
-        <div class="form-group">
-            <label>Amount (€)</label>
-            <input type="number" placeholder="Enter amount" />
-        </div>
 
-        <div class="form-group">
-            <label>Paid By</label>
-            <input type="text" placeholder="Enter member name" />
-        </div>
+        <!-- PREVIEW -->
+        <div class="expense-preview-card">
 
-        <button class="btn-primary auth-button">
-            Add Expense
-        </button>
+            <div class="card-heading">
+                <div class="heading-icon">👁</div>
+
+                <div>
+                    <h2>Expense Preview</h2>
+                    <p>This is how the expense will appear.</p>
+                </div>
+            </div>
+
+            <div class="preview-image">
+
+                <img src="images/vehicles/vw.png"
+                     alt="Volkswagen Golf" />
+
+                <div class="preview-category">
+                    ⛽ Fuel
+                </div>
+
+            </div>
+
+            <div class="preview-content">
+
+                <div class="preview-title-row">
+
+                    <div>
+                        <h2>Fuel Expense</h2>
+                        <span>Volkswagen Golf · L-123AB</span>
+                    </div>
+
+                    <strong class="preview-amount">
+                        €68.00
+                    </strong>
+
+                </div>
+
+
+                <div class="preview-info-grid">
+
+                    <div class="preview-info">
+                        <span>Category</span>
+                        <strong>Fuel</strong>
+                    </div>
+
+                    <div class="preview-info">
+                        <span>Paid By</span>
+                        <strong>Sebastian</strong>
+                    </div>
+
+                    <div class="preview-info">
+                        <span>Date</span>
+                        <strong>24 Sep 2026</strong>
+                    </div>
+
+                    <div class="preview-info">
+                        <span>Vehicle</span>
+                        <strong>Volkswagen Golf</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="expense-total">
+
+                    <span>Total Amount</span>
+
+                    <strong>
+                        €68.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 

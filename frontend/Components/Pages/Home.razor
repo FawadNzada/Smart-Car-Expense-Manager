@@ -2,71 +2,318 @@
 
 <PageTitle>Smart Carsharing Manager</PageTitle>
 
-<section class="hero">
+<div class="home-page">
 
-    <div class="hero-left">
+    <div class="home-topbar">
 
-        <h1>Manage Shared Vehicles Smarter</h1>
+        <div></div>
 
-        <p>
-            Reserve vehicles, track trips, manage expenses
-            and optimize repayments with AI-powered receipt recognition.
-        </p>
+        <div class="home-auth-buttons">
 
-        <div class="hero-buttons">
-            <button class="btn-primary">Get Started</button>
-            <button class="btn-secondary">Learn More</button>
+            <a href="/login" class="login-btn">
+                Login
+            </a>
+
+            <a href="/register" class="register-btn">
+                Register
+            </a>
+
         </div>
 
     </div>
 
-    <div class="hero-right">
 
-        <div class="dashboard-card">
-            <h4>Vehicles</h4>
-            <h2>3</h2>
+    <!-- HERO -->
+
+    <section class="home-hero">
+
+        <div class="hero-copy">
+
+            <span class="hero-eyebrow">
+                SMART CARSHARING
+            </span>
+
+            <h1>
+                Manage Shared Vehicles
+                <span>Smarter.</span>
+            </h1>
+
+            <p>
+                Reserve vehicles, track trips, manage expenses and optimize
+                repayments with intelligent cost management and AI-powered
+                receipt recognition.
+            </p>
+
+            <div class="hero-actions">
+
+                <a href="/dashboard" class="hero-primary-btn">
+                    Get Started
+                </a>
+
+                <a href="#features" class="hero-secondary-btn">
+                    Learn More
+                </a>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div>
+                    <strong>3</strong>
+                    <span>Vehicles</span>
+                </div>
+
+                <div>
+                    <strong>12</strong>
+                    <span>Reservations</span>
+                </div>
+
+                <div>
+                    <strong>48</strong>
+                    <span>Trips</span>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="dashboard-card">
-            <h4>Reservations</h4>
-            <h2>12</h2>
+
+        <!-- VEHICLE PREVIEW -->
+
+        <div class="hero-preview">
+
+            <div class="preview-glow"></div>
+
+            <div class="preview-card">
+
+                <div class="preview-card-header">
+
+                    <div>
+                        <span>Current Vehicle</span>
+                        <h2>Volkswagen Golf</h2>
+                    </div>
+
+                    <span class="available-badge">
+                        Available
+                    </span>
+
+                </div>
+
+                <div class="preview-car">
+
+                    <img src="images/vehicles/vw.png"
+                         alt="Volkswagen Golf" />
+
+                </div>
+
+                <div class="preview-details">
+
+                    <div>
+                        <span>License Plate</span>
+                        <strong>L-123AB</strong>
+                    </div>
+
+                    <div>
+                        <span>Fuel Level</span>
+                        <strong>75%</strong>
+                    </div>
+
+                    <div>
+                        <span>Mileage</span>
+                        <strong>48,250 km</strong>
+                    </div>
+
+                </div>
+
+                <div class="preview-fuel">
+
+                    <div>
+                        <span>⛽ Fuel</span>
+                        <strong>75%</strong>
+                    </div>
+
+                    <div class="fuel-track">
+                        <div class="fuel-value"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="dashboard-card">
-            <h4>Trips</h4>
-            <h2>48</h2>
+    </section>
+
+
+    <!-- FEATURES -->
+
+    <section class="home-features" id="features">
+
+        <div class="section-heading">
+
+            <span>CORE FEATURES</span>
+
+            <h2>
+                Everything your group needs
+            </h2>
+
+            <p>
+                One place for vehicles, reservations, trips, expenses
+                and optimized repayments.
+            </p>
+
         </div>
 
-    </div>
 
-</section>
+        <div class="home-feature-grid">
 
-<section class="features">
+            <div class="home-feature-card">
 
-    <h2>Features</h2>
+                <div class="feature-icon">
+                    🚗
+                </div>
 
-    <div class="feature-grid">
+                <h3>Vehicle Management</h3>
 
-        <div class="feature-card">
-            <h3>Vehicle Management</h3>
-            <p>Manage shared vehicles, license plates and availability.</p>
+                <p>
+                    Manage shared vehicles, availability,
+                    license plates and vehicle information.
+                </p>
+
+                <a href="/vehicles">
+                    View Vehicles →
+                </a>
+
+            </div>
+
+
+            <div class="home-feature-card">
+
+                <div class="feature-icon">
+                    📅
+                </div>
+
+                <h3>Reservations</h3>
+
+                <p>
+                    Reserve vehicles and keep track of who
+                    is using which vehicle and when.
+                </p>
+
+                <a href="/reservations">
+                    View Reservations →
+                </a>
+
+            </div>
+
+
+            <div class="home-feature-card">
+
+                <div class="feature-icon">
+                    🛣️
+                </div>
+
+                <h3>Trip Tracking</h3>
+
+                <p>
+                    Track completed trips, distances,
+                    mileage and vehicle usage history.
+                </p>
+
+                <a href="/trips">
+                    View Trips →
+                </a>
+
+            </div>
+
+
+            <div class="home-feature-card">
+
+                <div class="feature-icon">
+                    📄
+                </div>
+
+                <h3>AI Receipt Recognition</h3>
+
+                <p>
+                    Upload receipts and automatically prepare
+                    important expense information for processing.
+                </p>
+
+                <a href="/expenses">
+                    View Expenses →
+                </a>
+
+            </div>
+
+
+            <div class="home-feature-card">
+
+                <div class="feature-icon">
+                    💳
+                </div>
+
+                <h3>Debt Optimization</h3>
+
+                <p>
+                    Calculate balances and reduce unnecessary
+                    transfers between group members.
+                </p>
+
+                <a href="/debts">
+                    View Debts →
+                </a>
+
+            </div>
+
+
+            <div class="home-feature-card">
+
+                <div class="feature-icon">
+                    📊
+                </div>
+
+                <h3>Statistics</h3>
+
+                <p>
+                    Analyze vehicle usage, monthly trips and cost
+                    developments across the group.
+                </p>
+
+                <a href="/statistics">
+                    View Statistics →
+                </a>
+
+            </div>
+
         </div>
 
-        <div class="feature-card">
-            <h3>Trip Tracking</h3>
-            <p>Track trips, distances and vehicle usage history.</p>
+    </section>
+
+
+    <!-- BOTTOM CTA -->
+
+    <section class="home-cta">
+
+        <div>
+
+            <span>SMARTER COST MANAGEMENT</span>
+
+            <h2>
+                Keep shared vehicle costs transparent.
+            </h2>
+
+            <p>
+                Manage vehicles, expenses and repayments
+                without spreadsheets or complicated calculations.
+            </p>
+
         </div>
 
-        <div class="feature-card">
-            <h3>AI Receipt Recognition</h3>
-            <p>Upload fuel receipts and automatically extract data.</p>
-        </div>
+        <a href="/dashboard" class="hero-primary-btn">
+            Open Dashboard
+        </a>
 
-        <div class="feature-card">
-            <h3>Cost Optimization</h3>
-            <p>Reduce repayments with smart debt calculations.</p>
-        </div>
+    </section>
 
-    </div>
-
-</section>
+</div>

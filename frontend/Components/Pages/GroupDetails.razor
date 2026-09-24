@@ -2,54 +2,334 @@
 
 <PageTitle>Group Details</PageTitle>
 
-<h1>Family Car</h1>
+<div class="group-details-page">
 
-<div class="groups-grid">
+    <a href="/groups" class="back-link">
+        ← Back to Groups
+    </a>
 
-    <div class="group-card">
-        <h3>👥 Members</h3>
+    <div class="group-header">
 
-        <p>Sebastian</p>
-        <p>Max</p>
-        <p>Lisa</p>
-        <p>Tom</p>
+        <div>
+            <span class="group-label">GROUP DETAILS</span>
+            <h1>Family Car</h1>
+            <p>Shared vehicle group for family members.</p>
+        </div>
+
+        <div class="group-actions">
+            <button class="secondary-btn">
+                Invite Member
+            </button>
+
+            <button class="primary-btn">
+                Edit Group
+            </button>
+        </div>
+
     </div>
 
-    <div class="group-card">
-        <h3>🚗 Vehicles</h3>
 
-        <p>VW Golf</p>
-        <p>BMW 320d</p>
-        <p>Opel Astra</p>
+    <!-- SUMMARY -->
+
+    <div class="group-summary-grid">
+
+        <div class="summary-card">
+            <span>Members</span>
+            <strong>4</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Vehicles</span>
+            <strong>3</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Reservations</span>
+            <strong>3</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Open Debts</span>
+            <strong>€45.00</strong>
+        </div>
+
     </div>
 
-    <div class="group-card">
-        <h3>📅 Reservations</h3>
 
-        <p>Sebastian → Today 15:00 - 18:00</p>
-        <p>Lisa → Tomorrow 09:00 - 12:00</p>
-        <p>Max → Friday 10:00 - 14:00</p>
+    <!-- MAIN GRID -->
+
+    <div class="details-grid">
+
+        <!-- MEMBERS -->
+        <div class="details-card">
+
+            <div class="card-header">
+                <div>
+                    <h2>Members</h2>
+                    <p>People in this group.</p>
+                </div>
+
+                <span>4</span>
+            </div>
+
+            <div class="member-list">
+
+                <div class="member-row">
+                    <div class="avatar">SJ</div>
+
+                    <div>
+                        <strong>Sebastian</strong>
+                        <span>Member</span>
+                    </div>
+                </div>
+
+                <div class="member-row">
+                    <div class="avatar">MX</div>
+
+                    <div>
+                        <strong>Max</strong>
+                        <span>Member</span>
+                    </div>
+                </div>
+
+                <div class="member-row">
+                    <div class="avatar">LI</div>
+
+                    <div>
+                        <strong>Lisa</strong>
+                        <span>Member</span>
+                    </div>
+                </div>
+
+                <div class="member-row">
+                    <div class="avatar">TM</div>
+
+                    <div>
+                        <strong>Tom</strong>
+                        <span>Member</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- VEHICLES -->
+        <div class="details-card">
+
+            <div class="card-header">
+                <div>
+                    <h2>Vehicles</h2>
+                    <p>Vehicles assigned to this group.</p>
+                </div>
+
+                <span>3</span>
+            </div>
+
+            <div class="vehicle-list">
+
+                <div class="vehicle-row">
+
+                    <img src="images/vehicles/vw.png"
+                         alt="Volkswagen Golf" />
+
+                    <div>
+                        <strong>Volkswagen Golf</strong>
+                        <span>L-123AB</span>
+                    </div>
+
+                    <span class="vehicle-status available">
+                        Available
+                    </span>
+
+                </div>
+
+                <div class="vehicle-row">
+
+                    <img src="images/vehicles/bmw.png"
+                         alt="BMW 3 Series" />
+
+                    <div>
+                        <strong>BMW 3 Series</strong>
+                        <span>L-456CD</span>
+                    </div>
+
+                    <span class="vehicle-status in-use">
+                        In Use
+                    </span>
+
+                </div>
+
+                <div class="vehicle-row">
+
+                    <img src="images/vehicles/audi.png"
+                         alt="Audi A4" />
+
+                    <div>
+                        <strong>Audi A4</strong>
+                        <span>L-789EF</span>
+                    </div>
+
+                    <span class="vehicle-status reserved">
+                        Reserved
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-</div>
 
-<h2>Recent Trips</h2>
+    <!-- UPCOMING RESERVATIONS -->
 
-<div class="groups-grid">
+    <div class="details-card wide-card">
 
-    <div class="group-card">
-        <h3>🚗 VW Golf</h3>
-        <p>34 km • Today</p>
+        <div class="card-header">
+            <div>
+                <h2>Upcoming Reservations</h2>
+                <p>Next planned vehicle reservations.</p>
+            </div>
+
+            <a href="/reservations">
+                View All
+            </a>
+        </div>
+
+        <div class="reservation-list">
+
+            <div class="reservation-row">
+
+                <div class="reservation-date">
+                    <strong>24</strong>
+                    <span>SEP</span>
+                </div>
+
+                <div>
+                    <strong>Sebastian</strong>
+                    <span>Volkswagen Golf</span>
+                </div>
+
+                <div class="reservation-time">
+                    15:00 - 18:00
+                </div>
+
+            </div>
+
+            <div class="reservation-row">
+
+                <div class="reservation-date">
+                    <strong>25</strong>
+                    <span>SEP</span>
+                </div>
+
+                <div>
+                    <strong>Lisa</strong>
+                    <span>BMW 3 Series</span>
+                </div>
+
+                <div class="reservation-time">
+                    09:00 - 12:00
+                </div>
+
+            </div>
+
+            <div class="reservation-row">
+
+                <div class="reservation-date">
+                    <strong>26</strong>
+                    <span>SEP</span>
+                </div>
+
+                <div>
+                    <strong>Max</strong>
+                    <span>Audi A4</span>
+                </div>
+
+                <div class="reservation-time">
+                    10:00 - 14:00
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="group-card">
-        <h3>🚙 BMW 320d</h3>
-        <p>12 km • Yesterday</p>
-    </div>
 
-    <div class="group-card">
-        <h3>🚘 Opel Astra</h3>
-        <p>28 km • 2 Days Ago</p>
+    <!-- RECENT TRIPS -->
+
+    <div class="details-card wide-card">
+
+        <div class="card-header">
+            <div>
+                <h2>Recent Trips</h2>
+                <p>Latest completed trips in this group.</p>
+            </div>
+
+            <a href="/trips">
+                View All
+            </a>
+        </div>
+
+        <div class="trip-list">
+
+            <div class="trip-row">
+
+                <img src="images/vehicles/vw.png"
+                     alt="Volkswagen Golf" />
+
+                <div>
+                    <strong>Volkswagen Golf</strong>
+                    <span>Sebastian</span>
+                </div>
+
+                <div class="trip-meta">
+                    <strong>34 km</strong>
+                    <span>Today</span>
+                </div>
+
+            </div>
+
+            <div class="trip-row">
+
+                <img src="images/vehicles/bmw.png"
+                     alt="BMW 3 Series" />
+
+                <div>
+                    <strong>BMW 3 Series</strong>
+                    <span>Lisa</span>
+                </div>
+
+                <div class="trip-meta">
+                    <strong>12 km</strong>
+                    <span>Yesterday</span>
+                </div>
+
+            </div>
+
+            <div class="trip-row">
+
+                <img src="images/vehicles/audi.png"
+                     alt="Audi A4" />
+
+                <div>
+                    <strong>Audi A4</strong>
+                    <span>Max</span>
+                </div>
+
+                <div class="trip-meta">
+                    <strong>28 km</strong>
+                    <span>2 Days Ago</span>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
 </div>

@@ -2,49 +2,297 @@
 
 <PageTitle>Statistics</PageTitle>
 
-<h1>Statistics</h1>
+<div class="statistics-page">
 
-<div class="groups-grid">
+    <div class="statistics-header">
+        <div>
+            <h1>Statistics</h1>
+            <p>Insights about your carsharing usage and expenses.</p>
+        </div>
 
-    <div class="group-card">
-        <h3>📊 Total Trips</h3>
-        <p>48</p>
+        <select class="period-select">
+            <option>Last 6 Months</option>
+            <option>Last 3 Months</option>
+            <option>This Year</option>
+            <option>All Time</option>
+        </select>
     </div>
 
-    <div class="group-card">
-        <h3>💰 Total Expenses</h3>
-        <p>€860</p>
+
+    <!-- SUMMARY -->
+
+    <div class="statistics-summary">
+
+        <div class="summary-card">
+            <div class="summary-icon">🛣️</div>
+
+            <div>
+                <span>Total Trips</span>
+                <strong>48</strong>
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="summary-icon">📍</div>
+
+            <div>
+                <span>Total Distance</span>
+                <strong>2,450 km</strong>
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="summary-icon">💰</div>
+
+            <div>
+                <span>Total Expenses</span>
+                <strong>€860</strong>
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="summary-icon">€</div>
+
+            <div>
+                <span>Avg. per Trip</span>
+                <strong>€17.92</strong>
+            </div>
+        </div>
+
     </div>
 
-    <div class="group-card">
-        <h3>🚗 Most Used Vehicle</h3>
-        <p>Volkswagen Golf</p>
+
+    <!-- CHARTS -->
+
+    <div class="statistics-grid">
+
+        <!-- TRIPS PER MONTH -->
+
+        <div class="statistics-card">
+
+            <div class="card-header">
+                <div>
+                    <h2>Trips per Month</h2>
+                    <p>Number of completed trips.</p>
+                </div>
+            </div>
+
+            <div class="bar-chart">
+
+                <div class="bar-item">
+                    <div class="bar-wrapper">
+                        <div class="bar bar-10"></div>
+                    </div>
+                    <span>Apr</span>
+                </div>
+
+                <div class="bar-item">
+                    <div class="bar-wrapper">
+                        <div class="bar bar-13"></div>
+                    </div>
+                    <span>May</span>
+                </div>
+
+                <div class="bar-item">
+                    <div class="bar-wrapper">
+                        <div class="bar bar-18"></div>
+                    </div>
+                    <span>Jun</span>
+                </div>
+
+                <div class="bar-item">
+                    <div class="bar-wrapper">
+                        <div class="bar bar-15"></div>
+                    </div>
+                    <span>Jul</span>
+                </div>
+
+                <div class="bar-item">
+                    <div class="bar-wrapper">
+                        <div class="bar bar-14"></div>
+                    </div>
+                    <span>Aug</span>
+                </div>
+
+                <div class="bar-item">
+                    <div class="bar-wrapper">
+                        <div class="bar bar-20"></div>
+                    </div>
+                    <span>Sep</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- EXPENSES BY CATEGORY -->
+
+        <div class="statistics-card">
+
+            <div class="card-header">
+                <div>
+                    <h2>Expenses by Category</h2>
+                    <p>Distribution of vehicle costs.</p>
+                </div>
+            </div>
+
+            <div class="expense-chart-layout">
+
+                <div class="donut-chart">
+                    <div class="donut-center">
+                        <span>Total</span>
+                        <strong>€860</strong>
+                    </div>
+                </div>
+
+                <div class="chart-legend">
+
+                    <div class="legend-row">
+                        <div>
+                            <span class="legend-dot fuel"></span>
+                            <span>Fuel</span>
+                        </div>
+
+                        <strong>55%</strong>
+                    </div>
+
+                    <div class="legend-row">
+                        <div>
+                            <span class="legend-dot maintenance"></span>
+                            <span>Maintenance</span>
+                        </div>
+
+                        <strong>30%</strong>
+                    </div>
+
+                    <div class="legend-row">
+                        <div>
+                            <span class="legend-dot other"></span>
+                            <span>Other</span>
+                        </div>
+
+                        <strong>15%</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="group-card">
-        <h3>🛣️ Distance Driven</h3>
-        <p>2,450 km</p>
+
+    <!-- VEHICLE USAGE -->
+
+    <div class="statistics-card vehicle-usage-card">
+
+        <div class="card-header">
+            <div>
+                <h2>Vehicle Usage</h2>
+                <p>Trips completed by each vehicle.</p>
+            </div>
+        </div>
+
+
+        <div class="vehicle-usage-list">
+
+            <div class="vehicle-usage-row">
+
+                <div class="vehicle-information">
+                    <img src="images/vehicles/vw.png"
+                         alt="Volkswagen Golf" />
+
+                    <div>
+                        <strong>Volkswagen Golf</strong>
+                        <span>34 Trips</span>
+                    </div>
+                </div>
+
+                <div class="usage-progress">
+                    <div class="usage-bar">
+                        <div class="usage-fill usage-71"></div>
+                    </div>
+
+                    <strong>71%</strong>
+                </div>
+
+            </div>
+
+
+            <div class="vehicle-usage-row">
+
+                <div class="vehicle-information">
+                    <img src="images/vehicles/bmw.png"
+                         alt="BMW 3 Series" />
+
+                    <div>
+                        <strong>BMW 3 Series</strong>
+                        <span>10 Trips</span>
+                    </div>
+                </div>
+
+                <div class="usage-progress">
+                    <div class="usage-bar">
+                        <div class="usage-fill usage-21"></div>
+                    </div>
+
+                    <strong>21%</strong>
+                </div>
+
+            </div>
+
+
+            <div class="vehicle-usage-row">
+
+                <div class="vehicle-information">
+                    <img src="images/vehicles/audi.png"
+                         alt="Audi A4" />
+
+                    <div>
+                        <strong>Audi A4</strong>
+                        <span>4 Trips</span>
+                    </div>
+                </div>
+
+                <div class="usage-progress">
+                    <div class="usage-bar">
+                        <div class="usage-fill usage-8"></div>
+                    </div>
+
+                    <strong>8%</strong>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-</div>
 
-<h2>Vehicle Usage</h2>
+    <!-- AI INSIGHT -->
 
-<div class="groups-grid">
+    <div class="insight-card">
 
-    <div class="group-card">
-        <h3>🚗 Volkswagen Golf</h3>
-        <p>34 Trips</p>
-    </div>
+        <div class="insight-icon">
+            ✨
+        </div>
 
-    <div class="group-card">
-        <h3>🚙 BMW 320d</h3>
-        <p>10 Trips</p>
-    </div>
+        <div class="insight-content">
+            <span>AI COST INSIGHT</span>
 
-    <div class="group-card">
-        <h3>🚘 Skoda Octavia</h3>
-        <p>4 Trips</p>
+            <h2>Fuel is currently your largest expense category.</h2>
+
+            <p>
+                Fuel accounts for approximately 55% of all recorded vehicle
+                expenses in the selected period.
+            </p>
+        </div>
+
     </div>
 
 </div>

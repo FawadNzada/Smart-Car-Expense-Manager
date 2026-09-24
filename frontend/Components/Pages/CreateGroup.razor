@@ -2,27 +2,137 @@
 
 <PageTitle>Create Group</PageTitle>
 
-<div class="auth-container">
+<div class="create-group-page">
 
-    <div class="auth-card">
+    <a href="/groups" class="back-link">
+        ← Back to Groups
+    </a>
 
+    <div class="page-header">
         <h1>Create Group</h1>
+        <p>Create a new carsharing group and define its basic information.</p>
+    </div>
 
-        <p>Create a new expense group.</p>
+    <div class="group-layout">
 
-        <div class="form-group">
-            <label>Group Name</label>
-            <input type="text" placeholder="Enter group name" />
+        <div class="group-form-card">
+
+            <div class="card-heading">
+                <div class="heading-icon">👥</div>
+
+                <div>
+                    <h2>Group Details</h2>
+                    <p>Enter the information for your new group.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-field full-width">
+                    <label>Group Name</label>
+
+                    <input type="text"
+                           placeholder="e.g. Family Car" />
+                </div>
+
+                <div class="form-field full-width">
+                    <label>Description</label>
+
+                    <textarea placeholder="Describe the purpose of this group..."></textarea>
+                </div>
+
+                <div class="form-field">
+                    <label>Group Type</label>
+
+                    <select>
+                        <option>Family</option>
+                        <option>Friends</option>
+                        <option>Shared Apartment</option>
+                        <option>School / Team</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label>Max. Members</label>
+
+                    <input type="number"
+                           min="2"
+                           max="50"
+                           value="5" />
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+
+                <a href="/groups" class="cancel-btn">
+                    Cancel
+                </a>
+
+                <button class="save-btn">
+                    + Create Group
+                </button>
+
+            </div>
+
         </div>
 
-        <div class="form-group">
-            <label>Description</label>
-            <input type="text" placeholder="Enter description" />
-        </div>
 
-        <button class="btn-primary auth-button">
-            Create Group
-        </button>
+        <div class="group-preview-card">
+
+            <div class="card-heading">
+                <div class="heading-icon">👁</div>
+
+                <div>
+                    <h2>Group Preview</h2>
+                    <p>This is how the group will appear.</p>
+                </div>
+            </div>
+
+            <div class="group-preview-content">
+
+                <div class="preview-group-icon">
+                    🚗
+                </div>
+
+                <h2>Family Car</h2>
+
+                <p>
+                    Shared vehicle group for family members.
+                </p>
+
+                <div class="preview-info-grid">
+
+                    <div class="preview-info">
+                        <span>Members</span>
+                        <strong>4</strong>
+                    </div>
+
+                    <div class="preview-info">
+                        <span>Vehicles</span>
+                        <strong>2</strong>
+                    </div>
+
+                    <div class="preview-info">
+                        <span>Open Debts</span>
+                        <strong>€45.00</strong>
+                    </div>
+
+                    <div class="preview-info">
+                        <span>Type</span>
+                        <strong>Family</strong>
+                    </div>
+
+                </div>
+
+                <div class="preview-footer">
+                    Group ready to be created
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 

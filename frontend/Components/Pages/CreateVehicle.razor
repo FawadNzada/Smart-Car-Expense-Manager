@@ -1,0 +1,162 @@
+@page "/vehiclecreate"
+
+<PageTitle>Add Vehicle</PageTitle>
+
+<div class="create-vehicle-page">
+
+    <a href="/vehicles" class="back-link">
+        ← Back to Vehicles
+    </a>
+
+    <div class="page-header">
+        <h1>Add Vehicle</h1>
+        <p>Add a new vehicle to your carsharing group.</p>
+    </div>
+
+    <div class="create-layout">
+
+        <div class="form-card">
+
+            <div class="card-heading">
+                <div class="heading-icon">🚗</div>
+
+                <div>
+                    <h2>Vehicle Details</h2>
+                    <p>Enter the information of the new vehicle.</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-field">
+                    <label>Brand</label>
+                    <input type="text"
+                           placeholder="e.g. Volkswagen" />
+                </div>
+
+                <div class="form-field">
+                    <label>Model</label>
+                    <input type="text"
+                           placeholder="e.g. Golf" />
+                </div>
+
+                <div class="form-field full-width">
+                    <label>License Plate</label>
+                    <input type="text"
+                           placeholder="e.g. L-123AB" />
+                </div>
+
+                <div class="form-field">
+                    <label>Fuel Level</label>
+
+                    <div class="input-suffix">
+                        <input type="number"
+                               min="0"
+                               max="100"
+                               value="75" />
+
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Status</label>
+
+                    <select>
+                        <option>Available</option>
+                        <option>In Use</option>
+                        <option>Reserved</option>
+                        <option>Unavailable</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+
+                <a href="/vehicles" class="cancel-btn">
+                    Cancel
+                </a>
+
+                <button class="save-btn">
+                    + Add Vehicle
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="preview-card">
+
+            <div class="card-heading">
+                <div class="heading-icon">👁</div>
+
+                <div>
+                    <h2>Preview</h2>
+                    <p>This is how the vehicle will be displayed.</p>
+                </div>
+            </div>
+
+            <div class="preview-image">
+                <img src="images/vehicles/vw.png"
+                     alt="Volkswagen Golf" />
+            </div>
+
+            <div class="preview-content">
+
+                <div class="preview-title-row">
+                    <div>
+                        <h2>Volkswagen Golf</h2>
+                        <span>L-123AB</span>
+                    </div>
+
+                    <span class="preview-status">
+                        Available
+                    </span>
+                </div>
+
+                <div class="preview-fuel">
+
+                    <div class="preview-fuel-top">
+                        <span>⛽ Fuel Level</span>
+                        <strong>75%</strong>
+                    </div>
+
+                    <div class="fuel-bar">
+                        <div class="fuel-fill"></div>
+                    </div>
+
+                </div>
+
+                <div class="preview-meta">
+
+                    <div class="meta-item">
+                        <span class="meta-icon">VW</span>
+
+                        <div>
+                            <strong>Volkswagen</strong>
+                            <span>Brand</span>
+                        </div>
+                    </div>
+
+                    <div class="meta-divider"></div>
+
+                    <div class="meta-item">
+                        <span class="meta-icon">🚗</span>
+
+                        <div>
+                            <strong>Golf</strong>
+                            <span>Model</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

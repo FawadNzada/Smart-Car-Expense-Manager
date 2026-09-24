@@ -2,37 +2,74 @@
 
 <PageTitle>Register</PageTitle>
 
-<div class="auth-container">
+<div class="auth-page">
 
-    <div class="auth-card">
+    <div class="auth-panel">
 
-        <h1>Create Account</h1>
-
-        <p>Create your Smart Expense Manager account.</p>
-
-        <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" placeholder="Enter your name" />
+        <div class="auth-brand">
+            <span>SMART CARSHARING</span>
+            <h1>Create your account</h1>
+            <p>Join your carsharing group and start managing shared vehicle costs.</p>
         </div>
 
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" placeholder="Enter your email" />
-        </div>
+        <div class="auth-form-card">
 
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" placeholder="Enter your password" />
-        </div>
+            <h2>Register</h2>
+            <p>Create a new Smart Carsharing account.</p>
 
-        <div class="form-group">
-            <label>Confirm Password</label>
-            <input type="password" placeholder="Confirm password" />
-        </div>
+            <div class="form-row">
 
-        <button class="btn-primary auth-button">
-            Create Account
-        </button>
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text"
+                           placeholder="Sebastian" />
+                </div>
+
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text"
+                           placeholder="Junior" />
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email"
+                       placeholder="Enter your email" />
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password"
+                           placeholder="Create password" />
+                </div>
+
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password"
+                           placeholder="Repeat password" />
+                </div>
+
+            </div>
+
+            <label class="terms">
+                <input type="checkbox" />
+                <span>I agree to the terms and conditions.</span>
+            </label>
+
+            <button class="auth-main-btn">
+                Create Account
+            </button>
+
+            <div class="auth-switch">
+                <span>Already have an account?</span>
+                <a href="/login">Login</a>
+            </div>
+
+        </div>
 
     </div>
 

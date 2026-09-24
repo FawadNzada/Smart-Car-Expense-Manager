@@ -2,36 +2,145 @@
 
 <PageTitle>Vehicles</PageTitle>
 
-<h1>Vehicles</h1>
+<div class="vehicles-page">
 
-<a href="/vehiclecreate" class="btn-primary">
-    + Add Vehicle
-</a>
+    <div class="vehicles-header">
+        <div>
+            <h1>Vehicles</h1>
+            <p>Manage all vehicles in your carsharing group.</p>
+        </div>
 
-<div class="groups-grid">
-
-    <div class="group-card">
-        <h3>🚗 Volkswagen Golf</h3>
-
-        <p>License Plate: L-123AB</p>
-        <p>Fuel Level: 75%</p>
-        <p>Status: Available</p>
+        <a href="/vehiclecreate" class="add-vehicle-btn">
+            + Add Vehicle
+        </a>
     </div>
 
-    <div class="group-card">
-        <h3>🚙 BMW 320d</h3>
+    <div class="vehicle-toolbar">
+        <input type="text"
+               class="vehicle-search"
+               placeholder="Search vehicles..." />
 
-        <p>License Plate: L-456CD</p>
-        <p>Fuel Level: 60%</p>
-        <p>Status: Reserved</p>
+        <button class="filter-btn">
+            Filter
+        </button>
     </div>
 
-    <div class="group-card">
-        <h3>🚘 Skoda Octavia</h3>
+    <div class="vehicles-grid">
 
-        <p>License Plate: L-789EF</p>
-        <p>Fuel Level: 90%</p>
-        <p>Status: Available</p>
+        <div class="vehicle-card">
+            <div class="vehicle-image">
+                <div class="vehicle-status available">
+                    Available
+                </div>
+
+                <img src="images/vehicles/vw.png"
+                     alt="Volkswagen Golf"
+                     class="vehicle-photo" />
+            </div>
+
+            <div class="vehicle-card-content">
+                <h3>Volkswagen Golf</h3>
+                <span class="license-plate">L-123AB</span>
+
+                <div class="fuel-section">
+                    <div class="fuel-info">
+                        <span>⛽ Fuel Level</span>
+                        <strong>75%</strong>
+                    </div>
+
+                    <div class="fuel-bar">
+                        <div class="fuel-fill fuel-75"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="vehicle-card">
+            <div class="vehicle-image">
+                <div class="vehicle-status in-use">
+                    In Use
+                </div>
+
+                <img src="images/vehicles/bmw.png"
+                     alt="BMW 3 Series"
+                     class="vehicle-photo" />
+            </div>
+
+            <div class="vehicle-card-content">
+                <h3>BMW 3 Series</h3>
+                <span class="license-plate">L-456CD</span>
+
+                <div class="fuel-section">
+                    <div class="fuel-info">
+                        <span>⛽ Fuel Level</span>
+                        <strong>40%</strong>
+                    </div>
+
+                    <div class="fuel-bar">
+                        <div class="fuel-fill fuel-40"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="vehicle-card">
+            <div class="vehicle-image">
+                <div class="vehicle-status reserved">
+                    Reserved
+                </div>
+
+                <img src="images/vehicles/audi.png"
+                     alt="Audi A4"
+                     class="vehicle-photo" />
+            </div>
+
+            <div class="vehicle-card-content">
+                <h3>Audi A4</h3>
+                <span class="license-plate">L-789EF</span>
+
+                <div class="fuel-section">
+                    <div class="fuel-info">
+                        <span>⛽ Fuel Level</span>
+                        <strong>30%</strong>
+                    </div>
+
+                    <div class="fuel-bar">
+                        <div class="fuel-fill fuel-30"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="vehicle-card">
+            <div class="vehicle-image">
+                <div class="vehicle-status unavailable">
+                    Unavailable
+                </div>
+
+                <img src="images/vehicles/mercedes.png"
+                     alt="Mercedes C-Class"
+                     class="vehicle-photo" />
+            </div>
+
+            <div class="vehicle-card-content">
+                <h3>Mercedes C-Class</h3>
+                <span class="license-plate">L-321GH</span>
+
+                <div class="fuel-section">
+                    <div class="fuel-info">
+                        <span>⛽ Fuel Level</span>
+                        <strong>20%</strong>
+                    </div>
+
+                    <div class="fuel-bar">
+                        <div class="fuel-fill fuel-20"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-
 </div>

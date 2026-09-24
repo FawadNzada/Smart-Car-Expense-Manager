@@ -2,36 +2,167 @@
 
 <PageTitle>Expenses</PageTitle>
 
-<h1>Expenses</h1>
+<div class="expenses-page">
 
-<a href="/createexpense" class="btn-primary">
-    + Add Expense
-</a>
+    <div class="expenses-header">
+        <div>
+            <h1>Expenses</h1>
+            <p>Track and manage all vehicle expenses.</p>
+        </div>
 
-<div class="groups-grid">
-
-    <div class="group-card">
-        <h3>⛽ Fuel</h3>
-
-        <p>Vehicle: Volkswagen Golf</p>
-        <p>Paid By: Sebastian</p>
-        <p>Amount: €68</p>
+        <a href="/createexpense" class="add-expense-btn">
+            + Add Expense
+        </a>
     </div>
 
-    <div class="group-card">
-        <h3>🅿️ Parking</h3>
+    <div class="expenses-toolbar">
 
-        <p>Vehicle: BMW 320d</p>
-        <p>Paid By: Lisa</p>
-        <p>Amount: €15</p>
+        <div class="expense-tabs">
+            <button class="tab active">All</button>
+            <button class="tab">Fuel</button>
+            <button class="tab">Parking</button>
+            <button class="tab">Service</button>
+            <button class="tab">Other</button>
+        </div>
+
+        <input type="text"
+               class="expense-search"
+               placeholder="Search expenses..." />
+
     </div>
 
-    <div class="group-card">
-        <h3>🔧 Service</h3>
 
-        <p>Vehicle: Skoda Octavia</p>
-        <p>Paid By: Max</p>
-        <p>Amount: €220</p>
+    <div class="expense-summary-grid">
+
+        <div class="summary-card">
+            <span>Total Expenses</span>
+            <strong>€ 303</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Fuel</span>
+            <strong>€ 68</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Parking</span>
+            <strong>€ 15</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Service</span>
+            <strong>€ 220</strong>
+        </div>
+
+    </div>
+
+
+    <div class="expenses-table-card">
+
+        <div class="expenses-table-header">
+            <span>Vehicle</span>
+            <span>Category</span>
+            <span>Paid By</span>
+            <span>Date</span>
+            <span>Amount</span>
+        </div>
+
+
+        <div class="expense-row">
+
+            <div class="expense-vehicle">
+                <img src="images/vehicles/vw.png"
+                     alt="Volkswagen Golf" />
+
+                <div>
+                    <strong>Volkswagen Golf</strong>
+                    <span>L-123AB</span>
+                </div>
+            </div>
+
+            <div class="expense-category">
+                <span class="category-icon fuel">⛽</span>
+                <strong>Fuel</strong>
+            </div>
+
+            <div class="expense-person">
+                Sebastian
+            </div>
+
+            <div class="expense-date">
+                Today
+            </div>
+
+            <div class="expense-amount">
+                € 68.00
+            </div>
+
+        </div>
+
+
+        <div class="expense-row">
+
+            <div class="expense-vehicle">
+                <img src="images/vehicles/bmw.png"
+                     alt="BMW 3 Series" />
+
+                <div>
+                    <strong>BMW 3 Series</strong>
+                    <span>L-456CD</span>
+                </div>
+            </div>
+
+            <div class="expense-category">
+                <span class="category-icon parking">P</span>
+                <strong>Parking</strong>
+            </div>
+
+            <div class="expense-person">
+                Lisa
+            </div>
+
+            <div class="expense-date">
+                Yesterday
+            </div>
+
+            <div class="expense-amount">
+                € 15.00
+            </div>
+
+        </div>
+
+
+        <div class="expense-row">
+
+            <div class="expense-vehicle">
+                <img src="images/vehicles/audi.png"
+                     alt="Audi A4" />
+
+                <div>
+                    <strong>Audi A4</strong>
+                    <span>L-789EF</span>
+                </div>
+            </div>
+
+            <div class="expense-category">
+                <span class="category-icon service">🔧</span>
+                <strong>Service</strong>
+            </div>
+
+            <div class="expense-person">
+                Max
+            </div>
+
+            <div class="expense-date">
+                22 Sep 2026
+            </div>
+
+            <div class="expense-amount">
+                € 220.00
+            </div>
+
+        </div>
+
     </div>
 
 </div>

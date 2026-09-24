@@ -2,86 +2,277 @@
 
 <PageTitle>Dashboard</PageTitle>
 
-<h1>Dashboard</h1>
+<div class="dashboard-page">
 
-<div class="dashboard-grid">
+    <div class="dashboard-header">
+        <div>
+            <h1>Dashboard</h1>
+            <p>Overview of your carsharing group.</p>
+        </div>
 
-    <div class="dashboard-box">
-        <h3>🚗 Vehicles</h3>
-        <p>3</p>
+        <div class="dashboard-actions">
+            <input type="text"
+                   class="dashboard-search"
+                   placeholder="Search..." />
+
+            <button class="notification-btn">
+                🔔
+            </button>
+
+            <div class="profile-circle">
+                SJ
+            </div>
+        </div>
     </div>
 
-    <div class="dashboard-box">
-        <h3>📅 Reservations</h3>
-        <p>12</p>
+
+    <!-- STATISTICS -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-icon">🚗</div>
+
+            <div>
+                <span>Vehicles</span>
+                <strong>3</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📅</div>
+
+            <div>
+                <span>Reservations</span>
+                <strong>12</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🛣️</div>
+
+            <div>
+                <span>Trips</span>
+                <strong>48</strong>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+
+            <div>
+                <span>Total Expenses</span>
+                <strong>€ 860</strong>
+            </div>
+        </div>
+
     </div>
 
-    <div class="dashboard-box">
-        <h3>🛣️ Trips</h3>
-        <p>48</p>
+
+    <!-- CURRENT VEHICLE -->
+
+    <div class="section-header">
+        <div>
+            <h2>Current Vehicle</h2>
+            <p>Your currently selected vehicle.</p>
+        </div>
+
+        <a href="/vehicles" class="view-all-link">
+            View Vehicles →
+        </a>
     </div>
 
-    <div class="dashboard-box">
-        <h3>⛽ Expenses</h3>
-        <p>€ 860</p>
+    <div class="current-vehicle-card">
+
+        <div class="current-vehicle-info">
+
+            <div class="vehicle-title-row">
+                <div>
+                    <span class="section-label">
+                        CURRENT VEHICLE
+                    </span>
+
+                    <h2>Volkswagen Golf</h2>
+                    <p>L-123AB</p>
+                </div>
+
+                <span class="status-badge">
+                    Available
+                </span>
+            </div>
+
+            <div class="vehicle-dashboard-stats">
+
+                <div class="vehicle-stat">
+                    <span>Fuel Level</span>
+                    <strong>75%</strong>
+                </div>
+
+                <div class="vehicle-stat">
+                    <span>Mileage</span>
+                    <strong>48,250 km</strong>
+                </div>
+
+                <div class="vehicle-stat">
+                    <span>Reservations</span>
+                    <strong>12</strong>
+                </div>
+
+            </div>
+
+            <div class="fuel-wrapper">
+                <div class="fuel-label">
+                    <span>⛽ Fuel</span>
+                    <span>75%</span>
+                </div>
+
+                <div class="fuel-bar">
+                    <div class="fuel-fill"></div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="current-vehicle-image">
+            <img src="images/vehicles/vw.png"
+                 alt="Volkswagen Golf" />
+        </div>
+
     </div>
 
-</div>
 
-<h2>Current Vehicle</h2>
+    <!-- LOWER DASHBOARD -->
 
-<div class="dashboard-box current-vehicle">
+    <div class="dashboard-bottom-grid">
 
-    <div class="vehicle-info">
 
-        <h3>🚗 Volkswagen Golf</h3>
+        <!-- RECENT ACTIVITY -->
 
-        <p>License Plate: L-123AB</p>
+        <div class="dashboard-panel">
 
-        <p>Status: Available</p>
+            <div class="panel-header">
+                <h2>Recent Activity</h2>
 
-    </div>
+                <a href="/trips">
+                    View All
+                </a>
+            </div>
 
-    <div class="vehicle-stats">
+            <div class="activity-list">
 
-        <p>Fuel Level: 75%</p>
+                <div class="activity-row">
+                    <div class="activity-icon">📅</div>
 
-        <p>Mileage: 48,250 km</p>
+                    <div class="activity-main">
+                        <strong>New reservation</strong>
+                        <span>Volkswagen Golf</span>
+                    </div>
 
-        <p>Reservations: 12</p>
+                    <div class="activity-meta">
+                        Today, 14:30
+                    </div>
+                </div>
 
-    </div>
+                <div class="activity-row">
+                    <div class="activity-icon">⛽</div>
 
-</div>
+                    <div class="activity-main">
+                        <strong>Fuel expense added</strong>
+                        <span>€45.00</span>
+                    </div>
 
-<h2>Recent Trips</h2>
+                    <div class="activity-meta">
+                        Today, 11:20
+                    </div>
+                </div>
 
-<div class="dashboard-grid">
+                <div class="activity-row">
+                    <div class="activity-icon">🛣️</div>
 
-    <div class="dashboard-box">
-        <h3>Volkswagen Golf</h3>
-        <p>34 km • Today</p>
-    </div>
+                    <div class="activity-main">
+                        <strong>Trip completed</strong>
+                        <span>32 km</span>
+                    </div>
 
-    <div class="dashboard-box">
-        <h3>BMW 320d</h3>
-        <p>12 km • Yesterday</p>
-    </div>
+                    <div class="activity-meta">
+                        Yesterday
+                    </div>
+                </div>
 
-</div>
+                <div class="activity-row">
+                    <div class="activity-icon">🚗</div>
 
-<h2>Upcoming Reservations</h2>
+                    <div class="activity-main">
+                        <strong>Vehicle added</strong>
+                        <span>BMW 3 Series</span>
+                    </div>
 
-<div class="dashboard-grid">
+                    <div class="activity-meta">
+                        Yesterday
+                    </div>
+                </div>
 
-    <div class="dashboard-box">
-        <h3>John Doe</h3>
-        <p>VW Golf • 15:00 - 18:00</p>
-    </div>
+            </div>
 
-    <div class="dashboard-box">
-        <h3>Emily</h3>
-        <p>BMW 320d • Tomorrow</p>
+        </div>
+
+
+        <!-- UPCOMING RESERVATIONS -->
+
+        <div class="dashboard-panel">
+
+            <div class="panel-header">
+                <h2>Upcoming Reservations</h2>
+
+                <a href="/reservations">
+                    View All
+                </a>
+            </div>
+
+            <div class="reservation-list">
+
+                <div class="reservation-row">
+
+                    <div class="reservation-date">
+                        <strong>24</strong>
+                        <span>SEP</span>
+                    </div>
+
+                    <div class="reservation-info">
+                        <strong>Volkswagen Golf</strong>
+                        <span>John Doe</span>
+                    </div>
+
+                    <div class="reservation-time">
+                        15:00 – 18:00
+                    </div>
+
+                </div>
+
+
+                <div class="reservation-row">
+
+                    <div class="reservation-date">
+                        <strong>25</strong>
+                        <span>SEP</span>
+                    </div>
+
+                    <div class="reservation-info">
+                        <strong>BMW 3 Series</strong>
+                        <span>Emily</span>
+                    </div>
+
+                    <div class="reservation-time">
+                        10:00 – 13:00
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
 </div>

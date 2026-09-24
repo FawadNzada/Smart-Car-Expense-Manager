@@ -2,39 +2,188 @@
 
 <PageTitle>Profile</PageTitle>
 
-<h1>Profile</h1>
+<div class="profile-page">
 
-<div class="group-card">
-
-    <h3>👤 Sebastian</h3>
-
-    <p>Email: sebastian@email.com</p>
-
-    <p>Role: Group Member</p>
-
-    <p>Total Trips: 24</p>
-
-    <p>Total Expenses Paid: €320</p>
-
-</div>
-
-<h2>Recent Activity</h2>
-
-<div class="groups-grid">
-
-    <div class="group-card">
-        <h3>🚗 Volkswagen Golf</h3>
-        <p>Trip completed today</p>
+    <div class="profile-header">
+        <div>
+            <h1>Profile</h1>
+            <p>Manage your account and view your activity.</p>
+        </div>
     </div>
 
-    <div class="group-card">
-        <h3>⛽ Fuel Expense</h3>
-        <p>€68 added</p>
+    <div class="profile-layout">
+
+        <!-- LEFT -->
+        <div class="profile-main-card">
+
+            <div class="profile-top">
+
+                <div class="profile-avatar">
+                    SJ
+                </div>
+
+                <div class="profile-user-info">
+                    <h2>Sebastian Junior</h2>
+                    <span>Group Member</span>
+                </div>
+
+            </div>
+
+            <div class="profile-details-grid">
+
+                <div class="profile-field">
+                    <span>Email</span>
+                    <strong>sebastian@email.com</strong>
+                </div>
+
+                <div class="profile-field">
+                    <span>Role</span>
+                    <strong>Group Member</strong>
+                </div>
+
+                <div class="profile-field">
+                    <span>Phone</span>
+                    <strong>+43 660 1234567</strong>
+                </div>
+
+                <div class="profile-field">
+                    <span>Member Since</span>
+                    <strong>12 Jan 2026</strong>
+                </div>
+
+            </div>
+
+            <div class="profile-actions">
+                <button class="edit-profile-btn">
+                    Edit Profile
+                </button>
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT -->
+        <div class="profile-side">
+
+            <div class="group-card-profile">
+
+                <span class="section-label">
+                    GROUP MEMBERSHIP
+                </span>
+
+                <h2>Carshare Group</h2>
+
+                <p>
+                    You are currently a member of this group.
+                </p>
+
+                <div class="group-meta">
+                    <span>Members</span>
+                    <strong>4</strong>
+                </div>
+
+                <button class="leave-group-btn">
+                    Leave Group
+                </button>
+
+            </div>
+
+
+            <div class="preferences-card">
+
+                <span class="section-label">
+                    PREFERENCES
+                </span>
+
+                <div class="preference-row">
+                    <span>Notifications</span>
+
+                    <label class="switch">
+                        <input type="checkbox" checked />
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="preference-row">
+                    <span>Dark Mode</span>
+
+                    <label class="switch">
+                        <input type="checkbox" checked />
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="group-card">
-        <h3>📅 Reservation</h3>
-        <p>Tomorrow 09:00 - 12:00</p>
+
+    <!-- STATS -->
+    <div class="profile-stats">
+
+        <div class="stat-card">
+            <span>Total Trips</span>
+            <strong>24</strong>
+        </div>
+
+        <div class="stat-card">
+            <span>Total Expenses Paid</span>
+            <strong>€320</strong>
+        </div>
+
+        <div class="stat-card">
+            <span>Reservations</span>
+            <strong>12</strong>
+        </div>
+
+        <div class="stat-card">
+            <span>Vehicles Used</span>
+            <strong>3</strong>
+        </div>
+
+    </div>
+
+
+    <!-- RECENT ACTIVITY -->
+    <div class="activity-card">
+
+        <div class="activity-header">
+            <h2>Recent Activity</h2>
+        </div>
+
+        <div class="activity-list">
+
+            <div class="activity-row">
+                <div class="activity-icon">🚗</div>
+
+                <div>
+                    <strong>Volkswagen Golf</strong>
+                    <span>Trip completed today</span>
+                </div>
+            </div>
+
+            <div class="activity-row">
+                <div class="activity-icon">⛽</div>
+
+                <div>
+                    <strong>Fuel Expense</strong>
+                    <span>€68 added</span>
+                </div>
+            </div>
+
+            <div class="activity-row">
+                <div class="activity-icon">📅</div>
+
+                <div>
+                    <strong>Reservation</strong>
+                    <span>Tomorrow 09:00 - 12:00</span>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
 </div>

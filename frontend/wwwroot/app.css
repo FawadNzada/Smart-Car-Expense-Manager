@@ -1,195 +1,417 @@
-html, body {
+/* =========================================
+   GLOBAL THEME
+   Smart Carsharing - Black & Gold
+   ========================================= */
+
+html,
+body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #08142b;
-    color: white;
+
     margin: 0;
     padding: 0;
+
+    min-height: 100%;
+
+    background:
+        radial-gradient(
+            circle at 80% 0%,
+            rgba(245, 158, 11, 0.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 15% 70%,
+            rgba(217, 119, 6, 0.04),
+            transparent 30%
+        ),
+        #080808;
+
+    color: #ffffff;
 }
 
-a, .btn-link {
-    color: #22d3ee;
+
+/* =========================================
+   GLOBAL LINKS
+   ========================================= */
+
+a {
+    color: #fbbf24;
 }
+
+a:hover {
+    color: #f59e0b;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+   ========================================= */
 
 .content {
     padding: 2rem;
+
+    background: transparent;
 }
 
-.hero {
-    padding: 4rem 2rem;
-}
 
-.hero h1 {
-    font-size: 4rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-.hero p {
-    font-size: 1.3rem;
-    max-width: 700px;
-    color: #cbd5e1;
-    margin-bottom: 2rem;
-}
-
-.hero-buttons {
-    display: flex;
-    gap: 1rem;
-}
+/* =========================================
+   GLOBAL BUTTONS
+   ========================================= */
 
 .btn-primary {
-    background-color: #22d3ee;
-    border: none;
-    color: #08142b;
+    display: inline-block;
+
     padding: 12px 24px;
+
+    border: none;
     border-radius: 10px;
-    font-weight: 600;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f59e0b,
+            #fbbf24
+        );
+
+    color: #111111;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
     cursor: pointer;
+
+    box-shadow:
+        0 0 20px rgba(245, 158, 11, 0.15);
+
+    transition: 0.2s ease;
 }
+
+.btn-primary:hover {
+    color: #111111;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 28px rgba(245, 158, 11, 0.28);
+}
+
 
 .btn-secondary {
-    background: transparent;
-    border: 2px solid #22d3ee;
-    color: #22d3ee;
-    padding: 12px 24px;
+    display: inline-block;
+
+    padding: 11px 23px;
+
+    border: 1px solid #a16207;
     border-radius: 10px;
-    font-weight: 600;
+
+    background: rgba(245, 158, 11, 0.04);
+
+    color: #fbbf24;
+
+    text-decoration: none;
+
+    font-weight: 700;
+
     cursor: pointer;
+
+    transition: 0.2s ease;
 }
 
-.features {
-    padding: 4rem 2rem;
+.btn-secondary:hover {
+    border-color: #f59e0b;
+
+    background: rgba(245, 158, 11, 0.1);
+
+    color: #fbbf24;
 }
 
-.features h2 {
-    margin-bottom: 2rem;
-    font-size: 2.5rem;
-}
 
-.feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-}
-
-.feature-card {
-    background: #12213f;
-    padding: 1.5rem;
-    border-radius: 16px;
-    transition: 0.3s;
-}
-
-.feature-card:hover {
-    transform: translateY(-5px);
-}
-
-.feature-card h3 {
-    color: #22d3ee;
-    margin-bottom: 1rem;
-}
-
-.how-it-works {
-    padding: 4rem 2rem;
-}
-
-.how-it-works h2 {
-    margin-bottom: 2rem;
-    font-size: 2.5rem;
-}
-
-.steps {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-}
-
-.step {
-    background: #12213f;
-    padding: 1.5rem;
-    border-radius: 16px;
-    min-width: 200px;
-    text-align: center;
-}
-
-.step span {
-    display: inline-flex;
-    width: 50px;
-    height: 50px;
-    background: #22d3ee;
-    color: #08142b;
-    border-radius: 50%;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
-
-.blazor-error-boundary {
-    display: none;
-}
+/* =========================================
+   HOME / HERO
+   ========================================= */
 
 .hero {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     gap: 4rem;
+
     flex-wrap: wrap;
+
+    padding: 5rem 2rem;
 }
 
 .hero-left {
     flex: 1;
-    min-width: 500px;
+
+    min-width: 420px;
 }
 
 .hero-right {
     display: flex;
     flex-direction: column;
+
     gap: 1.5rem;
+
     min-width: 300px;
 }
 
-.dashboard-card {
-    background: #12213f;
-    padding: 1.5rem;
-    border-radius: 16px;
-    min-width: 280px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-}
-
-.dashboard-card h4 {
-    color: #22d3ee;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-}
-
-.dashboard-card h2 {
-    margin: 0;
-    font-size: 2rem;
-    color: white;
-}
-
-.dashboard-card:hover {
-    transform: translateY(-5px);
-    transition: 0.3s;
-}
-
 .hero h1 {
+    margin: 0 0 1rem;
+
+    max-width: 760px;
+
+    color: white;
+
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1.02;
+    font-weight: 800;
+
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
 }
 
+.hero h1 strong {
+    color: #fbbf24;
+}
+
+.hero p {
+    max-width: 700px;
+
+    margin-bottom: 2rem;
+
+    color: #9ca3af;
+
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+
+    gap: 1rem;
+
+    flex-wrap: wrap;
+}
+
+
+/* =========================================
+   HOME DASHBOARD PREVIEW CARDS
+   ========================================= */
+
+.dashboard-card {
+    min-width: 280px;
+
+    padding: 1.5rem;
+
+    border: 1px solid #6b4b0c;
+    border-radius: 16px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(245, 158, 11, 0.08),
+            transparent 40%
+        ),
+        linear-gradient(
+            180deg,
+            #171717,
+            #101010
+        );
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.35);
+
+    transition: 0.25s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #f59e0b;
+
+    box-shadow:
+        0 15px 40px rgba(245, 158, 11, 0.08);
+}
+
+.dashboard-card h4 {
+    margin-bottom: 0.5rem;
+
+    color: #fbbf24;
+
+    font-size: 1rem;
+}
+
+.dashboard-card h2 {
+    margin: 0;
+
+    color: white;
+
+    font-size: 2rem;
+}
+
+
+/* =========================================
+   HOME FEATURES
+   ========================================= */
+
+.features {
+    padding: 4rem 2rem;
+}
+
+.features h2,
+.how-it-works h2 {
+    margin-bottom: 2rem;
+
+    color: white;
+
+    font-size: 2.5rem;
+}
+
+.feature-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+
+    gap: 1.5rem;
+}
+
+.feature-card {
+    padding: 1.7rem;
+
+    border: 1px solid #5b430f;
+    border-radius: 16px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(245, 158, 11, 0.07),
+            transparent 40%
+        ),
+        linear-gradient(
+            180deg,
+            #171717,
+            #101010
+        );
+
+    transition: 0.25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #f59e0b;
+}
+
+.feature-card h3 {
+    margin-bottom: 1rem;
+
+    color: #fbbf24;
+}
+
+.feature-card p {
+    color: #9ca3af;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   HOW IT WORKS
+   ========================================= */
+
+.how-it-works {
+    padding: 4rem 2rem;
+}
+
+.steps {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 1.5rem;
+}
+
+.step {
+    flex: 1;
+
+    min-width: 200px;
+
+    padding: 1.5rem;
+
+    border: 1px solid #5b430f;
+    border-radius: 16px;
+
+    background: #121212;
+
+    text-align: center;
+}
+
+.step span {
+    width: 50px;
+    height: 50px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 1rem;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f59e0b,
+            #fbbf24
+        );
+
+    color: #111;
+
+    font-weight: 800;
+}
+
+
+/* =========================================
+   AUTH / LOGIN / REGISTER
+   ========================================= */
+
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
+
     min-height: 80vh;
+
+    padding: 30px;
 }
 
 .auth-card {
-    background: #12213f;
-    padding: 40px;
-    border-radius: 20px;
     width: 400px;
+    max-width: 100%;
+
+    padding: 40px;
+
+    border: 1px solid #a16207;
+    border-radius: 20px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(245, 158, 11, 0.08),
+            transparent 40%
+        ),
+        linear-gradient(
+            180deg,
+            #171717,
+            #101010
+        );
+
+    box-shadow:
+        0 0 30px rgba(245, 158, 11, 0.06);
 }
 
 .auth-card h1 {
@@ -197,8 +419,9 @@ a, .btn-link {
 }
 
 .auth-card p {
-    color: #cbd5e1;
     margin-bottom: 25px;
+
+    color: #9ca3af;
 }
 
 .form-group {
@@ -207,68 +430,166 @@ a, .btn-link {
 
 .form-group label {
     display: block;
+
     margin-bottom: 8px;
+
+    color: #e5e7eb;
+
+    font-weight: 600;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
     width: 100%;
+
+    box-sizing: border-box;
+
     padding: 12px;
+
+    border: 1px solid #3f3f46;
     border-radius: 10px;
-    border: 1px solid #334155;
-    background: #08142b;
+
+    background: #0f1115;
     color: white;
+
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #f59e0b;
+
+    box-shadow:
+        0 0 0 2px rgba(245, 158, 11, 0.08);
 }
 
 .auth-button {
     width: 100%;
+
     margin-top: 10px;
 }
 
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-top: 30px;
-}
 
-.dashboard-box {
-    background: #12213f;
-    padding: 25px;
-    border-radius: 16px;
-}
+/* =========================================
+   LEGACY FALLBACK CARDS
+   Pages we haven't redesigned yet
+   ========================================= */
 
-.dashboard-box h3 {
-    color: #22d3ee;
-}
-
-.dashboard-box p {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
+.dashboard-grid,
 .groups-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+
     gap: 20px;
+
     margin-top: 25px;
 }
 
+.dashboard-box,
 .group-card {
-    background: #12213f;
     padding: 25px;
+
+    border: 1px solid #5b430f;
     border-radius: 16px;
-    transition: 0.3s;
+
+    background:
+        linear-gradient(
+            180deg,
+            #171717,
+            #101010
+        );
+
+    transition: 0.25s ease;
 }
 
+.dashboard-box:hover,
 .group-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
+
+    border-color: #f59e0b;
 }
 
+.dashboard-box h3,
 .group-card h3 {
-    color: #22d3ee;
+    color: #fbbf24;
 }
 
 .group-link {
+    color: inherit;
+
     text-decoration: none;
+}
+
+
+/* =========================================
+   SELECTION + SCROLLBAR
+   ========================================= */
+
+::selection {
+    background: #f59e0b;
+
+    color: #111;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #090909;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+
+    background: #3f3f46;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a16207;
+}
+
+
+/* =========================================
+   ERROR
+   ========================================= */
+
+.blazor-error-boundary {
+    display: none;
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 750px) {
+
+    .content {
+        padding: 1rem;
+    }
+
+    .hero {
+        padding: 3rem 1rem;
+    }
+
+    .hero-left {
+        min-width: 0;
+    }
+
+    .hero-right {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .hero h1 {
+        font-size: 3rem;
+    }
+
+    .features,
+    .how-it-works {
+        padding: 3rem 1rem;
+    }
 }

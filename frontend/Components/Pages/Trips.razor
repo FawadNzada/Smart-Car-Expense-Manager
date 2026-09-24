@@ -2,36 +2,170 @@
 
 <PageTitle>Trips</PageTitle>
 
-<h1>Trips</h1>
+<div class="trips-page">
 
-<a href="/createtrip" class="btn-primary">
-    + Add Trip
-</a>
+    <div class="trips-header">
+        <div>
+            <h1>Trips</h1>
+            <p>Track and manage all vehicle trips.</p>
+        </div>
 
-<div class="groups-grid">
-
-    <div class="group-card">
-        <h3>🚗 Volkswagen Golf</h3>
-
-        <p>👤 Driver: Sebastian</p>
-        <p>🛣️ Distance: 34 km</p>
-        <p>📅 Today</p>
+        <a href="/createtrip" class="add-trip-btn">
+            + Log Trip
+        </a>
     </div>
 
-    <div class="group-card">
-        <h3>🚙 BMW 320d</h3>
+    <div class="trips-toolbar">
+        <input type="text"
+               class="trip-search"
+               placeholder="Search trips..." />
 
-        <p>👤 Driver: Lisa</p>
-        <p>🛣️ Distance: 12 km</p>
-        <p>📅 Yesterday</p>
+        <select class="trip-filter">
+            <option>All Vehicles</option>
+            <option>Volkswagen Golf</option>
+            <option>BMW 3 Series</option>
+            <option>Audi A4</option>
+            <option>Mercedes C-Class</option>
+        </select>
     </div>
 
-    <div class="group-card">
-        <h3>🚘 Skoda Octavia</h3>
+    <div class="trips-card">
 
-        <p>👤 Driver: Max</p>
-        <p>🛣️ Distance: 28 km</p>
-        <p>📅 2 Days Ago</p>
+        <div class="trips-table-header">
+            <span>Vehicle</span>
+            <span>Driver</span>
+            <span>Date</span>
+            <span>Distance</span>
+            <span>Duration</span>
+        </div>
+
+        <div class="trip-row">
+
+            <div class="trip-vehicle">
+                <img src="images/vehicles/vw.png"
+                     alt="Volkswagen Golf" />
+
+                <div>
+                    <strong>Volkswagen Golf</strong>
+                    <span>L-123AB</span>
+                </div>
+            </div>
+
+            <div class="trip-driver">
+                <div class="driver-avatar">SJ</div>
+                <span>Sebastian</span>
+            </div>
+
+            <div class="trip-date">
+                Today
+            </div>
+
+            <div class="trip-distance">
+                34 km
+            </div>
+
+            <div class="trip-duration">
+                1h 10m
+            </div>
+
+        </div>
+
+
+        <div class="trip-row">
+
+            <div class="trip-vehicle">
+                <img src="images/vehicles/bmw.png"
+                     alt="BMW 3 Series" />
+
+                <div>
+                    <strong>BMW 3 Series</strong>
+                    <span>L-456CD</span>
+                </div>
+            </div>
+
+            <div class="trip-driver">
+                <div class="driver-avatar">LI</div>
+                <span>Lisa</span>
+            </div>
+
+            <div class="trip-date">
+                Yesterday
+            </div>
+
+            <div class="trip-distance">
+                12 km
+            </div>
+
+            <div class="trip-duration">
+                35 min
+            </div>
+
+        </div>
+
+
+        <div class="trip-row">
+
+            <div class="trip-vehicle">
+                <img src="images/vehicles/audi.png"
+                     alt="Audi A4" />
+
+                <div>
+                    <strong>Audi A4</strong>
+                    <span>L-789EF</span>
+                </div>
+            </div>
+
+            <div class="trip-driver">
+                <div class="driver-avatar">MX</div>
+                <span>Max</span>
+            </div>
+
+            <div class="trip-date">
+                2 Days Ago
+            </div>
+
+            <div class="trip-distance">
+                28 km
+            </div>
+
+            <div class="trip-duration">
+                52 min
+            </div>
+
+        </div>
+
+
+        <div class="trip-row">
+
+            <div class="trip-vehicle">
+                <img src="images/vehicles/mercedes.png"
+                     alt="Mercedes C-Class" />
+
+                <div>
+                    <strong>Mercedes C-Class</strong>
+                    <span>L-321GH</span>
+                </div>
+            </div>
+
+            <div class="trip-driver">
+                <div class="driver-avatar">EM</div>
+                <span>Emily</span>
+            </div>
+
+            <div class="trip-date">
+                20 Sep 2026
+            </div>
+
+            <div class="trip-distance">
+                78 km
+            </div>
+
+            <div class="trip-duration">
+                1h 42m
+            </div>
+
+        </div>
+
     </div>
 
 </div>

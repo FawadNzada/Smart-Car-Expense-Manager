@@ -1,76 +1,211 @@
 .page {
     display: flex;
     min-height: 100vh;
-    background-color: #08142b;
+
+    background:
+        radial-gradient(
+            circle at 85% 0%,
+            rgba(245, 158, 11, 0.07),
+            transparent 30%
+        ),
+        #080808;
 }
+
+
+/* SIDEBAR */
 
 .sidebar {
     width: 260px;
-    background-color: #0f172a;
+
     padding: 30px 20px;
-    border-right: 1px solid rgba(255,255,255,0.08);
+
+    background:
+        linear-gradient(
+            180deg,
+            #0d0d0d,
+            #090909
+        );
+
+    border-right: 1px solid #2b2110;
+
+    box-shadow:
+        6px 0 25px rgba(0, 0, 0, 0.25);
 }
+
+
+/* LOGO */
 
 .logo {
+    margin-bottom: 42px;
+
     color: white;
+
     font-size: 1.7rem;
-    font-weight: 700;
-    margin-bottom: 50px;
-    line-height: 1.4;
+    font-weight: 800;
+    line-height: 1.3;
 }
 
+
+/* CURRENT VEHICLE */
+
 .vehicle-preview {
-    background-color: #12213f;
-    padding: 15px;
+    margin-bottom: 34px;
+    padding: 16px;
+
+    border: 1px solid #5b430f;
     border-radius: 14px;
-    margin-bottom: 35px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(245, 158, 11, 0.09),
+            transparent 45%
+        ),
+        linear-gradient(
+            180deg,
+            #171717,
+            #101010
+        );
+
+    box-shadow:
+        0 0 20px rgba(245, 158, 11, 0.04);
 }
 
 .vehicle-preview h4 {
-    color: #22d3ee;
-    margin-bottom: 10px;
+    margin: 0 0 10px;
+
+    color: #fbbf24;
+
     font-size: 0.9rem;
 }
 
 .vehicle-preview p {
+    margin: 0 0 5px;
+
     color: white;
-    font-weight: 600;
-    margin-bottom: 5px;
+
+    font-weight: 700;
 }
 
 .vehicle-preview span {
-    color: #4ade80;
+    color: #22c55e;
+
     font-size: 0.85rem;
 }
+
+
+/* NAVIGATION */
 
 .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+
+    gap: 8px;
 }
 
 .sidebar-nav a {
-    color: #cbd5e1;
+    display: block;
+
+    padding: 13px 16px;
+
+    border: 1px solid transparent;
+    border-radius: 10px;
+
+    color: #d1d5db;
+
     text-decoration: none;
-    padding: 14px 18px;
-    border-radius: 12px;
-    transition: 0.3s;
-    font-weight: 500;
+
+    font-weight: 600;
+
+    transition: 0.2s ease;
 }
 
 .sidebar-nav a:hover {
-    background-color: #22d3ee;
-    color: #08142b;
+    background: rgba(245, 158, 11, 0.08);
+
+    border-color: #5b430f;
+
+    color: #fbbf24;
+
+    transform: translateX(2px);
 }
+
+
+/* ACTIVE NAV ITEM
+   Works when Blazor applies the active class
+*/
+
+.sidebar-nav a.active {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(245, 158, 11, 0.22),
+            rgba(245, 158, 11, 0.08)
+        );
+
+    border-color: #a16207;
+
+    color: #fbbf24;
+
+    box-shadow:
+        inset 3px 0 0 #f59e0b;
+}
+
+
+/* MAIN CONTENT */
 
 main {
     flex: 1;
+
+    min-width: 0;
+
+    background: transparent;
 }
 
 .content {
     padding: 40px;
+
+    background: transparent;
 }
+
+
+/* ERROR */
 
 #blazor-error-ui {
     display: none;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+
+    .page {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: auto;
+
+        border-right: none;
+        border-bottom: 1px solid #2b2110;
+    }
+
+    .sidebar-nav {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .content {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 520px) {
+
+    .sidebar-nav {
+        grid-template-columns: 1fr;
+    }
 }
