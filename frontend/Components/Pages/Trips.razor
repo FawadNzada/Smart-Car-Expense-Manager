@@ -1,171 +1,294 @@
 @page "/trips"
 
+@using frontend.Services
+
+@inject TripStore TripStore
+
 <PageTitle>Trips</PageTitle>
 
 <div class="trips-page">
 
     <div class="trips-header">
+
         <div>
+            <span class="eyebrow">
+                TRIP MANAGEMENT
+            </span>
+
             <h1>Trips</h1>
-            <p>Track and manage all vehicle trips.</p>
+
+            <p>
+                Manage planned, active and completed vehicle trips.
+            </p>
         </div>
 
-        <a href="/createtrip" class="add-trip-btn">
-            + Log Trip
+        <a href="/createtrip"
+           class="new-trip-btn">
+            + New Trip
         </a>
+
     </div>
 
-    <div class="trips-toolbar">
-        <input type="text"
-               class="trip-search"
-               placeholder="Search trips..." />
 
-        <select class="trip-filter">
-            <option>All Vehicles</option>
-            <option>Volkswagen Golf</option>
-            <option>BMW 3 Series</option>
-            <option>Audi A4</option>
-            <option>Mercedes C-Class</option>
-        </select>
+    <div class="trip-tabs">
+
+        <button class="@GetTabClass("All")"
+                @onclick='() => SetFilter("All")'>
+            All
+        </button>
+
+        <button class="@GetTabClass("Planned")"
+                @onclick='() => SetFilter("Planned")'>
+            Planned
+        </button>
+
+        <button class="@GetTabClass("Active")"
+                @onclick='() => SetFilter("Active")'>
+            Active
+        </button>
+
+        <button class="@GetTabClass("Completed")"
+                @onclick='() => SetFilter("Completed")'>
+            Completed
+        </button>
+
+        <button class="@GetTabClass("Cancelled")"
+                @onclick='() => SetFilter("Cancelled")'>
+            Cancelled
+        </button>
+
     </div>
 
-    <div class="trips-card">
 
-        <div class="trips-table-header">
-            <span>Vehicle</span>
-            <span>Driver</span>
-            <span>Date</span>
-            <span>Distance</span>
-            <span>Duration</span>
-        </div>
+    <div class="trips-list">
 
-        <div class="trip-row">
+        @if (!FilteredTrips.Any())
+        {
+            <div class="empty-state">
 
-            <div class="trip-vehicle">
-                <img src="images/vehicles/vw.png"
-                     alt="Volkswagen Golf" />
-
-                <div>
-                    <strong>Volkswagen Golf</strong>
-                    <span>L-123AB</span>
+                <div class="empty-icon">
+                    🚘
                 </div>
+
+                <h3>No trips found</h3>
+
+                <p>
+                    There are currently no trips in this category.
+                </p>
+
             </div>
+        }
+        else
+        {
+            @foreach (var trip in FilteredTrips)
+            {
+                <a href="@($"/trips/{trip.Id}")"
+                   class="trip-card trip-card-link">
 
-            <div class="trip-driver">
-                <div class="driver-avatar">SJ</div>
-                <span>Sebastian</span>
-            </div>
+                    <div class="vehicle-image">
 
-            <div class="trip-date">
-                Today
-            </div>
+                        <img src="@trip.VehicleImage"
+                             alt="@trip.VehicleName" />
 
-            <div class="trip-distance">
-                34 km
-            </div>
-
-            <div class="trip-duration">
-                1h 10m
-            </div>
-
-        </div>
+                    </div>
 
 
-        <div class="trip-row">
+                    <div class="trip-main">
 
-            <div class="trip-vehicle">
-                <img src="images/vehicles/bmw.png"
-                     alt="BMW 3 Series" />
+                        <div class="trip-title-row">
 
-                <div>
-                    <strong>BMW 3 Series</strong>
-                    <span>L-456CD</span>
-                </div>
-            </div>
+                            <div>
 
-            <div class="trip-driver">
-                <div class="driver-avatar">LI</div>
-                <span>Lisa</span>
-            </div>
+                                <h2>
+                                    @trip.VehicleName
+                                </h2>
 
-            <div class="trip-date">
-                Yesterday
-            </div>
+                                <span class="license-plate">
+                                    @trip.LicensePlate
+                                </span>
 
-            <div class="trip-distance">
-                12 km
-            </div>
+                            </div>
 
-            <div class="trip-duration">
-                35 min
-            </div>
+                            <span class="status-badge @GetStatusClass(trip.Status)">
+                                @trip.Status
+                            </span>
 
-        </div>
+                        </div>
 
 
-        <div class="trip-row">
+                        <div class="route">
 
-            <div class="trip-vehicle">
-                <img src="images/vehicles/audi.png"
-                     alt="Audi A4" />
+                            <div class="route-point">
 
-                <div>
-                    <strong>Audi A4</strong>
-                    <span>L-789EF</span>
-                </div>
-            </div>
+                                <span class="route-dot"></span>
 
-            <div class="trip-driver">
-                <div class="driver-avatar">MX</div>
-                <span>Max</span>
-            </div>
+                                <div>
 
-            <div class="trip-date">
-                2 Days Ago
-            </div>
+                                    <small>FROM</small>
 
-            <div class="trip-distance">
-                28 km
-            </div>
+                                    <strong>
+                                        @trip.StartLocation
+                                    </strong>
 
-            <div class="trip-duration">
-                52 min
-            </div>
+                                </div>
 
-        </div>
+                            </div>
 
 
-        <div class="trip-row">
+                            <div class="route-line"></div>
 
-            <div class="trip-vehicle">
-                <img src="images/vehicles/mercedes.png"
-                     alt="Mercedes C-Class" />
 
-                <div>
-                    <strong>Mercedes C-Class</strong>
-                    <span>L-321GH</span>
-                </div>
-            </div>
+                            <div class="route-point">
 
-            <div class="trip-driver">
-                <div class="driver-avatar">EM</div>
-                <span>Emily</span>
-            </div>
+                                <span class="route-dot destination"></span>
 
-            <div class="trip-date">
-                20 Sep 2026
-            </div>
+                                <div>
 
-            <div class="trip-distance">
-                78 km
-            </div>
+                                    <small>TO</small>
 
-            <div class="trip-duration">
-                1h 42m
-            </div>
+                                    <strong>
+                                        @trip.Destination
+                                    </strong>
 
-        </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="trip-info-grid">
+
+                            <div class="info-box">
+
+                                <span>Driver</span>
+
+                                <strong>
+                                    @trip.Driver
+                                </strong>
+
+                            </div>
+
+                            <div class="info-box">
+
+                                <span>Date</span>
+
+                                <strong>
+                                    @trip.Date.ToString("dd MMM yyyy")
+                                </strong>
+
+                            </div>
+
+                            <div class="info-box">
+
+                                <span>Time</span>
+
+                                <strong>
+                                    @trip.StartTime.ToString("HH:mm")
+                                    -
+                                    @trip.EndTime.ToString("HH:mm")
+                                </strong>
+
+                            </div>
+
+                            <div class="info-box">
+
+                                <span>Distance</span>
+
+                                <strong>
+                                    @GetDistance(trip)
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </a>
+            }
+        }
 
     </div>
 
 </div>
+
+
+@code {
+
+    private string activeFilter = "All";
+
+
+    private IEnumerable<TripItem> FilteredTrips
+    {
+        get
+        {
+            var trips =
+                TripStore.Trips
+                    .OrderByDescending(trip => trip.Date)
+                    .ThenBy(trip => trip.StartTime);
+
+
+            return activeFilter switch
+            {
+                "Planned" =>
+                    trips.Where(
+                        trip => trip.Status == "Planned"),
+
+                "Active" =>
+                    trips.Where(
+                        trip => trip.Status == "Active"),
+
+                "Completed" =>
+                    trips.Where(
+                        trip => trip.Status == "Completed"),
+
+                "Cancelled" =>
+                    trips.Where(
+                        trip => trip.Status == "Cancelled"),
+
+                _ => trips
+            };
+        }
+    }
+
+
+    private void SetFilter(string filter)
+    {
+        activeFilter = filter;
+    }
+
+
+    private string GetTabClass(string filter)
+    {
+        return activeFilter == filter
+            ? "tab-btn active"
+            : "tab-btn";
+    }
+
+
+    private string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Planned" => "planned",
+            "Active" => "active",
+            "Completed" => "completed",
+            "Cancelled" => "cancelled",
+            _ => "planned"
+        };
+    }
+
+
+    private string GetDistance(TripItem trip)
+    {
+        if (trip.EndMileage <= 0
+            || trip.EndMileage < trip.StartMileage)
+        {
+            return "-";
+        }
+
+        return $"{trip.EndMileage - trip.StartMileage} km";
+    }
+
+}

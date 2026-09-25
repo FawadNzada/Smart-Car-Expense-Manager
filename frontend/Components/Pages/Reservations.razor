@@ -1,124 +1,304 @@
 @page "/reservations"
 
+@using frontend.Services
+
+@inject ReservationStore ReservationStore
+
 <PageTitle>Reservations</PageTitle>
 
 <div class="reservations-page">
 
     <div class="reservations-header">
+
         <div>
+            <span class="eyebrow">RESERVATION MANAGEMENT</span>
+
             <h1>Reservations</h1>
-            <p>Manage and view all vehicle reservations.</p>
+
+            <p>
+                Manage vehicle reservations and upcoming bookings.
+            </p>
         </div>
 
-        <a href="/createreservation" class="new-reservation-btn">
+        <a href="/createreservation"
+           class="new-reservation-btn">
             + New Reservation
         </a>
+
     </div>
 
+
+    <!-- FILTER TABS -->
+
     <div class="reservation-tabs">
-        <button class="tab active">All</button>
-        <button class="tab">Upcoming</button>
-        <button class="tab">Past</button>
-        <button class="tab">Cancelled</button>
+
+        <button class="@GetTabClass("All")"
+                @onclick='() => SetFilter("All")'>
+            All
+        </button>
+
+        <button class="@GetTabClass("Upcoming")"
+                @onclick='() => SetFilter("Upcoming")'>
+            Upcoming
+        </button>
+
+        <button class="@GetTabClass("Past")"
+                @onclick='() => SetFilter("Past")'>
+            Past
+        </button>
+
+        <button class="@GetTabClass("Completed")"
+                @onclick='() => SetFilter("Completed")'>
+            Completed
+        </button>
+
+        <button class="@GetTabClass("Cancelled")"
+                @onclick='() => SetFilter("Cancelled")'>
+            Cancelled
+        </button>
+
     </div>
+
+
+    <!-- RESERVATIONS -->
 
     <div class="reservations-list">
 
-        <div class="reservation-card">
-            <div class="reservation-car">
-                <img src="images/vehicles/vw.png"
-                     alt="Volkswagen Golf" />
+        @if (!FilteredReservations.Any())
+        {
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📅
+                </div>
+
+                <h3>No reservations found</h3>
+
+                <p>
+                    There are currently no reservations in this category.
+                </p>
+
             </div>
+        }
+        else
+        {
+            @foreach (var reservation in FilteredReservations)
+            {
+                <a href="@($"/reservations/{reservation.Id}")"
+                   class="reservation-card reservation-card-link">
 
-            <div class="reservation-main">
-                <h3>Volkswagen Golf</h3>
-                <span class="plate">L-123AB</span>
-            </div>
+                    <!-- VEHICLE -->
 
-            <div class="reservation-user">
-                <span class="label">Driver</span>
-                <strong>Sebastian</strong>
-            </div>
+                    <div class="vehicle-image">
 
-            <div class="reservation-date">
-                <span class="label">Date</span>
-                <strong>Today</strong>
-            </div>
+                        <img src="@reservation.VehicleImage"
+                             alt="@reservation.VehicleName" />
 
-            <div class="reservation-time">
-                <span class="label">Time</span>
-                <strong>15:00 - 18:00</strong>
-            </div>
-
-            <span class="status upcoming">
-                Upcoming
-            </span>
-        </div>
+                    </div>
 
 
-        <div class="reservation-card">
-            <div class="reservation-car">
-                <img src="images/vehicles/bmw.png"
-                     alt="BMW 3 Series" />
-            </div>
+                    <!-- MAIN INFO -->
 
-            <div class="reservation-main">
-                <h3>BMW 3 Series</h3>
-                <span class="plate">L-456CD</span>
-            </div>
+                    <div class="reservation-main">
 
-            <div class="reservation-user">
-                <span class="label">Driver</span>
-                <strong>Lisa</strong>
-            </div>
+                        <div class="vehicle-title-row">
 
-            <div class="reservation-date">
-                <span class="label">Date</span>
-                <strong>Tomorrow</strong>
-            </div>
+                            <div>
 
-            <div class="reservation-time">
-                <span class="label">Time</span>
-                <strong>09:00 - 12:00</strong>
-            </div>
+                                <h2>
+                                    @reservation.VehicleName
+                                </h2>
 
-            <span class="status planned">
-                Planned
-            </span>
-        </div>
+                                <span class="license-plate">
+                                    @reservation.LicensePlate
+                                </span>
+
+                            </div>
 
 
-        <div class="reservation-card">
-            <div class="reservation-car">
-                <img src="images/vehicles/audi.png"
-                     alt="Audi A4" />
-            </div>
+                            <span class="status-badge @GetStatusClass(reservation)">
+                                @GetDisplayStatus(reservation)
+                            </span>
 
-            <div class="reservation-main">
-                <h3>Audi A4</h3>
-                <span class="plate">L-789EF</span>
-            </div>
+                        </div>
 
-            <div class="reservation-user">
-                <span class="label">Driver</span>
-                <strong>Max</strong>
-            </div>
 
-            <div class="reservation-date">
-                <span class="label">Date</span>
-                <strong>Friday</strong>
-            </div>
+                        <div class="reservation-info-grid">
 
-            <div class="reservation-time">
-                <span class="label">Time</span>
-                <strong>10:00 - 14:00</strong>
-            </div>
+                            <div class="info-box">
 
-            <span class="status planned">
-                Planned
-            </span>
-        </div>
+                                <span>Driver</span>
+
+                                <strong>
+                                    @reservation.Driver
+                                </strong>
+
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span>Date</span>
+
+                                <strong>
+                                    @reservation.Date.ToString("dd MMM yyyy")
+                                </strong>
+
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span>Time</span>
+
+                                <strong>
+                                    @reservation.StartTime.ToString(@"hh\:mm")
+                                    -
+                                    @reservation.EndTime.ToString(@"hh\:mm")
+                                </strong>
+
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span>Duration</span>
+
+                                <strong>
+                                    @GetDuration(reservation)
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </a>
+            }
+        }
 
     </div>
 
 </div>
+
+
+@code {
+
+    private string activeFilter = "All";
+
+
+    private IEnumerable<ReservationItem> FilteredReservations
+    {
+        get
+        {
+            var reservations =
+                ReservationStore.Reservations
+                    .OrderBy(reservation => reservation.Date)
+                    .ThenBy(reservation => reservation.StartTime);
+
+
+            return activeFilter switch
+            {
+                "Upcoming" =>
+                    reservations.Where(reservation =>
+                        reservation.Status != "Cancelled" &&
+                        reservation.Status != "Completed" &&
+                        reservation.Date.Date >= DateTime.Today),
+
+                "Past" =>
+                    reservations.Where(reservation =>
+                        reservation.Status != "Cancelled" &&
+                        reservation.Status != "Completed" &&
+                        reservation.Date.Date < DateTime.Today),
+
+                "Completed" =>
+                    reservations.Where(reservation =>
+                        reservation.Status == "Completed"),
+
+                "Cancelled" =>
+                    reservations.Where(reservation =>
+                        reservation.Status == "Cancelled"),
+
+                _ => reservations
+            };
+        }
+    }
+
+
+    private void SetFilter(string filter)
+    {
+        activeFilter = filter;
+    }
+
+
+    private string GetTabClass(string filter)
+    {
+        return activeFilter == filter
+            ? "tab-btn active"
+            : "tab-btn";
+    }
+
+
+    private string GetStatusClass(
+        ReservationItem reservation)
+    {
+        var displayStatus =
+            GetDisplayStatus(reservation);
+
+        return displayStatus switch
+        {
+            "Upcoming" => "upcoming",
+            "Planned" => "planned",
+            "Past" => "past",
+            "Completed" => "completed",
+            "Cancelled" => "cancelled",
+            _ => "planned"
+        };
+    }
+
+
+    private string GetDisplayStatus(
+        ReservationItem reservation)
+    {
+        if (reservation.Status == "Cancelled")
+        {
+            return "Cancelled";
+        }
+
+        if (reservation.Status == "Completed")
+        {
+            return "Completed";
+        }
+
+        if (reservation.Date.Date < DateTime.Today)
+        {
+            return "Past";
+        }
+
+        return reservation.Status;
+    }
+
+
+    private string GetDuration(
+        ReservationItem reservation)
+    {
+        var duration =
+            reservation.EndTime -
+            reservation.StartTime;
+
+        if (duration.TotalMinutes <= 0)
+        {
+            return "-";
+        }
+
+        if (duration.Minutes == 0)
+        {
+            return $"{duration.Hours} h";
+        }
+
+        return
+            $"{duration.Hours} h {duration.Minutes} min";
+    }
+
+}

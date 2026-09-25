@@ -1,0 +1,313 @@
+@page "/reservations/{Id:int}"
+
+@using frontend.Services
+
+@inject ReservationStore ReservationStore
+
+<PageTitle>Reservation Details</PageTitle>
+
+<div class="reservation-details-page">
+
+    <a href="/reservations"
+       class="back-link">
+        ← Back to Reservations
+    </a>
+
+
+    @if (Reservation is null)
+    {
+        <div class="not-found-card">
+
+            <h2>Reservation not found</h2>
+
+            <p>
+                The selected reservation could not be found.
+            </p>
+
+            <a href="/reservations"
+               class="primary-btn">
+                Back to Reservations
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <div class="details-header">
+
+            <div>
+
+                <span>
+                    RESERVATION DETAILS
+                </span>
+
+                <h1>
+                    @Reservation.VehicleName
+                </h1>
+
+                <p>
+                    Reservation #@Reservation.Id
+                </p>
+
+            </div>
+
+
+            <div class="details-actions">
+
+                <a href="@($"/reservations/edit/{Reservation.Id}")"
+                   class="edit-reservation-btn">
+                    Edit Reservation
+                </a>
+
+                <button type="button"
+                        class="cancel-reservation-btn"
+                        @onclick="ShowCancelConfirmation">
+                    Cancel Reservation
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+            <div class="vehicle-card">
+
+                <div class="vehicle-image">
+
+                    <div class="reservation-status @GetStatusClass()">
+                        @GetDisplayStatus()
+                    </div>
+
+                    <img src="@Reservation.VehicleImage"
+                         alt="@Reservation.VehicleName" />
+
+                </div>
+
+
+                <div class="vehicle-content">
+
+                    <h2>
+                        @Reservation.VehicleName
+                    </h2>
+
+                    <span>
+                        @Reservation.LicensePlate
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="reservation-info-card">
+
+                <span class="section-label">
+                    RESERVATION INFORMATION
+                </span>
+
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+                        <span>Driver</span>
+                        <strong>@Reservation.Driver</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Date</span>
+                        <strong>
+                            @Reservation.Date.ToString("dd MMM yyyy")
+                        </strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Start Time</span>
+                        <strong>
+                            @Reservation.StartTime.ToString(@"hh\:mm")
+                        </strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>End Time</span>
+                        <strong>
+                            @Reservation.EndTime.ToString(@"hh\:mm")
+                        </strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Duration</span>
+                        <strong>
+                            @GetDurationText()
+                        </strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Status</span>
+                        <strong>
+                            @GetDisplayStatus()
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="notes-section">
+
+                    <span>Notes</span>
+
+                    <p>
+                        @(string.IsNullOrWhiteSpace(Reservation.Notes)
+                            ? "No notes added."
+                            : Reservation.Notes)
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        @if (showCancelConfirmation)
+        {
+            <div class="cancel-overlay">
+
+                <div class="cancel-modal">
+
+                    <div class="cancel-icon">
+                        !
+                    </div>
+
+                    <span class="cancel-label">
+                        CANCEL RESERVATION
+                    </span>
+
+                    <h2>
+                        Cancel this reservation?
+                    </h2>
+
+                    <p>
+                        The reservation for
+                        <strong>@Reservation.VehicleName</strong>
+                        will be marked as cancelled.
+                    </p>
+
+
+                    <div class="cancel-modal-actions">
+
+                        <button type="button"
+                                class="keep-btn"
+                                @onclick="CloseCancelConfirmation">
+                            Keep Reservation
+                        </button>
+
+                        <button type="button"
+                                class="confirm-cancel-btn"
+                                @onclick="CancelReservation">
+                            Cancel Reservation
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private bool showCancelConfirmation;
+
+
+    private ReservationItem? Reservation =>
+        ReservationStore.FindReservation(Id);
+
+
+    private void ShowCancelConfirmation()
+    {
+        showCancelConfirmation = true;
+    }
+
+
+    private void CloseCancelConfirmation()
+    {
+        showCancelConfirmation = false;
+    }
+
+
+    private void CancelReservation()
+    {
+        if (Reservation is null)
+        {
+            return;
+        }
+
+        Reservation.Status = "Cancelled";
+
+        showCancelConfirmation = false;
+    }
+
+
+    private string GetDurationText()
+    {
+        if (Reservation is null)
+        {
+            return "-";
+        }
+
+        var duration =
+            Reservation.EndTime -
+            Reservation.StartTime;
+
+        if (duration.Minutes == 0)
+        {
+            return $"{duration.Hours} h";
+        }
+
+        return $"{duration.Hours} h {duration.Minutes} min";
+    }
+
+
+    private string GetDisplayStatus()
+    {
+        if (Reservation is null)
+        {
+            return "";
+        }
+
+        if (Reservation.Status == "Cancelled")
+        {
+            return "Cancelled";
+        }
+
+        if (Reservation.Date.Date < DateTime.Today)
+        {
+            return "Past";
+        }
+
+        return Reservation.Status;
+    }
+
+
+    private string GetStatusClass()
+    {
+        return GetDisplayStatus() switch
+        {
+            "Upcoming" => "upcoming",
+            "Planned" => "planned",
+            "Past" => "past",
+            "Cancelled" => "cancelled",
+            _ => "planned"
+        };
+    }
+
+}

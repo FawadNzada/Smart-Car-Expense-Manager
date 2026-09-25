@@ -1,0 +1,521 @@
+@page "/reservations/edit/{Id:int}"
+
+@using frontend.Services
+
+@inject ReservationStore ReservationStore
+@inject VehicleStore VehicleStore
+@inject NavigationManager Navigation
+
+<PageTitle>Edit Reservation</PageTitle>
+
+
+<div class="edit-reservation-page">
+
+    @if (Reservation is null)
+    {
+        <div class="not-found-card">
+
+            <h2>Reservation not found</h2>
+
+            <p>
+                The reservation you want to edit could not be found.
+            </p>
+
+            <a href="/reservations"
+               class="primary-btn">
+                Back to Reservations
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <a href="@($"/reservations/{Reservation.Id}")"
+           class="back-link">
+            ← Back to Reservation
+        </a>
+
+
+        <div class="edit-header">
+
+            <span>RESERVATION MANAGEMENT</span>
+
+            <h1>Edit Reservation</h1>
+
+            <p>
+                Update reservation details and save your changes.
+            </p>
+
+        </div>
+
+
+        <div class="edit-layout">
+
+            <!-- FORM -->
+
+            <div class="edit-form-card">
+
+
+                <div class="form-group">
+
+                    <label>Vehicle</label>
+
+                    <select @bind="selectedLicensePlate">
+
+                        @foreach (var vehicle in VehicleStore.Vehicles)
+                        {
+                            <option value="@vehicle.LicensePlate">
+
+                                @vehicle.Name
+                                (@vehicle.LicensePlate)
+
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Driver</label>
+
+                    <input type="text"
+                           @bind="driver"
+                           @bind:event="oninput" />
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Date</label>
+
+                    <input type="date"
+                           @bind="reservationDate" />
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>Start Time</label>
+
+                        <input type="time"
+                               @bind="startTime" />
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>End Time</label>
+
+                        <input type="time"
+                               @bind="endTime" />
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Status</label>
+
+                    <select @bind="status">
+
+                        <option value="Planned">
+                            Planned
+                        </option>
+
+                        <option value="Upcoming">
+                            Upcoming
+                        </option>
+
+                        <option value="Cancelled">
+                            Cancelled
+                        </option>
+
+                        <option value="Completed">
+                            Completed
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Notes</label>
+
+                    <textarea @bind="notes"
+                              @bind:event="oninput">
+                    </textarea>
+
+                </div>
+
+
+                @if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    <div class="form-error">
+                        @errorMessage
+                    </div>
+                }
+
+
+                <div class="form-actions">
+
+                    <a href="@($"/reservations/{Reservation.Id}")"
+                       class="cancel-btn">
+                        Cancel
+                    </a>
+
+
+                    <button type="button"
+                            class="save-btn"
+                            @onclick="SaveChanges">
+
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PREVIEW -->
+
+            <div class="edit-preview-card">
+
+                <span class="preview-label">
+                    RESERVATION PREVIEW
+                </span>
+
+
+                @if (SelectedVehicle is not null)
+                {
+                    <div class="preview-vehicle">
+
+                        <div class="preview-status @GetStatusClass(status)">
+                            @status
+                        </div>
+
+                        <img src="@SelectedVehicle.Image"
+                             alt="@SelectedVehicle.Name" />
+
+                    </div>
+                }
+
+
+                <div class="preview-content">
+
+                    <h2>
+                        @(SelectedVehicle?.Name ?? "Vehicle")
+                    </h2>
+
+                    <span class="preview-plate">
+                        @(SelectedVehicle?.LicensePlate ?? "")
+                    </span>
+
+
+                    <div class="preview-info">
+
+                        <div>
+
+                            <span>Driver</span>
+
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(driver)
+                                    ? "Driver"
+                                    : driver)
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Date</span>
+
+                            <strong>
+                                @reservationDate.ToString("dd MMM yyyy")
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Time</span>
+
+                            <strong>
+                                @startTime.ToString("HH:mm")
+                                -
+                                @endTime.ToString("HH:mm")
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Duration</span>
+
+                            <strong>
+                                @GetDurationText()
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+
+    private ReservationItem? Reservation;
+
+    private bool reservationLoaded;
+
+
+    private string selectedLicensePlate = "";
+
+    private string driver = "";
+
+    private DateTime reservationDate;
+
+    private TimeOnly startTime;
+
+    private TimeOnly endTime;
+
+    private string status = "Planned";
+
+    private string notes = "";
+
+    private string errorMessage = "";
+
+
+    private VehicleItem? SelectedVehicle =>
+        VehicleStore.FindVehicle(
+            selectedLicensePlate);
+
+
+    protected override void OnParametersSet()
+    {
+        if (reservationLoaded)
+        {
+            return;
+        }
+
+
+        Reservation =
+            ReservationStore.FindReservation(Id);
+
+
+        if (Reservation is null)
+        {
+            return;
+        }
+
+
+        selectedLicensePlate =
+            Reservation.LicensePlate;
+
+        driver =
+            Reservation.Driver;
+
+        reservationDate =
+            Reservation.Date;
+
+        startTime =
+            TimeOnly.FromTimeSpan(
+                Reservation.StartTime);
+
+        endTime =
+            TimeOnly.FromTimeSpan(
+                Reservation.EndTime);
+
+        status =
+            Reservation.Status;
+
+        notes =
+            Reservation.Notes;
+
+
+        reservationLoaded = true;
+    }
+
+
+    private void SaveChanges()
+    {
+        if (Reservation is null)
+        {
+            return;
+        }
+
+
+        errorMessage = "";
+
+
+        if (SelectedVehicle is null)
+        {
+            errorMessage =
+                "Please select a vehicle.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(driver))
+        {
+            errorMessage =
+                "Please enter a driver.";
+
+            return;
+        }
+
+
+        if (reservationDate.Date < DateTime.Today)
+        {
+            errorMessage =
+                "Reservation date cannot be in the past.";
+
+            return;
+        }
+
+
+        if (endTime <= startTime)
+        {
+            errorMessage =
+                "End time must be after start time.";
+
+            return;
+        }
+
+
+        var start =
+            startTime.ToTimeSpan();
+
+        var end =
+            endTime.ToTimeSpan();
+
+
+        /*
+         * Cancelled and Completed reservations
+         * don't need availability conflict checks.
+         */
+
+        if (status != "Cancelled"
+            && status != "Completed")
+        {
+            var hasConflict =
+                ReservationStore.HasConflict(
+                    SelectedVehicle.LicensePlate,
+                    reservationDate,
+                    start,
+                    end,
+                    Reservation.Id);
+
+
+            if (hasConflict)
+            {
+                errorMessage =
+                    "This vehicle is already reserved during this time.";
+
+                return;
+            }
+        }
+
+
+        Reservation.VehicleName =
+            SelectedVehicle.Name;
+
+        Reservation.LicensePlate =
+            SelectedVehicle.LicensePlate;
+
+        Reservation.VehicleImage =
+            SelectedVehicle.Image;
+
+        Reservation.Driver =
+            driver.Trim();
+
+        Reservation.Date =
+            reservationDate.Date;
+
+        Reservation.StartTime =
+            start;
+
+        Reservation.EndTime =
+            end;
+
+        Reservation.Status =
+            status;
+
+        Reservation.Notes =
+            notes.Trim();
+
+
+        Navigation.NavigateTo(
+            $"/reservations/{Reservation.Id}");
+    }
+
+
+    private string GetDurationText()
+    {
+        if (endTime <= startTime)
+        {
+            return "-";
+        }
+
+
+        var duration =
+            endTime - startTime;
+
+
+        if (duration.Minutes == 0)
+        {
+            return $"{duration.Hours} h";
+        }
+
+
+        return
+            $"{duration.Hours} h {duration.Minutes} min";
+    }
+
+
+    private string GetStatusClass(
+        string reservationStatus)
+    {
+        return reservationStatus switch
+        {
+            "Upcoming" => "upcoming",
+
+            "Planned" => "planned",
+
+            "Cancelled" => "cancelled",
+
+            "Completed" => "completed",
+
+            _ => "planned"
+        };
+    }
+
+}

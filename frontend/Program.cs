@@ -1,10 +1,15 @@
 using frontend.Components;
+using frontend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSingleton<VehicleStore>();
+builder.Services.AddSingleton<ReservationStore>();
+builder.Services.AddSingleton<TripStore>();
 
 var app = builder.Build();
 

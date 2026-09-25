@@ -1,0 +1,159 @@
+.not-found-page {
+    min-height: calc(100vh - 60px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px;
+}
+
+.not-found-card {
+    width: 100%;
+    max-width: 720px;
+
+    padding: 54px 46px;
+
+    border: 1px solid #a16207;
+    border-radius: 20px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(245, 158, 11, 0.11),
+            transparent 38%
+        ),
+        linear-gradient(
+            180deg,
+            #171717,
+            #0d0d0d
+        );
+
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.45),
+        0 0 35px rgba(245, 158, 11, 0.06);
+
+    text-align: center;
+}
+
+.error-number {
+    color: #fbbf24;
+
+    font-size: 82px;
+    font-weight: 900;
+
+    line-height: 1;
+
+    letter-spacing: -0.04em;
+}
+
+.not-found-label {
+    display: inline-block;
+
+    margin-top: 14px;
+
+    color: #f59e0b;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 0.16em;
+}
+
+.not-found-card h1 {
+    margin: 12px 0;
+
+    color: white;
+
+    font-size: 38px;
+}
+
+.not-found-card p {
+    max-width: 540px;
+
+    margin: 0 auto;
+
+    color: #9ca3af;
+
+    line-height: 1.65;
+}
+
+.not-found-actions {
+    display: flex;
+    justify-content: center;
+
+    gap: 12px;
+
+    margin-top: 30px;
+}
+
+.home-button,
+.dashboard-button {
+    padding: 12px 20px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-weight: 750;
+
+    transition: 0.2s ease;
+}
+
+.home-button {
+    border: 1px solid #f59e0b;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f59e0b,
+            #fbbf24
+        );
+
+    color: #111;
+}
+
+.home-button:hover {
+    color: #111;
+
+    transform: translateY(-1px);
+}
+
+.dashboard-button {
+    border: 1px solid #6b4b0c;
+
+    background: transparent;
+
+    color: #fbbf24;
+}
+
+.dashboard-button:hover {
+    border-color: #f59e0b;
+
+    background:
+        rgba(245, 158, 11, 0.08);
+
+    color: #fbbf24;
+}
+
+@media (max-width: 600px) {
+    .not-found-page {
+        padding: 20px;
+    }
+
+    .not-found-card {
+        padding: 38px 24px;
+    }
+
+    .error-number {
+        font-size: 64px;
+    }
+
+    .not-found-card h1 {
+        font-size: 30px;
+    }
+
+    .not-found-actions {
+        flex-direction: column;
+    }
+}

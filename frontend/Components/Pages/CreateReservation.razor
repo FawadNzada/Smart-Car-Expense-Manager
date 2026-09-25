@@ -1,147 +1,408 @@
 @page "/createreservation"
 
-<PageTitle>Create Reservation</PageTitle>
+@using frontend.Services
+
+@inject VehicleStore VehicleStore
+@inject ReservationStore ReservationStore
+@inject NavigationManager Navigation
+
+<PageTitle>New Reservation</PageTitle>
+
 
 <div class="create-reservation-page">
 
-    <a href="/reservations" class="back-link">
+    <a href="/reservations"
+       class="back-link">
         ← Back to Reservations
     </a>
 
-    <div class="page-header">
-        <h1>Create Reservation</h1>
-        <p>Reserve a vehicle for a specific date and time.</p>
+
+    <div class="create-header">
+
+        <span>RESERVATION MANAGEMENT</span>
+
+        <h1>New Reservation</h1>
+
+        <p>
+            Create a new vehicle reservation.
+        </p>
+
     </div>
 
-    <div class="reservation-layout">
 
-        <div class="reservation-form-card">
+    <div class="create-layout">
 
-            <div class="card-heading">
-                <div class="heading-icon">📅</div>
+        <!-- FORM -->
 
-                <div>
-                    <h2>Reservation Details</h2>
-                    <p>Choose a vehicle and reservation period.</p>
-                </div>
+        <div class="create-form-card">
+
+
+            <div class="form-group">
+
+                <label>Vehicle</label>
+
+                <select @bind="selectedLicensePlate">
+
+                    <option value="">
+                        Select vehicle
+                    </option>
+
+                    @foreach (var vehicle in VehicleStore.Vehicles)
+                    {
+                        <option value="@vehicle.LicensePlate">
+
+                            @vehicle.Name
+                            (@vehicle.LicensePlate)
+
+                        </option>
+                    }
+
+                </select>
+
             </div>
 
-            <div class="form-grid">
 
-                <div class="form-field full-width">
-                    <label>Vehicle</label>
+            <div class="form-group">
 
-                    <select>
-                        <option>Volkswagen Golf</option>
-                        <option>BMW 3 Series</option>
-                        <option>Audi A4</option>
-                        <option>Mercedes C-Class</option>
-                    </select>
-                </div>
+                <label>Driver</label>
 
-                <div class="form-field">
-                    <label>Date</label>
-                    <input type="date" />
-                </div>
+                <input type="text"
+                       placeholder="Enter driver name"
+                       @bind="driver"
+                       @bind:event="oninput" />
 
-                <div class="form-field">
-                    <label>Driver</label>
-                    <input type="text" placeholder="e.g. Sebastian" />
-                </div>
+            </div>
 
-                <div class="form-field">
+
+            <div class="form-group">
+
+                <label>Date</label>
+
+                <input type="date"
+                       @bind="reservationDate" />
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
                     <label>Start Time</label>
-                    <input type="time" />
+
+                    <input type="time"
+                           @bind="startTime" />
+
                 </div>
 
-                <div class="form-field">
+
+                <div class="form-group">
+
                     <label>End Time</label>
-                    <input type="time" />
-                </div>
 
-                <div class="form-field full-width">
-                    <label>Notes</label>
-                    <textarea placeholder="Optional notes..."></textarea>
+                    <input type="time"
+                           @bind="endTime" />
+
                 </div>
 
             </div>
+
+
+            <div class="form-group">
+
+                <label>Notes</label>
+
+                <textarea placeholder="Optional notes..."
+                          @bind="notes"
+                          @bind:event="oninput">
+                </textarea>
+
+            </div>
+
+
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <div class="form-error">
+                    @errorMessage
+                </div>
+            }
+
 
             <div class="form-actions">
 
-                <a href="/reservations" class="cancel-btn">
+                <a href="/reservations"
+                   class="cancel-btn">
                     Cancel
                 </a>
 
-                <button class="save-btn">
-                    + Create Reservation
+
+                <button type="button"
+                        class="create-btn"
+                        @onclick="SaveReservation">
+
+                    Create Reservation
+
                 </button>
 
             </div>
 
         </div>
 
+
+        <!-- PREVIEW -->
+
         <div class="reservation-preview-card">
 
-            <div class="card-heading">
-                <div class="heading-icon">🚗</div>
+            <span class="preview-label">
+                RESERVATION PREVIEW
+            </span>
 
-                <div>
-                    <h2>Reservation Preview</h2>
-                    <p>This is how your reservation will appear.</p>
+
+            @if (SelectedVehicle is not null)
+            {
+                <div class="preview-vehicle">
+
+                    <img src="@SelectedVehicle.Image"
+                         alt="@SelectedVehicle.Name" />
+
                 </div>
-            </div>
 
-            <div class="preview-image">
-                <img src="images/vehicles/vw.png"
-                     alt="Volkswagen Golf" />
-            </div>
 
-            <div class="preview-content">
+                <div class="preview-content">
 
-                <div class="preview-title-row">
-                    <div>
-                        <h2>Volkswagen Golf</h2>
-                        <span>L-123AB</span>
-                    </div>
+                    <h2>
+                        @SelectedVehicle.Name
+                    </h2>
 
-                    <span class="status-badge">
-                        Available
+                    <span class="preview-plate">
+                        @SelectedVehicle.LicensePlate
                     </span>
+
+
+                    <div class="preview-info">
+
+                        <div>
+
+                            <span>Driver</span>
+
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(driver)
+                                    ? "Driver"
+                                    : driver)
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Date</span>
+
+                            <strong>
+                                @reservationDate.ToString("dd MMM yyyy")
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Time</span>
+
+                            <strong>
+                                @startTime.ToString("HH:mm")
+                                -
+                                @endTime.ToString("HH:mm")
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Duration</span>
+
+                            <strong>
+                                @GetDurationText()
+                            </strong>
+
+                        </div>
+
+                    </div>
+
                 </div>
+            }
+            else
+            {
+                <div class="empty-preview">
 
-                <div class="preview-info-grid">
-
-                    <div class="preview-info">
-                        <span>Date</span>
-                        <strong>24 Sep 2026</strong>
+                    <div class="empty-preview-icon">
+                        🚗
                     </div>
 
-                    <div class="preview-info">
-                        <span>Driver</span>
-                        <strong>Sebastian</strong>
-                    </div>
+                    <h3>Select a vehicle</h3>
 
-                    <div class="preview-info">
-                        <span>Start</span>
-                        <strong>15:00</strong>
-                    </div>
-
-                    <div class="preview-info">
-                        <span>End</span>
-                        <strong>18:00</strong>
-                    </div>
+                    <p>
+                        Your reservation preview will appear here.
+                    </p>
 
                 </div>
-
-                <div class="reservation-duration">
-                    <span>Reservation Duration</span>
-                    <strong>3 hours</strong>
-                </div>
-
-            </div>
+            }
 
         </div>
 
     </div>
 
 </div>
+
+
+@code {
+
+    private string selectedLicensePlate = "";
+
+    private string driver = "";
+
+    private DateTime reservationDate =
+        DateTime.Today;
+
+    private TimeOnly startTime =
+        new TimeOnly(9, 0);
+
+    private TimeOnly endTime =
+        new TimeOnly(10, 0);
+
+    private string notes = "";
+
+    private string errorMessage = "";
+
+
+    private VehicleItem? SelectedVehicle =>
+        VehicleStore.FindVehicle(
+            selectedLicensePlate);
+
+
+    private void SaveReservation()
+    {
+        errorMessage = "";
+
+
+        if (SelectedVehicle is null)
+        {
+            errorMessage =
+                "Please select a vehicle.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(driver))
+        {
+            errorMessage =
+                "Please enter a driver.";
+
+            return;
+        }
+
+
+        if (reservationDate.Date < DateTime.Today)
+        {
+            errorMessage =
+                "Reservation date cannot be in the past.";
+
+            return;
+        }
+
+
+        if (endTime <= startTime)
+        {
+            errorMessage =
+                "End time must be after start time.";
+
+            return;
+        }
+
+
+        var start =
+            startTime.ToTimeSpan();
+
+        var end =
+            endTime.ToTimeSpan();
+
+
+        if (ReservationStore.HasConflict(
+                SelectedVehicle.LicensePlate,
+                reservationDate,
+                start,
+                end))
+        {
+            errorMessage =
+                "This vehicle is already reserved during this time.";
+
+            return;
+        }
+
+
+        var reservation =
+            new ReservationItem
+            {
+                VehicleName =
+                    SelectedVehicle.Name,
+
+                LicensePlate =
+                    SelectedVehicle.LicensePlate,
+
+                VehicleImage =
+                    SelectedVehicle.Image,
+
+                Driver =
+                    driver.Trim(),
+
+                Date =
+                    reservationDate.Date,
+
+                StartTime =
+                    start,
+
+                EndTime =
+                    end,
+
+                Status =
+                    "Planned",
+
+                Notes =
+                    notes.Trim()
+            };
+
+
+        ReservationStore.AddReservation(
+            reservation);
+
+
+        Navigation.NavigateTo(
+            "/reservations");
+    }
+
+
+    private string GetDurationText()
+    {
+        if (endTime <= startTime)
+        {
+            return "-";
+        }
+
+
+        var duration =
+            endTime - startTime;
+
+
+        if (duration.Minutes == 0)
+        {
+            return $"{duration.Hours} h";
+        }
+
+
+        return
+            $"{duration.Hours} h {duration.Minutes} min";
+    }
+
+}

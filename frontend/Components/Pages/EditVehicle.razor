@@ -1,0 +1,445 @@
+@page "/vehicles/edit/{LicensePlate}"
+
+@using frontend.Services
+
+@inject VehicleStore VehicleStore
+@inject NavigationManager Navigation
+
+<PageTitle>Edit Vehicle</PageTitle>
+
+<div class="edit-vehicle-page">
+
+    @if (Vehicle is null)
+    {
+        <div class="not-found-card">
+
+            <h2>Vehicle not found</h2>
+
+            <p>
+                The vehicle you want to edit could not be found.
+            </p>
+
+            <a href="/vehicles" class="primary-btn">
+                Back to Vehicles
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <a href="@($"/vehicles/{Vehicle.LicensePlate}")"
+           class="back-link">
+            ← Back to Vehicle
+        </a>
+
+        <div class="edit-header">
+
+            <span>VEHICLE MANAGEMENT</span>
+
+            <h1>Edit Vehicle</h1>
+
+            <p>
+                Update vehicle information and save your changes.
+            </p>
+
+        </div>
+
+        <div class="edit-layout">
+
+            <div class="edit-form-card">
+
+                <div class="form-group">
+
+                    <label>Brand</label>
+
+                    <input type="text"
+                           @bind="brand"
+                           @bind:event="oninput" />
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Model</label>
+
+                    <input type="text"
+                           @bind="model"
+                           @bind:event="oninput" />
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>License Plate</label>
+
+                    <input type="text"
+                           @bind="licensePlate"
+                           @bind:event="oninput" />
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Fuel Level</label>
+
+                    <input type="number"
+                           min="0"
+                           max="100"
+                           @bind="fuelLevel"
+                           @bind:event="oninput" />
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Status</label>
+
+                    <select @bind="status">
+
+                        <option value="Available">
+                            Available
+                        </option>
+
+                        <option value="In Use">
+                            In Use
+                        </option>
+
+                        <option value="Reserved">
+                            Reserved
+                        </option>
+
+                        <option value="Unavailable">
+                            Unavailable
+                        </option>
+
+                    </select>
+
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    <div class="form-error">
+                        @errorMessage
+                    </div>
+                }
+
+                <div class="form-actions">
+
+                    <a href="@($"/vehicles/{Vehicle.LicensePlate}")"
+                       class="cancel-btn">
+                        Cancel
+                    </a>
+
+                    <button type="button"
+                            class="save-btn"
+                            @onclick="SaveChanges">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="edit-preview-card">
+
+                <span class="preview-label">
+                    VEHICLE PREVIEW
+                </span>
+
+                @if (!string.IsNullOrWhiteSpace(GetVehicleImage()))
+                {
+                    <div class="preview-image">
+
+                        <span class="preview-status @GetStatusClass(status)">
+                            @status
+                        </span>
+
+                        <img src="@GetVehicleImage()"
+                             alt="@GetVehicleName()" />
+
+                    </div>
+                }
+                else
+                {
+                    <div class="preview-image preview-empty">
+
+                        <div class="preview-placeholder">
+                            🚗
+                        </div>
+
+                    </div>
+                }
+
+                <div class="preview-content">
+
+                    <h2>
+                        @GetVehicleName()
+                    </h2>
+
+                    <span class="preview-plate">
+                        @GetLicensePlatePreview()
+                    </span>
+
+                    <div class="preview-fuel">
+
+                        <div>
+
+                            <span>
+                                ⛽ Fuel Level
+                            </span>
+
+                            <strong>
+                                @fuelLevel%
+                            </strong>
+
+                        </div>
+
+                        <div class="preview-fuel-track">
+
+                            <div class="preview-fuel-fill"
+                                 style="width: @(GetSafeFuelLevel())%;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string LicensePlate { get; set; } = "";
+
+
+    private VehicleItem? Vehicle;
+
+    private bool vehicleLoaded = false;
+
+    private string brand = "";
+
+    private string model = "";
+
+    private string licensePlate = "";
+
+    private int fuelLevel = 0;
+
+    private string status = "Available";
+
+    private string errorMessage = "";
+
+
+    protected override void OnParametersSet()
+    {
+        if (vehicleLoaded)
+        {
+            return;
+        }
+
+        Vehicle =
+            VehicleStore.FindVehicle(LicensePlate);
+
+        if (Vehicle is null)
+        {
+            return;
+        }
+
+        brand = Vehicle.Brand;
+
+        model = Vehicle.Model;
+
+        licensePlate = Vehicle.LicensePlate;
+
+        fuelLevel = Vehicle.FuelLevel;
+
+        status = Vehicle.Status;
+
+        vehicleLoaded = true;
+    }
+
+
+    private void SaveChanges()
+    {
+        if (Vehicle is null)
+        {
+            return;
+        }
+
+        errorMessage = "";
+
+
+        if (string.IsNullOrWhiteSpace(brand))
+        {
+            errorMessage =
+                "Please enter a brand.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(model))
+        {
+            errorMessage =
+                "Please enter a model.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(licensePlate))
+        {
+            errorMessage =
+                "Please enter a license plate.";
+
+            return;
+        }
+
+
+        if (fuelLevel < 0 || fuelLevel > 100)
+        {
+            errorMessage =
+                "Fuel level must be between 0 and 100.";
+
+            return;
+        }
+
+
+        if (
+            VehicleStore.LicensePlateExists(
+                licensePlate.Trim(),
+                Vehicle)
+        )
+        {
+            errorMessage =
+                "A vehicle with this license plate already exists.";
+
+            return;
+        }
+
+
+        Vehicle.Brand =
+            brand.Trim();
+
+        Vehicle.Model =
+            model.Trim();
+
+        Vehicle.Name =
+            $"{brand.Trim()} {model.Trim()}";
+
+        Vehicle.LicensePlate =
+            licensePlate.Trim().ToUpper();
+
+        Vehicle.FuelLevel =
+            fuelLevel;
+
+        Vehicle.Status =
+            status;
+
+        Vehicle.StatusClass =
+            GetStatusClass(status);
+
+        Vehicle.Image =
+            GetVehicleImage();
+
+
+        var targetPlate =
+            Vehicle.LicensePlate;
+
+
+        Navigation.NavigateTo(
+            $"/vehicles/{targetPlate}");
+    }
+
+
+    private string GetVehicleName()
+    {
+        var name =
+            $"{brand} {model}".Trim();
+
+        return string.IsNullOrWhiteSpace(name)
+            ? "Vehicle"
+            : name;
+    }
+
+
+    private string GetLicensePlatePreview()
+    {
+        return string.IsNullOrWhiteSpace(licensePlate)
+            ? "LICENSE PLATE"
+            : licensePlate.ToUpper();
+    }
+
+
+    private int GetSafeFuelLevel()
+    {
+        return Math.Clamp(
+            fuelLevel,
+            0,
+            100);
+    }
+
+
+    private string GetStatusClass(string vehicleStatus)
+    {
+        return vehicleStatus switch
+        {
+            "Available" => "available",
+            "In Use" => "in-use",
+            "Reserved" => "reserved",
+            "Unavailable" => "unavailable",
+            _ => "available"
+        };
+    }
+
+
+    private string GetVehicleImage()
+    {
+        var value =
+            brand.Trim().ToLower();
+
+
+        if (value.Contains("bmw"))
+        {
+            return "images/vehicles/bmw.png";
+        }
+
+
+        if (value.Contains("audi"))
+        {
+            return "images/vehicles/audi.png";
+        }
+
+
+        if (
+            value.Contains("mercedes")
+            ||
+            value.Contains("benz")
+        )
+        {
+            return "images/vehicles/mercedes.png";
+        }
+
+
+        if (
+            value.Contains("volkswagen")
+            ||
+            value.Contains("vw")
+        )
+        {
+            return "images/vehicles/vw.png";
+        }
+
+
+        return Vehicle?.Image ?? "";
+    }
+
+}

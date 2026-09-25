@@ -1,97 +1,187 @@
 @page "/createtrip"
 
-<PageTitle>Log Trip</PageTitle>
+@using frontend.Services
+
+@inject TripStore TripStore
+@inject VehicleStore VehicleStore
+@inject NavigationManager Navigation
+
+<PageTitle>New Trip</PageTitle>
+
 
 <div class="create-trip-page">
 
-    <a href="/trips" class="back-link">
+    <a href="/trips"
+       class="back-link">
         ← Back to Trips
     </a>
 
-    <div class="page-header">
-        <h1>Log Trip</h1>
-        <p>Add a completed vehicle trip.</p>
+
+    <div class="create-header">
+
+        <span>TRIP MANAGEMENT</span>
+
+        <h1>New Trip</h1>
+
+        <p>
+            Create a new vehicle trip.
+        </p>
+
     </div>
 
-    <div class="trip-layout">
 
-        <div class="trip-form-card">
+    <div class="create-layout">
 
-            <div class="card-heading">
-                <div class="heading-icon">🛣️</div>
 
-                <div>
-                    <h2>Trip Details</h2>
-                    <p>Enter the information for the completed trip.</p>
-                </div>
+        <!-- FORM -->
+
+        <div class="create-form-card">
+
+
+            <div class="form-group">
+
+                <label>Vehicle</label>
+
+                <select @bind="selectedLicensePlate">
+
+                    <option value="">
+                        Select vehicle
+                    </option>
+
+                    @foreach (var vehicle in VehicleStore.Vehicles)
+                    {
+                        <option value="@vehicle.LicensePlate">
+
+                            @vehicle.Name
+                            (@vehicle.LicensePlate)
+
+                        </option>
+                    }
+
+                </select>
+
             </div>
 
-            <div class="form-grid">
 
-                <div class="form-field full-width">
-                    <label>Vehicle</label>
+            <div class="form-group">
 
-                    <select>
-                        <option>Volkswagen Golf</option>
-                        <option>BMW 3 Series</option>
-                        <option>Audi A4</option>
-                        <option>Mercedes C-Class</option>
-                    </select>
+                <label>Driver</label>
+
+                <input type="text"
+                       placeholder="Enter driver name"
+                       @bind="driver"
+                       @bind:event="oninput" />
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>Start Location</label>
+
+                    <input type="text"
+                           placeholder="e.g. Linz"
+                           @bind="startLocation"
+                           @bind:event="oninput" />
+
                 </div>
 
-                <div class="form-field">
-                    <label>Driver</label>
-                    <input type="text" placeholder="e.g. Sebastian" />
+
+                <div class="form-group">
+
+                    <label>Destination</label>
+
+                    <input type="text"
+                           placeholder="e.g. Salzburg"
+                           @bind="destination"
+                           @bind:event="oninput" />
+
                 </div>
 
-                <div class="form-field">
-                    <label>Date</label>
-                    <input type="date" />
-                </div>
+            </div>
 
-                <div class="form-field">
+
+            <div class="form-group">
+
+                <label>Date</label>
+
+                <input type="date"
+                       @bind="tripDate" />
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
                     <label>Start Time</label>
-                    <input type="time" />
+
+                    <input type="time"
+                           @bind="startTime" />
+
                 </div>
 
-                <div class="form-field">
-                    <label>End Time</label>
-                    <input type="time" />
-                </div>
 
-                <div class="form-field">
-                    <label>Start Mileage</label>
+                <div class="form-group">
 
-                    <div class="input-suffix">
-                        <input type="number" placeholder="48250" />
-                        <span>km</span>
-                    </div>
-                </div>
+                    <label>Expected End Time</label>
 
-                <div class="form-field">
-                    <label>End Mileage</label>
+                    <input type="time"
+                           @bind="endTime" />
 
-                    <div class="input-suffix">
-                        <input type="number" placeholder="48284" />
-                        <span>km</span>
-                    </div>
-                </div>
-
-                <div class="form-field full-width">
-                    <label>Notes</label>
-                    <textarea placeholder="Optional notes about the trip..."></textarea>
                 </div>
 
             </div>
+
+
+            <div class="form-group">
+
+                <label>Start Mileage</label>
+
+                <input type="number"
+                       min="0"
+                       @bind="startMileage" />
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Notes</label>
+
+                <textarea placeholder="Optional notes..."
+                          @bind="notes"
+                          @bind:event="oninput">
+                </textarea>
+
+            </div>
+
+
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <div class="form-error">
+                    @errorMessage
+                </div>
+            }
+
 
             <div class="form-actions">
 
-                <a href="/trips" class="cancel-btn">
+                <a href="/trips"
+                   class="cancel-btn">
                     Cancel
                 </a>
 
-                <button class="save-btn">
-                    + Log Trip
+
+                <button type="button"
+                        class="create-btn"
+                        @onclick="SaveTrip">
+
+                    Create Trip
+
                 </button>
 
             </div>
@@ -99,75 +189,305 @@
         </div>
 
 
+
+        <!-- PREVIEW -->
+
         <div class="trip-preview-card">
 
-            <div class="card-heading">
-                <div class="heading-icon">🚗</div>
+            <span class="preview-label">
+                TRIP PREVIEW
+            </span>
 
-                <div>
-                    <h2>Trip Preview</h2>
-                    <p>This is how the trip will appear.</p>
-                </div>
-            </div>
 
-            <div class="preview-image">
-                <img src="images/vehicles/vw.png"
-                     alt="Volkswagen Golf" />
-            </div>
+            @if (SelectedVehicle is not null)
+            {
 
-            <div class="preview-content">
+                <div class="preview-vehicle">
 
-                <div class="preview-title">
-                    <h2>Volkswagen Golf</h2>
-                    <span>L-123AB</span>
-                </div>
+                    <span class="preview-status">
+                        Planned
+                    </span>
 
-                <div class="preview-info-grid">
-
-                    <div class="preview-info">
-                        <span>Driver</span>
-                        <strong>Sebastian</strong>
-                    </div>
-
-                    <div class="preview-info">
-                        <span>Date</span>
-                        <strong>24 Sep 2026</strong>
-                    </div>
-
-                    <div class="preview-info">
-                        <span>Distance</span>
-                        <strong>34 km</strong>
-                    </div>
-
-                    <div class="preview-info">
-                        <span>Duration</span>
-                        <strong>1h 10m</strong>
-                    </div>
+                    <img src="@SelectedVehicle.Image"
+                         alt="@SelectedVehicle.Name" />
 
                 </div>
 
-                <div class="mileage-summary">
 
-                    <div>
-                        <span>Start Mileage</span>
-                        <strong>48,250 km</strong>
+                <div class="preview-content">
+
+                    <h2>
+                        @SelectedVehicle.Name
+                    </h2>
+
+                    <span class="preview-plate">
+                        @SelectedVehicle.LicensePlate
+                    </span>
+
+
+                    <div class="preview-route">
+
+                        <div>
+
+                            <span>FROM</span>
+
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(startLocation)
+                                    ? "Start location"
+                                    : startLocation)
+                            </strong>
+
+                        </div>
+
+
+                        <div class="route-arrow">
+                            →
+                        </div>
+
+
+                        <div>
+
+                            <span>TO</span>
+
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(destination)
+                                    ? "Destination"
+                                    : destination)
+                            </strong>
+
+                        </div>
+
                     </div>
 
-                    <div class="mileage-arrow">
-                        →
-                    </div>
 
-                    <div>
-                        <span>End Mileage</span>
-                        <strong>48,284 km</strong>
+                    <div class="preview-info">
+
+                        <div>
+
+                            <span>Driver</span>
+
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(driver)
+                                    ? "Driver"
+                                    : driver)
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Date</span>
+
+                            <strong>
+                                @tripDate.ToString("dd MMM yyyy")
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Time</span>
+
+                            <strong>
+                                @startTime.ToString("HH:mm")
+                                -
+                                @endTime.ToString("HH:mm")
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Start Mileage</span>
+
+                            <strong>
+                                @startMileage km
+                            </strong>
+
+                        </div>
+
                     </div>
 
                 </div>
 
-            </div>
+            }
+            else
+            {
+
+                <div class="empty-preview">
+
+                    <div class="empty-preview-icon">
+                        🚘
+                    </div>
+
+                    <h3>Select a vehicle</h3>
+
+                    <p>
+                        Your trip preview will appear here.
+                    </p>
+
+                </div>
+
+            }
 
         </div>
 
     </div>
 
 </div>
+
+
+@code {
+
+    private string selectedLicensePlate = "";
+
+    private string driver = "";
+
+    private string startLocation = "";
+
+    private string destination = "";
+
+    private DateTime tripDate =
+        DateTime.Today;
+
+    private TimeOnly startTime =
+        new TimeOnly(9, 0);
+
+    private TimeOnly endTime =
+        new TimeOnly(10, 0);
+
+    private int startMileage;
+
+    private string notes = "";
+
+    private string errorMessage = "";
+
+
+    private VehicleItem? SelectedVehicle =>
+        VehicleStore.FindVehicle(
+            selectedLicensePlate);
+
+
+    private void SaveTrip()
+    {
+        errorMessage = "";
+
+
+        if (SelectedVehicle is null)
+        {
+            errorMessage =
+                "Please select a vehicle.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(driver))
+        {
+            errorMessage =
+                "Please enter a driver.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(startLocation))
+        {
+            errorMessage =
+                "Please enter a start location.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(destination))
+        {
+            errorMessage =
+                "Please enter a destination.";
+
+            return;
+        }
+
+
+        if (tripDate.Date < DateTime.Today)
+        {
+            errorMessage =
+                "Trip date cannot be in the past.";
+
+            return;
+        }
+
+
+        if (endTime <= startTime)
+        {
+            errorMessage =
+                "End time must be after start time.";
+
+            return;
+        }
+
+
+        if (startMileage < 0)
+        {
+            errorMessage =
+                "Start mileage cannot be negative.";
+
+            return;
+        }
+
+
+        var trip =
+            new TripItem
+            {
+                VehicleName =
+                    SelectedVehicle.Name,
+
+                LicensePlate =
+                    SelectedVehicle.LicensePlate,
+
+                VehicleImage =
+                    SelectedVehicle.Image,
+
+                Driver =
+                    driver.Trim(),
+
+                StartLocation =
+                    startLocation.Trim(),
+
+                Destination =
+                    destination.Trim(),
+
+                Date =
+                    tripDate.Date,
+
+                StartTime =
+                    startTime,
+
+                EndTime =
+                    endTime,
+
+                StartMileage =
+                    startMileage,
+
+                EndMileage =
+                    0,
+
+                Status =
+                    "Planned",
+
+                Notes =
+                    notes.Trim()
+            };
+
+
+        TripStore.AddTrip(trip);
+
+
+        Navigation.NavigateTo(
+            "/trips");
+    }
+
+}

@@ -1,0 +1,415 @@
+@page "/trips/{Id:int}"
+
+@using frontend.Services
+
+@inject TripStore TripStore
+@inject NavigationManager Navigation
+
+<PageTitle>Trip Details</PageTitle>
+
+<div class="trip-details-page">
+
+    @if (Trip is null)
+    {
+        <div class="not-found-card">
+
+            <h2>Trip not found</h2>
+
+            <p>
+                This trip could not be found.
+            </p>
+
+            <a href="/trips"
+               class="primary-btn">
+                Back to Trips
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <a href="/trips"
+           class="back-link">
+            ← Back to Trips
+        </a>
+
+
+        <div class="details-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    TRIP DETAILS
+                </span>
+
+                <h1>
+                    @Trip.StartLocation → @Trip.Destination
+                </h1>
+
+                <p>
+                    View and manage this vehicle trip.
+                </p>
+
+            </div>
+
+
+            <span class="status-badge @GetStatusClass(Trip.Status)">
+                @Trip.Status
+            </span>
+
+        </div>
+
+
+        <div class="details-layout">
+
+            <div class="vehicle-card">
+
+                <img src="@Trip.VehicleImage"
+                     alt="@Trip.VehicleName" />
+
+                <h2>
+                    @Trip.VehicleName
+                </h2>
+
+                <span>
+                    @Trip.LicensePlate
+                </span>
+
+            </div>
+
+
+            <div class="details-card">
+
+                <div class="route-box">
+
+                    <div>
+
+                        <span>FROM</span>
+
+                        <strong>
+                            @Trip.StartLocation
+                        </strong>
+
+                    </div>
+
+                    <div class="route-arrow">
+                        →
+                    </div>
+
+                    <div>
+
+                        <span>TO</span>
+
+                        <strong>
+                            @Trip.Destination
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="details-grid">
+
+                    <div class="detail-item">
+                        <span>Driver</span>
+                        <strong>@Trip.Driver</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Date</span>
+                        <strong>@Trip.Date.ToString("dd MMM yyyy")</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Start Time</span>
+                        <strong>@Trip.StartTime.ToString("HH:mm")</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>End Time</span>
+                        <strong>@Trip.EndTime.ToString("HH:mm")</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Start Mileage</span>
+                        <strong>@Trip.StartMileage km</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>End Mileage</span>
+
+                        <strong>
+                            @(Trip.EndMileage > 0
+                                ? $"{Trip.EndMileage} km"
+                                : "-")
+                        </strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Distance</span>
+                        <strong>@GetDistance()</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Status</span>
+                        <strong>@Trip.Status</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="notes-box">
+
+                    <span>Notes</span>
+
+                    <p>
+                        @(string.IsNullOrWhiteSpace(Trip.Notes)
+                            ? "No notes."
+                            : Trip.Notes)
+                    </p>
+
+                </div>
+
+
+                <div class="trip-actions">
+
+                    <a href="@($"/trips/edit/{Trip.Id}")"
+                       class="edit-btn">
+                        Edit Trip
+                    </a>
+
+
+                    @if (Trip.Status != "Completed"
+                        && Trip.Status != "Cancelled")
+                    {
+                        <button class="complete-btn"
+                                @onclick="OpenCompleteModal">
+                            Complete Trip
+                        </button>
+
+                        <button class="cancel-trip-btn"
+                                @onclick="OpenCancelModal">
+                            Cancel Trip
+                        </button>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        @if (showCompleteModal)
+        {
+            <div class="modal-overlay">
+
+                <div class="modal-card">
+
+                    <h2>Complete Trip</h2>
+
+                    <p>
+                        Enter the final mileage to complete this trip.
+                    </p>
+
+
+                    <label>
+                        End Mileage
+                    </label>
+
+                    <input type="number"
+                           min="@Trip.StartMileage"
+                           @bind="endMileage" />
+
+
+                    @if (!string.IsNullOrWhiteSpace(errorMessage))
+                    {
+                        <div class="modal-error">
+                            @errorMessage
+                        </div>
+                    }
+
+
+                    <div class="modal-actions">
+
+                        <button class="modal-secondary"
+                                @onclick="CloseCompleteModal">
+                            Back
+                        </button>
+
+                        <button class="modal-primary"
+                                @onclick="CompleteTrip">
+                            Complete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+
+        @if (showCancelModal)
+        {
+            <div class="modal-overlay">
+
+                <div class="modal-card">
+
+                    <h2>Cancel Trip?</h2>
+
+                    <p>
+                        This trip will be marked as cancelled.
+                    </p>
+
+                    <div class="modal-actions">
+
+                        <button class="modal-secondary"
+                                @onclick="CloseCancelModal">
+                            Back
+                        </button>
+
+                        <button class="modal-danger"
+                                @onclick="CancelTrip">
+                            Cancel Trip
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private TripItem? Trip;
+
+    private bool showCompleteModal;
+    private bool showCancelModal;
+
+    private int endMileage;
+
+    private string errorMessage = "";
+
+
+    protected override void OnParametersSet()
+    {
+        Trip =
+            TripStore.FindTrip(Id);
+
+        if (Trip is not null)
+        {
+            endMileage =
+                Trip.EndMileage > 0
+                    ? Trip.EndMileage
+                    : Trip.StartMileage;
+        }
+    }
+
+
+    private string GetDistance()
+    {
+        if (Trip is null
+            || Trip.EndMileage <= 0
+            || Trip.EndMileage < Trip.StartMileage)
+        {
+            return "-";
+        }
+
+        return
+            $"{Trip.EndMileage - Trip.StartMileage} km";
+    }
+
+
+    private string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Planned" => "planned",
+            "Active" => "active",
+            "Completed" => "completed",
+            "Cancelled" => "cancelled",
+            _ => "planned"
+        };
+    }
+
+
+    private void OpenCompleteModal()
+    {
+        errorMessage = "";
+
+        showCompleteModal = true;
+    }
+
+
+    private void CloseCompleteModal()
+    {
+        showCompleteModal = false;
+
+        errorMessage = "";
+    }
+
+
+    private void CompleteTrip()
+    {
+        if (Trip is null)
+        {
+            return;
+        }
+
+
+        if (endMileage < Trip.StartMileage)
+        {
+            errorMessage =
+                "End mileage cannot be lower than start mileage.";
+
+            return;
+        }
+
+
+        Trip.EndMileage =
+            endMileage;
+
+        Trip.Status =
+            "Completed";
+
+        showCompleteModal = false;
+    }
+
+
+    private void OpenCancelModal()
+    {
+        showCancelModal = true;
+    }
+
+
+    private void CloseCancelModal()
+    {
+        showCancelModal = false;
+    }
+
+
+    private void CancelTrip()
+    {
+        if (Trip is null)
+        {
+            return;
+        }
+
+        Trip.Status =
+            "Cancelled";
+
+        showCancelModal = false;
+    }
+
+}

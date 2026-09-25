@@ -1,0 +1,241 @@
+@page "/vehicles/{LicensePlate}"
+
+@using frontend.Services
+
+@inject VehicleStore VehicleStore
+@inject NavigationManager Navigation
+
+<PageTitle>Vehicle Details</PageTitle>
+
+<div class="vehicle-details-page">
+
+    <a href="/vehicles" class="back-link">
+        ← Back to Vehicles
+    </a>
+
+
+    @if (Vehicle is null)
+    {
+        <div class="not-found-card">
+
+            <h2>Vehicle not found</h2>
+
+            <p>
+                The selected vehicle could not be found.
+            </p>
+
+            <a href="/vehicles" class="primary-btn">
+                Back to Vehicles
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <div class="details-header">
+
+            <div>
+
+                <span>
+                    VEHICLE DETAILS
+                </span>
+
+                <h1>
+                    @Vehicle.Name
+                </h1>
+
+                <p>
+                    @Vehicle.LicensePlate
+                </p>
+
+            </div>
+
+
+            <div class="details-actions">
+
+                <a href="@($"/vehicles/edit/{Vehicle.LicensePlate}")"
+                   class="secondary-btn">
+                    Edit Vehicle
+                </a>
+
+                <button type="button"
+                        class="delete-btn"
+                        @onclick="ShowDeleteConfirmation">
+                    Delete Vehicle
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+            <div class="vehicle-image-card">
+
+                <div class="vehicle-status @Vehicle.StatusClass">
+                    @Vehicle.Status
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Vehicle.Image))
+                {
+                    <img src="@Vehicle.Image"
+                         alt="@Vehicle.Name" />
+                }
+                else
+                {
+                    <div class="image-placeholder">
+                        🚗
+                    </div>
+                }
+
+            </div>
+
+
+            <div class="vehicle-info-card">
+
+                <span class="section-label">
+                    VEHICLE INFORMATION
+                </span>
+
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+                        <span>Brand</span>
+                        <strong>@Vehicle.Brand</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Model</span>
+                        <strong>@Vehicle.Model</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>License Plate</span>
+                        <strong>@Vehicle.LicensePlate</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Status</span>
+                        <strong>@Vehicle.Status</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="fuel-section">
+
+                    <div class="fuel-header">
+
+                        <span>
+                            ⛽ Fuel Level
+                        </span>
+
+                        <strong>
+                            @Vehicle.FuelLevel%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="fuel-track">
+
+                        <div class="fuel-fill"
+                             style="width: @(Vehicle.FuelLevel)%;">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        @if (showDeleteConfirmation)
+        {
+            <div class="delete-overlay">
+
+                <div class="delete-modal">
+
+                    <div class="delete-icon">
+                        ⚠
+                    </div>
+
+                    <span class="delete-label">
+                        DELETE VEHICLE
+                    </span>
+
+                    <h2>
+                        Delete @Vehicle.Name?
+                    </h2>
+
+                    <p>
+                        This vehicle will be removed from the vehicle list.
+                    </p>
+
+                    <div class="delete-modal-actions">
+
+                        <button type="button"
+                                class="modal-cancel-btn"
+                                @onclick="CancelDelete">
+                            Cancel
+                        </button>
+
+                        <button type="button"
+                                class="modal-delete-btn"
+                                @onclick="DeleteVehicle">
+                            Delete Vehicle
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string LicensePlate { get; set; } = "";
+
+
+    private bool showDeleteConfirmation = false;
+
+
+    private VehicleItem? Vehicle =>
+        VehicleStore.FindVehicle(LicensePlate);
+
+
+    private void ShowDeleteConfirmation()
+    {
+        showDeleteConfirmation = true;
+    }
+
+
+    private void CancelDelete()
+    {
+        showDeleteConfirmation = false;
+    }
+
+
+    private void DeleteVehicle()
+    {
+        if (Vehicle is null)
+        {
+            return;
+        }
+
+        VehicleStore.DeleteVehicle(Vehicle);
+
+        Navigation.NavigateTo("/vehicles");
+    }
+
+}

@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@implements IDisposable
+@inject NavigationManager Navigation
 
 <div class="page">
 
@@ -9,35 +11,63 @@
         </div>
 
         <div class="vehicle-preview">
-
             <h4>🚗 Current Vehicle</h4>
-
             <p>Volkswagen Golf</p>
-
             <span>Available</span>
-
         </div>
 
         <nav class="sidebar-nav">
-            <a href="/">🏠 Home</a>
-            <a href="/dashboard">📊 Dashboard</a>
-            <a href="/groups">👥 Groups</a>
-            <a href="/vehicles">🚗 Vehicles</a>
-            <a href="/reservations">📅 Reservations</a>
-            <a href="/trips">🛣️ Trips</a>
-            <a href="/expenses">⛽ Expenses</a>
-            <a href="/debts">💳 Debts</a>
-            <a href="/statistics">📈 Statistics</a>
-            <a href="/profile">👤 Profile</a>
 
-</nav>
+            <NavLink href="/" Match="NavLinkMatch.All">
+                🏠 Home
+            </NavLink>
+
+            <NavLink href="/dashboard">
+                📊 Dashboard
+            </NavLink>
+
+            <NavLink href="/groups">
+                👥 Groups
+            </NavLink>
+
+            <NavLink href="/vehicles">
+                🚗 Vehicles
+            </NavLink>
+
+            <NavLink href="/reservations">
+                📅 Reservations
+            </NavLink>
+
+            <NavLink href="/trips">
+                🛣️ Trips
+            </NavLink>
+
+            <NavLink href="/expenses">
+                ⛽ Expenses
+            </NavLink>
+
+            <NavLink href="/debts">
+                💳 Debts
+            </NavLink>
+
+            <NavLink href="/statistics">
+                📈 Statistics
+            </NavLink>
+
+            <NavLink href="/profile">
+                👤 Profile
+            </NavLink>
+
+        </nav>
 
     </aside>
 
-    <main>
-        <article class="content">
+    <main class="main-area">
+
+        <div class="page-content-animation" @key="_animationKey">
             @Body
-        </article>
+        </div>
+
     </main>
 
 </div>
@@ -47,3 +77,24 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    private int _animationKey;
+
+    protected override void OnInitialized()
+    {
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        _animationKey++;
+
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+}

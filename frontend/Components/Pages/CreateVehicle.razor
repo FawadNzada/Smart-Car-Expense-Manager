@@ -1,5 +1,10 @@
 @page "/vehiclecreate"
 
+@using frontend.Services
+
+@inject VehicleStore VehicleStore
+@inject NavigationManager Navigation
+
 <PageTitle>Add Vehicle</PageTitle>
 
 <div class="create-vehicle-page">
@@ -8,78 +13,107 @@
         ← Back to Vehicles
     </a>
 
-    <div class="page-header">
+    <div class="create-header">
+
+        <span>VEHICLE MANAGEMENT</span>
+
         <h1>Add Vehicle</h1>
-        <p>Add a new vehicle to your carsharing group.</p>
+
+        <p>
+            Add a new vehicle to your carsharing group.
+        </p>
+
     </div>
 
-    <div class="create-layout">
 
-        <div class="form-card">
+    <div class="vehicle-create-layout">
 
-            <div class="card-heading">
-                <div class="heading-icon">🚗</div>
+        <div class="vehicle-form-card">
 
-                <div>
-                    <h2>Vehicle Details</h2>
-                    <p>Enter the information of the new vehicle.</p>
-                </div>
+            <div class="form-group">
+                <label>Brand</label>
+
+                <input type="text"
+                       placeholder="e.g. BMW"
+                       @bind="brand"
+                       @bind:event="oninput" />
             </div>
 
-            <div class="form-grid">
 
-                <div class="form-field">
-                    <label>Brand</label>
-                    <input type="text"
-                           placeholder="e.g. Volkswagen" />
-                </div>
+            <div class="form-group">
+                <label>Model</label>
 
-                <div class="form-field">
-                    <label>Model</label>
-                    <input type="text"
-                           placeholder="e.g. Golf" />
-                </div>
-
-                <div class="form-field full-width">
-                    <label>License Plate</label>
-                    <input type="text"
-                           placeholder="e.g. L-123AB" />
-                </div>
-
-                <div class="form-field">
-                    <label>Fuel Level</label>
-
-                    <div class="input-suffix">
-                        <input type="number"
-                               min="0"
-                               max="100"
-                               value="75" />
-
-                        <span>%</span>
-                    </div>
-                </div>
-
-                <div class="form-field">
-                    <label>Status</label>
-
-                    <select>
-                        <option>Available</option>
-                        <option>In Use</option>
-                        <option>Reserved</option>
-                        <option>Unavailable</option>
-                    </select>
-                </div>
-
+                <input type="text"
+                       placeholder="e.g. M3"
+                       @bind="model"
+                       @bind:event="oninput" />
             </div>
+
+
+            <div class="form-group">
+                <label>License Plate</label>
+
+                <input type="text"
+                       placeholder="e.g. L-555XY"
+                       @bind="licensePlate"
+                       @bind:event="oninput" />
+            </div>
+
+
+            <div class="form-group">
+                <label>Fuel Level</label>
+
+                <input type="number"
+                       min="0"
+                       max="100"
+                       @bind="fuelLevel" />
+            </div>
+
+
+            <div class="form-group">
+                <label>Status</label>
+
+                <select @bind="status">
+
+                    <option value="Available">
+                        Available
+                    </option>
+
+                    <option value="In Use">
+                        In Use
+                    </option>
+
+                    <option value="Reserved">
+                        Reserved
+                    </option>
+
+                    <option value="Unavailable">
+                        Unavailable
+                    </option>
+
+                </select>
+            </div>
+
+
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <div class="form-error">
+                    @errorMessage
+                </div>
+            }
+
 
             <div class="form-actions">
 
-                <a href="/vehicles" class="cancel-btn">
+                <a href="/vehicles"
+                   class="cancel-btn">
                     Cancel
                 </a>
 
-                <button class="save-btn">
-                    + Add Vehicle
+                <button type="button"
+                        class="add-btn"
+                        @onclick="AddVehicle">
+                    Add Vehicle
                 </button>
 
             </div>
@@ -87,68 +121,84 @@
         </div>
 
 
-        <div class="preview-card">
+        <!-- LIVE PREVIEW -->
 
-            <div class="card-heading">
-                <div class="heading-icon">👁</div>
+        <div class="vehicle-preview-card">
 
-                <div>
-                    <h2>Preview</h2>
-                    <p>This is how the vehicle will be displayed.</p>
+            <span class="preview-label">
+                LIVE PREVIEW
+            </span>
+
+
+            @if (HasVehicleImage())
+            {
+                <div class="preview-image">
+
+                    <span class="preview-status @GetStatusClass(status)">
+                        @status
+                    </span>
+
+                    <img src="@GetVehicleImage()"
+                         alt="@GetVehicleName()" />
+
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="preview-image preview-empty">
 
-            <div class="preview-image">
-                <img src="images/vehicles/vw.png"
-                     alt="Volkswagen Golf" />
-            </div>
+                    <div class="preview-placeholder">
+
+                        <div class="preview-placeholder-icon">
+                            🚗
+                        </div>
+
+                        <strong>
+                            Vehicle Preview
+                        </strong>
+
+                        <span>
+                            Enter a supported vehicle brand to show a preview.
+                        </span>
+
+                    </div>
+
+                </div>
+            }
+
 
             <div class="preview-content">
 
-                <div class="preview-title-row">
-                    <div>
-                        <h2>Volkswagen Golf</h2>
-                        <span>L-123AB</span>
-                    </div>
+                <h2>
+                    @GetVehicleName()
+                </h2>
 
-                    <span class="preview-status">
-                        Available
-                    </span>
-                </div>
+                <span class="preview-plate">
+                    @GetLicensePlate()
+                </span>
+
 
                 <div class="preview-fuel">
 
-                    <div class="preview-fuel-top">
-                        <span>⛽ Fuel Level</span>
-                        <strong>75%</strong>
+                    <div>
+
+                        <span>
+                            ⛽ Fuel Level
+                        </span>
+
+                        <strong>
+                            @fuelLevel%
+                        </strong>
+
                     </div>
 
-                    <div class="fuel-bar">
-                        <div class="fuel-fill"></div>
-                    </div>
 
-                </div>
+                    <div class="preview-fuel-track">
 
-                <div class="preview-meta">
-
-                    <div class="meta-item">
-                        <span class="meta-icon">VW</span>
-
-                        <div>
-                            <strong>Volkswagen</strong>
-                            <span>Brand</span>
+                        <div class="preview-fuel-fill"
+                             style="width: @(GetSafeFuelLevel())%;">
                         </div>
-                    </div>
 
-                    <div class="meta-divider"></div>
-
-                    <div class="meta-item">
-                        <span class="meta-icon">🚗</span>
-
-                        <div>
-                            <strong>Golf</strong>
-                            <span>Model</span>
-                        </div>
                     </div>
 
                 </div>
@@ -160,3 +210,197 @@
     </div>
 
 </div>
+
+
+@code {
+
+    private string brand = "";
+
+    private string model = "";
+
+    private string licensePlate = "";
+
+    private int fuelLevel = 50;
+
+    private string status = "Available";
+
+    private string errorMessage = "";
+
+
+    private void AddVehicle()
+    {
+        errorMessage = "";
+
+
+        if (string.IsNullOrWhiteSpace(brand))
+        {
+            errorMessage = "Please enter a brand.";
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(model))
+        {
+            errorMessage = "Please enter a model.";
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(licensePlate))
+        {
+            errorMessage = "Please enter a license plate.";
+            return;
+        }
+
+
+        if (fuelLevel < 0 || fuelLevel > 100)
+        {
+            errorMessage =
+                "Fuel level must be between 0 and 100.";
+
+            return;
+        }
+
+
+        bool licensePlateExists =
+            VehicleStore.Vehicles.Any(vehicle =>
+                vehicle.LicensePlate.Equals(
+                    licensePlate.Trim(),
+                    StringComparison.OrdinalIgnoreCase));
+
+
+        if (licensePlateExists)
+        {
+            errorMessage =
+                "A vehicle with this license plate already exists.";
+
+            return;
+        }
+
+
+        var vehicle = new VehicleItem
+        {
+            Brand = brand.Trim(),
+
+            Model = model.Trim(),
+
+            Name =
+                $"{brand.Trim()} {model.Trim()}",
+
+            LicensePlate =
+                licensePlate.Trim().ToUpper(),
+
+            FuelLevel =
+                fuelLevel,
+
+            Status =
+                status,
+
+            StatusClass =
+                GetStatusClass(status),
+
+            Image =
+                GetVehicleImage()
+        };
+
+
+        VehicleStore.AddVehicle(vehicle);
+
+        Navigation.NavigateTo("/vehicles");
+    }
+
+
+    private string GetVehicleName()
+    {
+        if (string.IsNullOrWhiteSpace(brand) &&
+            string.IsNullOrWhiteSpace(model))
+        {
+            return "Your Vehicle";
+        }
+
+        return $"{brand} {model}".Trim();
+    }
+
+
+    private string GetLicensePlate()
+    {
+        if (string.IsNullOrWhiteSpace(licensePlate))
+        {
+            return "LICENSE PLATE";
+        }
+
+        return licensePlate.ToUpper();
+    }
+
+
+    private int GetSafeFuelLevel()
+    {
+        return Math.Clamp(
+            fuelLevel,
+            0,
+            100);
+    }
+
+
+    private string GetStatusClass(string vehicleStatus)
+    {
+        return vehicleStatus switch
+        {
+            "Available" => "available",
+            "In Use" => "in-use",
+            "Reserved" => "reserved",
+            "Unavailable" => "unavailable",
+            _ => "available"
+        };
+    }
+
+
+    private bool HasVehicleImage()
+    {
+        var value = brand.Trim().ToLower();
+
+        return
+            value.Contains("volkswagen")
+            || value.Contains("vw")
+            || value.Contains("bmw")
+            || value.Contains("audi")
+            || value.Contains("mercedes")
+            || value.Contains("benz");
+    }
+
+
+    private string GetVehicleImage()
+    {
+        var value = brand.Trim().ToLower();
+
+
+        if (value.Contains("bmw"))
+        {
+            return "images/vehicles/bmw.png";
+        }
+
+
+        if (value.Contains("audi"))
+        {
+            return "images/vehicles/audi.png";
+        }
+
+
+        if (value.Contains("mercedes") ||
+            value.Contains("benz"))
+        {
+            return "images/vehicles/mercedes.png";
+        }
+
+
+        if (value.Contains("volkswagen") ||
+            value.Contains("vw"))
+        {
+            return "images/vehicles/vw.png";
+        }
+
+
+        return "";
+    }
+
+}

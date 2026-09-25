@@ -1,0 +1,450 @@
+@page "/trips/edit/{Id:int}"
+
+@using frontend.Services
+
+@inject TripStore TripStore
+@inject VehicleStore VehicleStore
+@inject NavigationManager Navigation
+
+<PageTitle>Edit Trip</PageTitle>
+
+<div class="edit-trip-page">
+
+    @if (Trip is null)
+    {
+        <div class="not-found-card">
+            <h2>Trip not found</h2>
+
+            <a href="/trips"
+               class="primary-btn">
+                Back to Trips
+            </a>
+        </div>
+    }
+    else
+    {
+        <a href="@($"/trips/{Trip.Id}")"
+           class="back-link">
+            ← Back to Trip
+        </a>
+
+
+        <div class="edit-header">
+
+            <span>TRIP MANAGEMENT</span>
+
+            <h1>Edit Trip</h1>
+
+            <p>
+                Update trip information.
+            </p>
+
+        </div>
+
+
+        <div class="edit-layout">
+
+            <div class="edit-form-card">
+
+                <div class="form-group">
+
+                    <label>Vehicle</label>
+
+                    <select @bind="selectedLicensePlate">
+
+                        @foreach (var vehicle in VehicleStore.Vehicles)
+                        {
+                            <option value="@vehicle.LicensePlate">
+                                @vehicle.Name (@vehicle.LicensePlate)
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Driver</label>
+
+                    <input type="text"
+                           @bind="driver"
+                           @bind:event="oninput" />
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>Start Location</label>
+
+                        <input type="text"
+                               @bind="startLocation"
+                               @bind:event="oninput" />
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Destination</label>
+
+                        <input type="text"
+                               @bind="destination"
+                               @bind:event="oninput" />
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Date</label>
+
+                    <input type="date"
+                           @bind="tripDate" />
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>Start Time</label>
+
+                        <input type="time"
+                               @bind="startTime" />
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>End Time</label>
+
+                        <input type="time"
+                               @bind="endTime" />
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Start Mileage</label>
+
+                    <input type="number"
+                           min="0"
+                           @bind="startMileage" />
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Status</label>
+
+                    <select @bind="status">
+
+                        <option value="Planned">
+                            Planned
+                        </option>
+
+                        <option value="Active">
+                            Active
+                        </option>
+
+                        <option value="Completed">
+                            Completed
+                        </option>
+
+                        <option value="Cancelled">
+                            Cancelled
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Notes</label>
+
+                    <textarea @bind="notes"
+                              @bind:event="oninput">
+                    </textarea>
+
+                </div>
+
+
+                @if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    <div class="form-error">
+                        @errorMessage
+                    </div>
+                }
+
+
+                <div class="form-actions">
+
+                    <a href="@($"/trips/{Trip.Id}")"
+                       class="cancel-btn">
+                        Cancel
+                    </a>
+
+                    <button class="save-btn"
+                            @onclick="SaveChanges">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="preview-card">
+
+                <span class="preview-label">
+                    TRIP PREVIEW
+                </span>
+
+
+                @if (SelectedVehicle is not null)
+                {
+                    <img src="@SelectedVehicle.Image"
+                         alt="@SelectedVehicle.Name" />
+
+                    <h2>
+                        @SelectedVehicle.Name
+                    </h2>
+
+                    <span class="plate">
+                        @SelectedVehicle.LicensePlate
+                    </span>
+                }
+
+
+                <div class="preview-route">
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(startLocation)
+                            ? "Start"
+                            : startLocation)
+                    </strong>
+
+                    <span>
+                        →
+                    </span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(destination)
+                            ? "Destination"
+                            : destination)
+                    </strong>
+
+                </div>
+
+
+                <div class="preview-status">
+                    @status
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    private TripItem? Trip;
+
+    private bool loaded;
+
+    private string selectedLicensePlate = "";
+    private string driver = "";
+    private string startLocation = "";
+    private string destination = "";
+
+    private DateTime tripDate;
+
+    private TimeOnly startTime;
+    private TimeOnly endTime;
+
+    private int startMileage;
+
+    private string status = "Planned";
+    private string notes = "";
+
+    private string errorMessage = "";
+
+
+    private VehicleItem? SelectedVehicle =>
+        VehicleStore.FindVehicle(
+            selectedLicensePlate);
+
+
+    protected override void OnParametersSet()
+    {
+        if (loaded)
+        {
+            return;
+        }
+
+
+        Trip =
+            TripStore.FindTrip(Id);
+
+
+        if (Trip is null)
+        {
+            return;
+        }
+
+
+        selectedLicensePlate =
+            Trip.LicensePlate;
+
+        driver =
+            Trip.Driver;
+
+        startLocation =
+            Trip.StartLocation;
+
+        destination =
+            Trip.Destination;
+
+        tripDate =
+            Trip.Date;
+
+        startTime =
+            Trip.StartTime;
+
+        endTime =
+            Trip.EndTime;
+
+        startMileage =
+            Trip.StartMileage;
+
+        status =
+            Trip.Status;
+
+        notes =
+            Trip.Notes;
+
+
+        loaded = true;
+    }
+
+
+    private void SaveChanges()
+    {
+        if (Trip is null)
+        {
+            return;
+        }
+
+
+        errorMessage = "";
+
+
+        if (SelectedVehicle is null)
+        {
+            errorMessage =
+                "Please select a vehicle.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(driver))
+        {
+            errorMessage =
+                "Please enter a driver.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(startLocation)
+            || string.IsNullOrWhiteSpace(destination))
+        {
+            errorMessage =
+                "Please enter the route.";
+
+            return;
+        }
+
+
+        if (endTime <= startTime)
+        {
+            errorMessage =
+                "End time must be after start time.";
+
+            return;
+        }
+
+
+        if (startMileage < 0)
+        {
+            errorMessage =
+                "Mileage cannot be negative.";
+
+            return;
+        }
+
+
+        Trip.VehicleName =
+            SelectedVehicle.Name;
+
+        Trip.LicensePlate =
+            SelectedVehicle.LicensePlate;
+
+        Trip.VehicleImage =
+            SelectedVehicle.Image;
+
+        Trip.Driver =
+            driver.Trim();
+
+        Trip.StartLocation =
+            startLocation.Trim();
+
+        Trip.Destination =
+            destination.Trim();
+
+        Trip.Date =
+            tripDate.Date;
+
+        Trip.StartTime =
+            startTime;
+
+        Trip.EndTime =
+            endTime;
+
+        Trip.StartMileage =
+            startMileage;
+
+        Trip.Status =
+            status;
+
+        Trip.Notes =
+            notes.Trim();
+
+
+        Navigation.NavigateTo(
+            $"/trips/{Trip.Id}");
+    }
+
+}
