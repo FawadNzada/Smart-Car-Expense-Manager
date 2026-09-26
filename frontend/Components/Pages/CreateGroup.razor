@@ -1,77 +1,168 @@
-@page "/groupcreate"
+@page "/creategroup"
 
-<PageTitle>Create Group</PageTitle>
+@using frontend.Services
+
+@inject GroupStore GroupStore
+@inject VehicleStore VehicleStore
+@inject NavigationManager Navigation
+
+<PageTitle>New Group</PageTitle>
+
 
 <div class="create-group-page">
 
-    <a href="/groups" class="back-link">
+    <a href="/groups"
+       class="back-link">
         ← Back to Groups
     </a>
 
-    <div class="page-header">
-        <h1>Create Group</h1>
-        <p>Create a new carsharing group and define its basic information.</p>
+
+    <div class="create-header">
+
+        <span>
+            GROUP MANAGEMENT
+        </span>
+
+        <h1>New Group</h1>
+
+        <p>
+            Create a carsharing group and assign members and vehicles.
+        </p>
+
     </div>
 
-    <div class="group-layout">
 
-        <div class="group-form-card">
+    <div class="create-layout">
 
-            <div class="card-heading">
-                <div class="heading-icon">👥</div>
 
-                <div>
-                    <h2>Group Details</h2>
-                    <p>Enter the information for your new group.</p>
-                </div>
-            </div>
+        <!-- FORM -->
 
-            <div class="form-grid">
+        <div class="create-form-card">
 
-                <div class="form-field full-width">
-                    <label>Group Name</label>
 
-                    <input type="text"
-                           placeholder="e.g. Family Car" />
-                </div>
+            <div class="form-group">
 
-                <div class="form-field full-width">
-                    <label>Description</label>
+                <label>Group Name</label>
 
-                    <textarea placeholder="Describe the purpose of this group..."></textarea>
-                </div>
-
-                <div class="form-field">
-                    <label>Group Type</label>
-
-                    <select>
-                        <option>Family</option>
-                        <option>Friends</option>
-                        <option>Shared Apartment</option>
-                        <option>School / Team</option>
-                        <option>Other</option>
-                    </select>
-                </div>
-
-                <div class="form-field">
-                    <label>Max. Members</label>
-
-                    <input type="number"
-                           min="2"
-                           max="50"
-                           value="5" />
-                </div>
+                <input type="text"
+                       placeholder="e.g. Weekend Crew"
+                       @bind="groupName"
+                       @bind:event="oninput" />
 
             </div>
+
+
+            <div class="form-group">
+
+                <label>Owner</label>
+
+                <input type="text"
+                       placeholder="e.g. Sebastian"
+                       @bind="owner"
+                       @bind:event="oninput" />
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Description</label>
+
+                <textarea placeholder="What is this group used for?"
+                          @bind="description"
+                          @bind:event="oninput">
+                </textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Members
+                </label>
+
+                <input type="text"
+                       placeholder="Lisa, Max, Sebastian"
+                       @bind="membersText"
+                       @bind:event="oninput" />
+
+                <small>
+                    Separate members with commas.
+                </small>
+
+            </div>
+
+
+            <div class="vehicle-selection">
+
+                <label>
+                    Vehicles
+                </label>
+
+
+                @foreach (var vehicle in VehicleStore.Vehicles)
+                {
+                    <label class="vehicle-option">
+
+                        <input type="checkbox"
+                               checked="@IsVehicleSelected(vehicle.LicensePlate)"
+                               @onchange="args => ToggleVehicle(vehicle.LicensePlate, args)" />
+
+
+                        <div class="vehicle-option-image">
+
+                            <img src="@vehicle.Image"
+                                 alt="@vehicle.Name" />
+
+                        </div>
+
+
+                        <div class="vehicle-option-info">
+
+                            <strong>
+                                @vehicle.Name
+                            </strong>
+
+                            <span>
+                                @vehicle.LicensePlate
+                            </span>
+
+                        </div>
+
+
+                        <span class="vehicle-status @vehicle.StatusClass">
+                            @vehicle.Status
+                        </span>
+
+                    </label>
+                }
+
+            </div>
+
+
+            @if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <div class="form-error">
+                    @errorMessage
+                </div>
+            }
+
 
             <div class="form-actions">
 
-                <a href="/groups" class="cancel-btn">
+                <a href="/groups"
+                   class="cancel-btn">
                     Cancel
                 </a>
 
-                <button class="save-btn">
-                    + Create Group
+
+                <button type="button"
+                        class="create-btn"
+                        @onclick="SaveGroup">
+
+                    Create Group
+
                 </button>
 
             </div>
@@ -79,61 +170,276 @@
         </div>
 
 
+
+        <!-- PREVIEW -->
+
         <div class="group-preview-card">
 
-            <div class="card-heading">
-                <div class="heading-icon">👁</div>
+            <span class="preview-label">
+                GROUP PREVIEW
+            </span>
+
+
+            <div class="preview-icon">
+                👥
+            </div>
+
+
+            <h2>
+                @(string.IsNullOrWhiteSpace(groupName)
+                    ? "Group Name"
+                    : groupName)
+            </h2>
+
+
+            <span class="preview-owner">
+                Owner:
+                @(string.IsNullOrWhiteSpace(owner)
+                    ? "Owner"
+                    : owner)
+            </span>
+
+
+            <p>
+                @(string.IsNullOrWhiteSpace(description)
+                    ? "Your group description will appear here."
+                    : description)
+            </p>
+
+
+            <div class="preview-stats">
 
                 <div>
-                    <h2>Group Preview</h2>
-                    <p>This is how the group will appear.</p>
-                </div>
-            </div>
 
-            <div class="group-preview-content">
+                    <span>Members</span>
 
-                <div class="preview-group-icon">
-                    🚗
-                </div>
-
-                <h2>Family Car</h2>
-
-                <p>
-                    Shared vehicle group for family members.
-                </p>
-
-                <div class="preview-info-grid">
-
-                    <div class="preview-info">
-                        <span>Members</span>
-                        <strong>4</strong>
-                    </div>
-
-                    <div class="preview-info">
-                        <span>Vehicles</span>
-                        <strong>2</strong>
-                    </div>
-
-                    <div class="preview-info">
-                        <span>Open Debts</span>
-                        <strong>€45.00</strong>
-                    </div>
-
-                    <div class="preview-info">
-                        <span>Type</span>
-                        <strong>Family</strong>
-                    </div>
+                    <strong>
+                        @PreviewMembers.Count
+                    </strong>
 
                 </div>
 
-                <div class="preview-footer">
-                    Group ready to be created
+
+                <div>
+
+                    <span>Vehicles</span>
+
+                    <strong>
+                        @selectedVehicles.Count
+                    </strong>
+
                 </div>
 
             </div>
+
+
+            @if (PreviewMembers.Any())
+            {
+                <div class="preview-members">
+
+                    @foreach (var member in PreviewMembers)
+                    {
+                        <span>
+                            @member
+                        </span>
+                    }
+
+                </div>
+            }
+
+
+            @if (SelectedVehicleObjects.Any())
+            {
+                <div class="preview-vehicles">
+
+                    @foreach (var vehicle in SelectedVehicleObjects)
+                    {
+                        <div>
+
+                            <img src="@vehicle.Image"
+                                 alt="@vehicle.Name" />
+
+                            <span>
+                                @vehicle.Name
+                            </span>
+
+                        </div>
+                    }
+
+                </div>
+            }
 
         </div>
 
     </div>
 
 </div>
+
+
+@code {
+
+    private string groupName = "";
+
+    private string owner = "";
+
+    private string description = "";
+
+    private string membersText = "";
+
+    private string errorMessage = "";
+
+
+    private List<string> selectedVehicles =
+        new();
+
+
+    private List<string> PreviewMembers =>
+        ParseMembers();
+
+
+    private IEnumerable<VehicleItem> SelectedVehicleObjects =>
+        VehicleStore.Vehicles.Where(
+            vehicle =>
+                selectedVehicles.Contains(
+                    vehicle.LicensePlate,
+                    StringComparer.OrdinalIgnoreCase));
+
+
+    private bool IsVehicleSelected(
+        string licensePlate)
+    {
+        return selectedVehicles.Contains(
+            licensePlate,
+            StringComparer.OrdinalIgnoreCase);
+    }
+
+
+    private void ToggleVehicle(
+        string licensePlate,
+        ChangeEventArgs args)
+    {
+        var isChecked =
+            args.Value is bool value
+            && value;
+
+
+        if (isChecked)
+        {
+            if (!IsVehicleSelected(
+                    licensePlate))
+            {
+                selectedVehicles.Add(
+                    licensePlate);
+            }
+        }
+        else
+        {
+            selectedVehicles.RemoveAll(
+                plate =>
+                    plate.Equals(
+                        licensePlate,
+                        StringComparison.OrdinalIgnoreCase));
+        }
+    }
+
+
+    private List<string> ParseMembers()
+    {
+        return membersText
+            .Split(
+                ',',
+                StringSplitOptions.RemoveEmptyEntries)
+            .Select(member =>
+                member.Trim())
+            .Where(member =>
+                !string.IsNullOrWhiteSpace(member))
+            .Distinct(
+                StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+
+    private void SaveGroup()
+    {
+        errorMessage = "";
+
+
+        if (string.IsNullOrWhiteSpace(
+                groupName))
+        {
+            errorMessage =
+                "Please enter a group name.";
+
+            return;
+        }
+
+
+        if (GroupStore.GroupNameExists(
+                groupName.Trim()))
+        {
+            errorMessage =
+                "A group with this name already exists.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(
+                owner))
+        {
+            errorMessage =
+                "Please enter a group owner.";
+
+            return;
+        }
+
+
+        var members =
+            ParseMembers();
+
+
+        if (!members.Any(
+                member =>
+                    member.Equals(
+                        owner.Trim(),
+                        StringComparison.OrdinalIgnoreCase)))
+        {
+            members.Insert(
+                0,
+                owner.Trim());
+        }
+
+
+        var group =
+            new GroupItem
+            {
+                Name =
+                    groupName.Trim(),
+
+                Owner =
+                    owner.Trim(),
+
+                Description =
+                    description.Trim(),
+
+                CreatedAt =
+                    DateTime.Today,
+
+                Members =
+                    members,
+
+                VehicleLicensePlates =
+                    new List<string>(
+                        selectedVehicles)
+            };
+
+
+        GroupStore.AddGroup(
+            group);
+
+
+        Navigation.NavigateTo(
+            "/groups");
+    }
+
+}

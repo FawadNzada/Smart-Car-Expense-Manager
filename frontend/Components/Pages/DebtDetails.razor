@@ -1,0 +1,337 @@
+@page "/debts/{Id:int}"
+
+@using frontend.Services
+
+@inject DebtStore DebtStore
+@inject NavigationManager Navigation
+
+<PageTitle>Debt Details</PageTitle>
+
+
+<div class="debt-details-page">
+
+    @if (Debt is null)
+    {
+        <div class="not-found-card">
+
+            <h2>Debt not found</h2>
+
+            <p>
+                This debt could not be found.
+            </p>
+
+            <a href="/debts"
+               class="primary-btn">
+                Back to Debts
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <a href="/debts"
+           class="back-link">
+            ← Back to Debts
+        </a>
+
+
+        <div class="details-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    DEBT DETAILS
+                </span>
+
+                <h1>
+                    @Debt.FromPerson → @Debt.ToPerson
+                </h1>
+
+                <p>
+                    View and manage this debt.
+                </p>
+
+            </div>
+
+
+            <div class="header-right">
+
+                <strong class="header-amount">
+                    @FormatMoney(Debt.Amount)
+                </strong>
+
+                <span class="status-badge @GetStatusClass(Debt.Status)">
+                    @Debt.Status
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="details-card">
+
+            <div class="people-box">
+
+                <div>
+
+                    <span>WHO OWES</span>
+
+                    <strong>
+                        @Debt.FromPerson
+                    </strong>
+
+                </div>
+
+
+                <div class="arrow">
+                    →
+                </div>
+
+
+                <div>
+
+                    <span>WHO RECEIVES</span>
+
+                    <strong>
+                        @Debt.ToPerson
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-grid">
+
+                <div class="detail-item">
+
+                    <span>Amount</span>
+
+                    <strong class="money">
+                        @FormatMoney(Debt.Amount)
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>Status</span>
+
+                    <strong>
+                        @Debt.Status
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>Date</span>
+
+                    <strong>
+                        @Debt.Date.ToString("dd MMM yyyy")
+                    </strong>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span>Related Expense</span>
+
+                    <strong>
+                        @(string.IsNullOrWhiteSpace(Debt.ExpenseDescription)
+                            ? "No related expense"
+                            : Debt.ExpenseDescription)
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="description-box">
+
+                <span>Description</span>
+
+                <p>
+                    @(string.IsNullOrWhiteSpace(Debt.Description)
+                        ? "No description."
+                        : Debt.Description)
+                </p>
+
+            </div>
+
+
+            <div class="debt-actions">
+
+                <a href="@($"/debts/edit/{Debt.Id}")"
+                   class="edit-btn">
+                    Edit Debt
+                </a>
+
+
+                @if (Debt.Status == "Open")
+                {
+                    <button type="button"
+                            class="paid-btn"
+                            @onclick="MarkAsPaid">
+                        Mark as Paid
+                    </button>
+                }
+                else
+                {
+                    <button type="button"
+                            class="reopen-btn"
+                            @onclick="ReopenDebt">
+                        Reopen
+                    </button>
+                }
+
+
+                <button type="button"
+                        class="delete-btn"
+                        @onclick="OpenDeleteModal">
+                    Delete Debt
+                </button>
+
+            </div>
+
+        </div>
+
+
+        @if (showDeleteModal)
+        {
+            <div class="modal-overlay">
+
+                <div class="modal-card">
+
+                    <h2>Delete Debt?</h2>
+
+                    <p>
+                        This debt will be permanently removed.
+                    </p>
+
+
+                    <div class="delete-summary">
+
+                        <span>
+                            @Debt.FromPerson → @Debt.ToPerson
+                        </span>
+
+                        <strong>
+                            @FormatMoney(Debt.Amount)
+                        </strong>
+
+                    </div>
+
+
+                    <div class="modal-actions">
+
+                        <button type="button"
+                                class="modal-secondary"
+                                @onclick="CloseDeleteModal">
+                            Back
+                        </button>
+
+                        <button type="button"
+                                class="modal-danger"
+                                @onclick="DeleteDebt">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+
+    private DebtItem? Debt;
+
+    private bool showDeleteModal;
+
+
+    protected override void OnParametersSet()
+    {
+        Debt =
+            DebtStore.FindDebt(Id);
+    }
+
+
+    private void MarkAsPaid()
+    {
+        if (Debt is null)
+        {
+            return;
+        }
+
+        DebtStore.MarkAsPaid(Debt);
+    }
+
+
+    private void ReopenDebt()
+    {
+        if (Debt is null)
+        {
+            return;
+        }
+
+        DebtStore.ReopenDebt(Debt);
+    }
+
+
+    private void OpenDeleteModal()
+    {
+        showDeleteModal = true;
+    }
+
+
+    private void CloseDeleteModal()
+    {
+        showDeleteModal = false;
+    }
+
+
+    private void DeleteDebt()
+    {
+        if (Debt is null)
+        {
+            return;
+        }
+
+
+        DebtStore.DeleteDebt(Debt);
+
+        Navigation.NavigateTo(
+            "/debts");
+    }
+
+
+    private string GetStatusClass(string status)
+    {
+        return status == "Paid"
+            ? "paid"
+            : "open";
+    }
+
+
+    private string FormatMoney(decimal amount)
+    {
+        return $"{amount:N2} €";
+    }
+
+}

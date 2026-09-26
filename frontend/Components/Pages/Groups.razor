@@ -1,172 +1,292 @@
 @page "/groups"
 
+@using frontend.Services
+
+@inject GroupStore GroupStore
+@inject VehicleStore VehicleStore
+
 <PageTitle>Groups</PageTitle>
+
 
 <div class="groups-page">
 
     <div class="groups-header">
+
         <div>
+
+            <span class="eyebrow">
+                GROUP MANAGEMENT
+            </span>
+
             <h1>Groups</h1>
-            <p>Manage your carsharing groups and members.</p>
+
+            <p>
+                Manage carsharing groups, members and vehicles.
+            </p>
+
         </div>
 
-        <a href="/groupcreate" class="create-group-btn">
-            + Create Group
+
+        <a href="/creategroup"
+           class="new-group-btn">
+
+            + New Group
+
         </a>
+
     </div>
 
-    <div class="groups-toolbar">
 
-        <input type="text"
-               class="group-search"
-               placeholder="Search groups..." />
+    <div class="groups-summary">
 
-        <select class="group-filter">
-            <option>All Groups</option>
-            <option>Family</option>
-            <option>Friends</option>
-            <option>School</option>
-        </select>
+        <div class="summary-card">
+
+            <span>Total Groups</span>
+
+            <strong>
+                @GroupStore.Groups.Count
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>Total Members</span>
+
+            <strong>
+                @TotalMembers
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>Assigned Vehicles</span>
+
+            <strong>
+                @AssignedVehicles
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>Available Vehicles</span>
+
+            <strong>
+                @AvailableVehicles
+            </strong>
+
+        </div>
 
     </div>
 
 
     <div class="groups-grid">
 
-        <a href="/groupdetails" class="group-link">
+        @if (!GroupStore.Groups.Any())
+        {
+            <div class="empty-state">
 
-            <div class="group-card">
-
-                <div class="group-card-top">
-
-                    <div class="group-icon">
-                        🚗
-                    </div>
-
-                    <span class="member-badge">
-                        4 Members
-                    </span>
-
+                <div class="empty-icon">
+                    👥
                 </div>
 
-                <div class="group-card-content">
+                <h3>No groups yet</h3>
 
-                    <h2>Family Car</h2>
+                <p>
+                    Create your first carsharing group.
+                </p>
 
-                    <p>
-                        Shared vehicle group for family members.
-                    </p>
-
-                    <div class="group-info-row">
-                        <span>Vehicles</span>
-                        <strong>2</strong>
-                    </div>
-
-                    <div class="group-info-row">
-                        <span>Open Debts</span>
-                        <strong>€45.00</strong>
-                    </div>
-
-                </div>
-
-                <div class="group-card-footer">
-                    View Group →
-                </div>
+                <a href="/creategroup">
+                    Create Group
+                </a>
 
             </div>
+        }
+        else
+        {
+            @foreach (var group in GroupStore.Groups)
+            {
+                <a href="@($"/groups/{group.Id}")"
+                   class="group-card">
 
-        </a>
+                    <div class="group-card-top">
+
+                        <div class="group-icon">
+                            👥
+                        </div>
 
 
-        <a href="/groupdetails" class="group-link">
+                        <div class="group-main">
 
-            <div class="group-card">
+                            <h2>
+                                @group.Name
+                            </h2>
 
-                <div class="group-card-top">
+                            <span>
+                                Owner: @group.Owner
+                            </span>
 
-                    <div class="group-icon">
-                        🏠
+                        </div>
+
                     </div>
 
-                    <span class="member-badge">
-                        3 Members
-                    </span>
 
-                </div>
-
-                <div class="group-card-content">
-
-                    <h2>WG Linz</h2>
-
-                    <p>
-                        Shared vehicle group for the apartment.
+                    <p class="group-description">
+                        @(string.IsNullOrWhiteSpace(group.Description)
+                            ? "No description."
+                            : group.Description)
                     </p>
 
-                    <div class="group-info-row">
-                        <span>Vehicles</span>
-                        <strong>1</strong>
+
+                    <div class="group-stats">
+
+                        <div>
+
+                            <span>Members</span>
+
+                            <strong>
+                                @group.Members.Count
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Vehicles</span>
+
+                            <strong>
+                                @group.VehicleLicensePlates.Count
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Created</span>
+
+                            <strong>
+                                @group.CreatedAt.ToString("dd MMM yyyy")
+                            </strong>
+
+                        </div>
+
                     </div>
 
-                    <div class="group-info-row">
-                        <span>Open Debts</span>
-                        <strong>€22.00</strong>
+
+                    <div class="member-preview">
+
+                        @foreach (var member in group.Members.Take(3))
+                        {
+                            <div class="member-avatar"
+                                 title="@member">
+
+                                @GetInitials(member)
+
+                            </div>
+                        }
+
+
+                        @if (group.Members.Count > 3)
+                        {
+                            <div class="member-avatar more">
+                                +@(group.Members.Count - 3)
+                            </div>
+                        }
+
                     </div>
 
-                </div>
 
-                <div class="group-card-footer">
-                    View Group →
-                </div>
+                    <div class="vehicle-preview-list">
 
-            </div>
+                        @foreach (var licensePlate in group.VehicleLicensePlates.Take(3))
+                        {
+                            var vehicle =
+                                VehicleStore.FindVehicle(
+                                    licensePlate);
 
-        </a>
+                            @if (vehicle is not null)
+                            {
+                                <div class="vehicle-chip">
 
+                                    <img src="@vehicle.Image"
+                                         alt="@vehicle.Name" />
 
-        <a href="/groupdetails" class="group-link">
+                                    <span>
+                                        @vehicle.Name
+                                    </span>
 
-            <div class="group-card">
+                                </div>
+                            }
+                        }
 
-                <div class="group-card-top">
-
-                    <div class="group-icon">
-                        🎓
                     </div>
 
-                    <span class="member-badge">
-                        5 Members
-                    </span>
-
-                </div>
-
-                <div class="group-card-content">
-
-                    <h2>HTL Team</h2>
-
-                    <p>
-                        Carsharing group for the school project team.
-                    </p>
-
-                    <div class="group-info-row">
-                        <span>Vehicles</span>
-                        <strong>2</strong>
-                    </div>
-
-                    <div class="group-info-row">
-                        <span>Open Debts</span>
-                        <strong>€68.00</strong>
-                    </div>
-
-                </div>
-
-                <div class="group-card-footer">
-                    View Group →
-                </div>
-
-            </div>
-
-        </a>
+                </a>
+            }
+        }
 
     </div>
 
 </div>
+
+
+@code {
+
+    private int TotalMembers =>
+        GroupStore.Groups
+            .SelectMany(group => group.Members)
+            .Distinct(
+                StringComparer.OrdinalIgnoreCase)
+            .Count();
+
+
+    private int AssignedVehicles =>
+        GroupStore.Groups
+            .SelectMany(
+                group => group.VehicleLicensePlates)
+            .Distinct(
+                StringComparer.OrdinalIgnoreCase)
+            .Count();
+
+
+    private int AvailableVehicles =>
+        VehicleStore.Vehicles.Count(
+            vehicle =>
+                vehicle.Status == "Available");
+
+
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return "?";
+        }
+
+
+        var parts =
+            name.Split(
+                ' ',
+                StringSplitOptions.RemoveEmptyEntries);
+
+
+        if (parts.Length == 1)
+        {
+            return parts[0]
+                .Substring(0, 1)
+                .ToUpper();
+        }
+
+
+        return
+            $"{parts[0][0]}{parts[^1][0]}"
+            .ToUpper();
+    }
+
+}

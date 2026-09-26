@@ -1,164 +1,321 @@
 @page "/debts"
 
+@using frontend.Services
+
+@inject DebtStore DebtStore
+@inject NavigationManager Navigation
+
 <PageTitle>Debts</PageTitle>
 
 <div class="debts-page">
 
     <div class="debts-header">
+
         <div>
+            <span class="eyebrow">
+                DEBT MANAGEMENT
+            </span>
+
             <h1>Debts</h1>
-            <p>Track balances between group members.</p>
+
+            <p>
+                Track shared costs and outstanding payments.
+            </p>
         </div>
+
+        <a href="/createdebt"
+           class="new-debt-btn">
+            + New Debt
+        </a>
+
     </div>
 
-    <div class="debt-summary-grid">
 
-        <div class="summary-card positive">
-            <span>You are owed</span>
-            <strong>€45.00</strong>
-        </div>
+    <div class="summary-grid">
 
-        <div class="summary-card negative">
-            <span>You owe</span>
-            <strong>€20.00</strong>
+        <div class="summary-card">
+            <span>Open Amount</span>
+            <strong>@FormatMoney(OpenAmount)</strong>
         </div>
 
         <div class="summary-card">
             <span>Open Debts</span>
-            <strong>3</strong>
+            <strong>@OpenCount</strong>
         </div>
 
         <div class="summary-card">
-            <span>Net Balance</span>
-            <strong>+€25.00</strong>
+            <span>Paid Amount</span>
+            <strong>@FormatMoney(PaidAmount)</strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Paid Debts</span>
+            <strong>@PaidCount</strong>
         </div>
 
     </div>
 
 
-    <div class="debts-card">
+    <div class="debt-tabs">
 
-        <div class="debts-table-header">
-            <span>From</span>
-            <span>To</span>
-            <span>Amount</span>
-            <span>Status</span>
-        </div>
+        <button class="@GetTabClass("All")"
+                @onclick='() => SetFilter("All")'>
+            All
+        </button>
 
+        <button class="@GetTabClass("Open")"
+                @onclick='() => SetFilter("Open")'>
+            Open
+        </button>
 
-        <div class="debt-row">
-
-            <div class="person-cell">
-                <div class="avatar">MX</div>
-
-                <div>
-                    <strong>Max</strong>
-                    <span>Member</span>
-                </div>
-            </div>
-
-            <div class="person-cell">
-                <div class="avatar">SJ</div>
-
-                <div>
-                    <strong>Sebastian</strong>
-                    <span>Member</span>
-                </div>
-            </div>
-
-            <div class="debt-amount">
-                €30.00
-            </div>
-
-            <span class="status open">
-                Open
-            </span>
-
-        </div>
-
-
-        <div class="debt-row">
-
-            <div class="person-cell">
-                <div class="avatar">LI</div>
-
-                <div>
-                    <strong>Lisa</strong>
-                    <span>Member</span>
-                </div>
-            </div>
-
-            <div class="person-cell">
-                <div class="avatar">SJ</div>
-
-                <div>
-                    <strong>Sebastian</strong>
-                    <span>Member</span>
-                </div>
-            </div>
-
-            <div class="debt-amount">
-                €15.00
-            </div>
-
-            <span class="status open">
-                Open
-            </span>
-
-        </div>
-
-
-        <div class="debt-row">
-
-            <div class="person-cell">
-                <div class="avatar">TM</div>
-
-                <div>
-                    <strong>Tom</strong>
-                    <span>Member</span>
-                </div>
-            </div>
-
-            <div class="person-cell">
-                <div class="avatar">MX</div>
-
-                <div>
-                    <strong>Max</strong>
-                    <span>Member</span>
-                </div>
-            </div>
-
-            <div class="debt-amount">
-                €22.00
-            </div>
-
-            <span class="status open">
-                Open
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <div class="optimization-card">
-
-        <div>
-            <span class="optimization-label">
-                SMART SETTLEMENT
-            </span>
-
-            <h2>Optimized repayments</h2>
-
-            <p>
-                Reduce the number of transfers needed to settle all open debts.
-            </p>
-        </div>
-
-        <button class="optimize-btn">
-            Optimize Debts
+        <button class="@GetTabClass("Paid")"
+                @onclick='() => SetFilter("Paid")'>
+            Paid
         </button>
 
     </div>
 
+
+    <div class="debts-list">
+
+        @if (!FilteredDebts.Any())
+        {
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    💸
+                </div>
+
+                <h3>No debts found</h3>
+
+                <p>
+                    There are currently no debts in this category.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            @foreach (var debt in FilteredDebts)
+            {
+                <div class="debt-card"
+                     role="button"
+                     tabindex="0"
+                     @onclick="() => OpenDebt(debt.Id)">
+
+                    <div class="debt-icon @GetStatusClass(debt.Status)">
+                        @(debt.Status == "Paid" ? "✓" : "€")
+                    </div>
+
+
+                    <div class="debt-main">
+
+                        <div class="debt-title-row">
+
+                            <div>
+
+                                <h2>
+                                    @debt.FromPerson
+                                    <span>owes</span>
+                                    @debt.ToPerson
+                                </h2>
+
+                                <p>
+                                    @debt.Description
+                                </p>
+
+                            </div>
+
+
+                            <div class="amount-area">
+
+                                <strong>
+                                    @FormatMoney(debt.Amount)
+                                </strong>
+
+                                <span class="status-badge @GetStatusClass(debt.Status)">
+                                    @debt.Status
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="debt-info-grid">
+
+                            <div class="info-box">
+
+                                <span>From</span>
+
+                                <strong>
+                                    @debt.FromPerson
+                                </strong>
+
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span>To</span>
+
+                                <strong>
+                                    @debt.ToPerson
+                                </strong>
+
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span>Date</span>
+
+                                <strong>
+                                    @debt.Date.ToString("dd MMM yyyy")
+                                </strong>
+
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span>Related Expense</span>
+
+                                <strong>
+                                    @(string.IsNullOrWhiteSpace(debt.ExpenseDescription)
+                                        ? "No expense"
+                                        : debt.ExpenseDescription)
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="debt-actions"
+                             @onclick:stopPropagation="true">
+
+                            @if (debt.Status == "Open")
+                            {
+                                <button type="button"
+                                        class="paid-btn"
+                                        @onclick="() => MarkAsPaid(debt)">
+                                    Mark as Paid
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button"
+                                        class="reopen-btn"
+                                        @onclick="() => ReopenDebt(debt)">
+                                    Reopen
+                                </button>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+        }
+
+    </div>
+
 </div>
+
+
+@code {
+
+    private string activeFilter = "All";
+
+
+    private IEnumerable<DebtItem> FilteredDebts
+    {
+        get
+        {
+            var debts =
+                DebtStore.Debts
+                    .OrderByDescending(debt => debt.Date)
+                    .ThenByDescending(debt => debt.Id);
+
+            if (activeFilter == "All")
+            {
+                return debts;
+            }
+
+            return debts.Where(
+                debt => debt.Status == activeFilter);
+        }
+    }
+
+
+    private decimal OpenAmount =>
+        DebtStore.Debts
+            .Where(debt => debt.Status == "Open")
+            .Sum(debt => debt.Amount);
+
+
+    private decimal PaidAmount =>
+        DebtStore.Debts
+            .Where(debt => debt.Status == "Paid")
+            .Sum(debt => debt.Amount);
+
+
+    private int OpenCount =>
+        DebtStore.Debts.Count(
+            debt => debt.Status == "Open");
+
+
+    private int PaidCount =>
+        DebtStore.Debts.Count(
+            debt => debt.Status == "Paid");
+
+
+    private void SetFilter(string filter)
+    {
+        activeFilter = filter;
+    }
+
+
+    private string GetTabClass(string filter)
+    {
+        return activeFilter == filter
+            ? "tab-btn active"
+            : "tab-btn";
+    }
+
+
+    private void OpenDebt(int id)
+    {
+        Navigation.NavigateTo(
+            $"/debts/{id}");
+    }
+
+
+    private void MarkAsPaid(DebtItem debt)
+    {
+        DebtStore.MarkAsPaid(debt);
+    }
+
+
+    private void ReopenDebt(DebtItem debt)
+    {
+        DebtStore.ReopenDebt(debt);
+    }
+
+
+    private string GetStatusClass(string status)
+    {
+        return status == "Paid"
+            ? "paid"
+            : "open";
+    }
+
+
+    private string FormatMoney(decimal amount)
+    {
+        return $"{amount:N2} €";
+    }
+
+}

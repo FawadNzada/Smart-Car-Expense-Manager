@@ -1,0 +1,501 @@
+@page "/groups/edit/{Id:int}"
+
+@using frontend.Services
+
+@inject GroupStore GroupStore
+@inject VehicleStore VehicleStore
+@inject NavigationManager Navigation
+
+<PageTitle>Edit Group</PageTitle>
+
+
+<div class="edit-group-page">
+
+    @if (Group is null)
+    {
+        <div class="not-found-card">
+
+            <h2>Group not found</h2>
+
+            <a href="/groups"
+               class="primary-btn">
+                Back to Groups
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <a href="@($"/groups/{Group.Id}")"
+           class="back-link">
+            ← Back to Group
+        </a>
+
+
+        <div class="edit-header">
+
+            <span>
+                GROUP MANAGEMENT
+            </span>
+
+            <h1>Edit Group</h1>
+
+            <p>
+                Update group details, members and vehicles.
+            </p>
+
+        </div>
+
+
+        <div class="edit-layout">
+
+
+            <!-- FORM -->
+
+            <div class="edit-form-card">
+
+
+                <div class="form-group">
+
+                    <label>Group Name</label>
+
+                    <input type="text"
+                           @bind="groupName"
+                           @bind:event="oninput" />
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Owner</label>
+
+                    <input type="text"
+                           @bind="owner"
+                           @bind:event="oninput" />
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Description</label>
+
+                    <textarea @bind="description"
+                              @bind:event="oninput">
+                    </textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Members</label>
+
+                    <input type="text"
+                           @bind="membersText"
+                           @bind:event="oninput" />
+
+                    <small>
+                        Separate members with commas.
+                    </small>
+
+                </div>
+
+
+                <div class="vehicle-selection">
+
+                    <label>
+                        Vehicles
+                    </label>
+
+
+                    @foreach (var vehicle in VehicleStore.Vehicles)
+                    {
+                        <label class="vehicle-option">
+
+                            <input type="checkbox"
+                                   checked="@IsVehicleSelected(vehicle.LicensePlate)"
+                                   @onchange="args => ToggleVehicle(vehicle.LicensePlate, args)" />
+
+
+                            <div class="vehicle-option-image">
+
+                                <img src="@vehicle.Image"
+                                     alt="@vehicle.Name" />
+
+                            </div>
+
+
+                            <div class="vehicle-option-info">
+
+                                <strong>
+                                    @vehicle.Name
+                                </strong>
+
+                                <span>
+                                    @vehicle.LicensePlate
+                                </span>
+
+                            </div>
+
+
+                            <span class="vehicle-status @vehicle.StatusClass">
+                                @vehicle.Status
+                            </span>
+
+                        </label>
+                    }
+
+                </div>
+
+
+                @if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    <div class="form-error">
+                        @errorMessage
+                    </div>
+                }
+
+
+                <div class="form-actions">
+
+                    <a href="@($"/groups/{Group.Id}")"
+                       class="cancel-btn">
+                        Cancel
+                    </a>
+
+
+                    <button type="button"
+                            class="save-btn"
+                            @onclick="SaveChanges">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PREVIEW -->
+
+            <div class="preview-card">
+
+                <span class="preview-label">
+                    GROUP PREVIEW
+                </span>
+
+
+                <div class="preview-icon">
+                    👥
+                </div>
+
+
+                <h2>
+                    @(string.IsNullOrWhiteSpace(groupName)
+                        ? "Group Name"
+                        : groupName)
+                </h2>
+
+
+                <span class="preview-owner">
+                    Owner:
+                    @(string.IsNullOrWhiteSpace(owner)
+                        ? "Owner"
+                        : owner)
+                </span>
+
+
+                <p>
+                    @(string.IsNullOrWhiteSpace(description)
+                        ? "No description."
+                        : description)
+                </p>
+
+
+                <div class="preview-stats">
+
+                    <div>
+
+                        <span>Members</span>
+
+                        <strong>
+                            @PreviewMembers.Count
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Vehicles</span>
+
+                        <strong>
+                            @selectedVehicles.Count
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                @if (PreviewMembers.Any())
+                {
+                    <div class="preview-members">
+
+                        @foreach (var member in PreviewMembers)
+                        {
+                            <span>
+                                @member
+                            </span>
+                        }
+
+                    </div>
+                }
+
+
+                @if (SelectedVehicleObjects.Any())
+                {
+                    <div class="preview-vehicles">
+
+                        @foreach (var vehicle in SelectedVehicleObjects)
+                        {
+                            <div>
+
+                                <img src="@vehicle.Image"
+                                     alt="@vehicle.Name" />
+
+                                <span>
+                                    @vehicle.Name
+                                </span>
+
+                            </div>
+                        }
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+
+    private GroupItem? Group;
+
+    private bool loaded;
+
+
+    private string groupName = "";
+
+    private string owner = "";
+
+    private string description = "";
+
+    private string membersText = "";
+
+    private string errorMessage = "";
+
+
+    private List<string> selectedVehicles =
+        new();
+
+
+    private List<string> PreviewMembers =>
+        ParseMembers();
+
+
+    private IEnumerable<VehicleItem> SelectedVehicleObjects =>
+        VehicleStore.Vehicles.Where(
+            vehicle =>
+                selectedVehicles.Contains(
+                    vehicle.LicensePlate,
+                    StringComparer.OrdinalIgnoreCase));
+
+
+    protected override void OnParametersSet()
+    {
+        if (loaded)
+        {
+            return;
+        }
+
+
+        Group =
+            GroupStore.FindGroup(Id);
+
+
+        if (Group is null)
+        {
+            return;
+        }
+
+
+        groupName =
+            Group.Name;
+
+        owner =
+            Group.Owner;
+
+        description =
+            Group.Description;
+
+        membersText =
+            string.Join(
+                ", ",
+                Group.Members);
+
+        selectedVehicles =
+            new List<string>(
+                Group.VehicleLicensePlates);
+
+
+        loaded = true;
+    }
+
+
+    private bool IsVehicleSelected(
+        string licensePlate)
+    {
+        return selectedVehicles.Contains(
+            licensePlate,
+            StringComparer.OrdinalIgnoreCase);
+    }
+
+
+    private void ToggleVehicle(
+        string licensePlate,
+        ChangeEventArgs args)
+    {
+        var isChecked =
+            args.Value is bool value
+            && value;
+
+
+        if (isChecked)
+        {
+            if (!IsVehicleSelected(
+                    licensePlate))
+            {
+                selectedVehicles.Add(
+                    licensePlate);
+            }
+        }
+        else
+        {
+            selectedVehicles.RemoveAll(
+                plate =>
+                    plate.Equals(
+                        licensePlate,
+                        StringComparison.OrdinalIgnoreCase));
+        }
+    }
+
+
+    private List<string> ParseMembers()
+    {
+        return membersText
+            .Split(
+                ',',
+                StringSplitOptions.RemoveEmptyEntries)
+            .Select(member =>
+                member.Trim())
+            .Where(member =>
+                !string.IsNullOrWhiteSpace(member))
+            .Distinct(
+                StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+
+    private void SaveChanges()
+    {
+        if (Group is null)
+        {
+            return;
+        }
+
+
+        errorMessage = "";
+
+
+        if (string.IsNullOrWhiteSpace(groupName))
+        {
+            errorMessage =
+                "Please enter a group name.";
+
+            return;
+        }
+
+
+        if (GroupStore.GroupNameExists(
+                groupName.Trim(),
+                Group))
+        {
+            errorMessage =
+                "A group with this name already exists.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(owner))
+        {
+            errorMessage =
+                "Please enter a group owner.";
+
+            return;
+        }
+
+
+        var members =
+            ParseMembers();
+
+
+        /*
+         * Owner should always be part
+         * of the group.
+         */
+
+        if (!members.Any(
+                member =>
+                    member.Equals(
+                        owner.Trim(),
+                        StringComparison.OrdinalIgnoreCase)))
+        {
+            members.Insert(
+                0,
+                owner.Trim());
+        }
+
+
+        Group.Name =
+            groupName.Trim();
+
+        Group.Owner =
+            owner.Trim();
+
+        Group.Description =
+            description.Trim();
+
+        Group.Members =
+            members;
+
+        Group.VehicleLicensePlates =
+            new List<string>(
+                selectedVehicles);
+
+
+        Navigation.NavigateTo(
+            $"/groups/{Group.Id}");
+    }
+
+}

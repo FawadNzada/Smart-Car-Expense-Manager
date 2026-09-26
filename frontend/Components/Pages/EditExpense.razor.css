@@ -1,24 +1,17 @@
-.create-expense-page {
+.edit-expense-page {
     width: 100%;
     max-width: 1150px;
-
     margin: 0 auto;
-
     padding: 30px 38px 60px;
-
     color: white;
 }
 
 
 .back-link {
     display: inline-block;
-
     margin-bottom: 24px;
-
     color: #888888;
-
     text-decoration: none;
-
     font-size: 12px;
 }
 
@@ -29,54 +22,41 @@
 
 /* HEADER */
 
-.create-header {
+.edit-header {
     margin-bottom: 27px;
 }
 
-.create-header span {
+.edit-header span {
     color: #f59e0b;
-
     font-size: 10px;
     font-weight: 800;
-
     letter-spacing: 1.5px;
 }
 
-.create-header h1 {
+.edit-header h1 {
     margin: 7px 0 5px;
-
     font-size: 31px;
-    font-weight: 800;
 }
 
-.create-header p {
+.edit-header p {
     margin: 0;
-
     color: #777777;
-
     font-size: 12px;
 }
 
 
 /* LAYOUT */
 
-.create-layout {
+.edit-layout {
     display: grid;
-
-    grid-template-columns:
-        1.3fr
-        0.7fr;
-
+    grid-template-columns: 1.3fr 0.7fr;
     gap: 23px;
-
     align-items: start;
 }
 
 
-/* CARDS */
-
-.create-form-card,
-.expense-preview-card {
+.edit-form-card,
+.preview-card {
     padding: 23px;
 
     border: 1px solid #252525;
@@ -91,24 +71,18 @@
 .form-group {
     display: flex;
     flex-direction: column;
-
     gap: 7px;
-
     margin-bottom: 16px;
 }
 
 .form-row {
     display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
+    grid-template-columns: repeat(2, 1fr);
     gap: 13px;
 }
 
 .form-group label {
     color: #bbbbbb;
-
     font-size: 10px;
     font-weight: 700;
 }
@@ -140,7 +114,6 @@
 
 .form-group textarea {
     min-height: 90px;
-
     resize: vertical;
 }
 
@@ -149,7 +122,6 @@
 
 .form-error {
     margin: 10px 0 16px;
-
     padding: 10px 11px;
 
     border: 1px solid rgba(239, 68, 68, 0.35);
@@ -163,21 +135,18 @@
 }
 
 
-/* ACTIONS */
+/* BUTTONS */
 
 .form-actions {
     display: flex;
     justify-content: flex-end;
-
     gap: 9px;
-
     margin-top: 20px;
 }
 
 .cancel-btn,
-.create-btn {
+.save-btn {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
 
@@ -195,23 +164,18 @@
 
 .cancel-btn {
     border: 1px solid #333333;
-
     background: #1b1b1b;
-
     color: #bbbbbb;
 }
 
-.create-btn {
+.save-btn {
     border: none;
-
     background: #f59e0b;
-
     color: #080808;
-
     cursor: pointer;
 }
 
-.create-btn:hover {
+.save-btn:hover {
     background: #fbbf24;
 }
 
@@ -220,21 +184,19 @@
 
 .preview-label {
     display: block;
-
     margin-bottom: 15px;
 
     color: #666666;
 
     font-size: 9px;
     font-weight: 800;
-
     letter-spacing: 1.1px;
 }
 
 .preview-vehicle {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     height: 155px;
 
@@ -253,35 +215,16 @@
 .preview-vehicle img {
     width: 235px;
     height: 135px;
-
     object-fit: contain;
 }
 
-.empty-vehicle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    height: 135px;
-
-    margin-bottom: 14px;
-
-    border-radius: 9px;
-
-    background: #0e0e0e;
-
-    font-size: 33px;
-}
-
-.expense-preview-card h2 {
+.preview-card h2 {
     margin: 0 0 4px;
-
     font-size: 17px;
 }
 
-.preview-plate {
+.plate {
     color: #777777;
-
     font-size: 10px;
 }
 
@@ -305,14 +248,12 @@
 
 .preview-amount span {
     color: #888888;
-
     font-size: 10px;
     font-weight: 700;
 }
 
 .preview-amount strong {
     color: #fbbf24;
-
     font-size: 20px;
 }
 
@@ -321,16 +262,12 @@
 
 .preview-info {
     display: grid;
-
-    grid-template-columns: 1fr;
-
     gap: 8px;
 }
 
 .preview-info div {
     display: flex;
     justify-content: space-between;
-
     gap: 10px;
 
     padding: 10px 11px;
@@ -343,25 +280,51 @@
 
 .preview-info span {
     color: #666666;
-
     font-size: 9px;
     font-weight: 700;
-
     text-transform: uppercase;
 }
 
 .preview-info strong {
     font-size: 10px;
-
     text-align: right;
 }
 
 
-/* RESPONSIVE */
+/* NOT FOUND */
+
+.not-found-card {
+    padding: 40px;
+
+    border: 1px solid #252525;
+    border-radius: 12px;
+
+    background: #141414;
+
+    text-align: center;
+}
+
+.primary-btn {
+    display: inline-block;
+
+    margin-top: 15px;
+
+    padding: 10px 16px;
+
+    border-radius: 7px;
+
+    background: #f59e0b;
+    color: #090909;
+
+    text-decoration: none;
+
+    font-weight: 800;
+}
+
 
 @media (max-width: 850px) {
 
-    .create-layout {
+    .edit-layout {
         grid-template-columns: 1fr;
     }
 
@@ -370,7 +333,7 @@
 
 @media (max-width: 600px) {
 
-    .create-expense-page {
+    .edit-expense-page {
         padding: 25px 20px 50px;
     }
 

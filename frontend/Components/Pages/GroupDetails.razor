@@ -1,335 +1,419 @@
-@page "/groupdetails"
+@page "/groups/{Id:int}"
+
+@using frontend.Services
+
+@inject GroupStore GroupStore
+@inject VehicleStore VehicleStore
+@inject NavigationManager Navigation
 
 <PageTitle>Group Details</PageTitle>
 
+
 <div class="group-details-page">
 
-    <a href="/groups" class="back-link">
-        ← Back to Groups
-    </a>
+    @if (Group is null)
+    {
+        <div class="not-found-card">
 
-    <div class="group-header">
+            <h2>Group not found</h2>
 
-        <div>
-            <span class="group-label">GROUP DETAILS</span>
-            <h1>Family Car</h1>
-            <p>Shared vehicle group for family members.</p>
-        </div>
+            <p>
+                This group could not be found.
+            </p>
 
-        <div class="group-actions">
-            <button class="secondary-btn">
-                Invite Member
-            </button>
-
-            <button class="primary-btn">
-                Edit Group
-            </button>
-        </div>
-
-    </div>
-
-
-    <!-- SUMMARY -->
-
-    <div class="group-summary-grid">
-
-        <div class="summary-card">
-            <span>Members</span>
-            <strong>4</strong>
-        </div>
-
-        <div class="summary-card">
-            <span>Vehicles</span>
-            <strong>3</strong>
-        </div>
-
-        <div class="summary-card">
-            <span>Reservations</span>
-            <strong>3</strong>
-        </div>
-
-        <div class="summary-card">
-            <span>Open Debts</span>
-            <strong>€45.00</strong>
-        </div>
-
-    </div>
-
-
-    <!-- MAIN GRID -->
-
-    <div class="details-grid">
-
-        <!-- MEMBERS -->
-        <div class="details-card">
-
-            <div class="card-header">
-                <div>
-                    <h2>Members</h2>
-                    <p>People in this group.</p>
-                </div>
-
-                <span>4</span>
-            </div>
-
-            <div class="member-list">
-
-                <div class="member-row">
-                    <div class="avatar">SJ</div>
-
-                    <div>
-                        <strong>Sebastian</strong>
-                        <span>Member</span>
-                    </div>
-                </div>
-
-                <div class="member-row">
-                    <div class="avatar">MX</div>
-
-                    <div>
-                        <strong>Max</strong>
-                        <span>Member</span>
-                    </div>
-                </div>
-
-                <div class="member-row">
-                    <div class="avatar">LI</div>
-
-                    <div>
-                        <strong>Lisa</strong>
-                        <span>Member</span>
-                    </div>
-                </div>
-
-                <div class="member-row">
-                    <div class="avatar">TM</div>
-
-                    <div>
-                        <strong>Tom</strong>
-                        <span>Member</span>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- VEHICLES -->
-        <div class="details-card">
-
-            <div class="card-header">
-                <div>
-                    <h2>Vehicles</h2>
-                    <p>Vehicles assigned to this group.</p>
-                </div>
-
-                <span>3</span>
-            </div>
-
-            <div class="vehicle-list">
-
-                <div class="vehicle-row">
-
-                    <img src="images/vehicles/vw.png"
-                         alt="Volkswagen Golf" />
-
-                    <div>
-                        <strong>Volkswagen Golf</strong>
-                        <span>L-123AB</span>
-                    </div>
-
-                    <span class="vehicle-status available">
-                        Available
-                    </span>
-
-                </div>
-
-                <div class="vehicle-row">
-
-                    <img src="images/vehicles/bmw.png"
-                         alt="BMW 3 Series" />
-
-                    <div>
-                        <strong>BMW 3 Series</strong>
-                        <span>L-456CD</span>
-                    </div>
-
-                    <span class="vehicle-status in-use">
-                        In Use
-                    </span>
-
-                </div>
-
-                <div class="vehicle-row">
-
-                    <img src="images/vehicles/audi.png"
-                         alt="Audi A4" />
-
-                    <div>
-                        <strong>Audi A4</strong>
-                        <span>L-789EF</span>
-                    </div>
-
-                    <span class="vehicle-status reserved">
-                        Reserved
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- UPCOMING RESERVATIONS -->
-
-    <div class="details-card wide-card">
-
-        <div class="card-header">
-            <div>
-                <h2>Upcoming Reservations</h2>
-                <p>Next planned vehicle reservations.</p>
-            </div>
-
-            <a href="/reservations">
-                View All
+            <a href="/groups"
+               class="primary-btn">
+                Back to Groups
             </a>
-        </div>
-
-        <div class="reservation-list">
-
-            <div class="reservation-row">
-
-                <div class="reservation-date">
-                    <strong>24</strong>
-                    <span>SEP</span>
-                </div>
-
-                <div>
-                    <strong>Sebastian</strong>
-                    <span>Volkswagen Golf</span>
-                </div>
-
-                <div class="reservation-time">
-                    15:00 - 18:00
-                </div>
-
-            </div>
-
-            <div class="reservation-row">
-
-                <div class="reservation-date">
-                    <strong>25</strong>
-                    <span>SEP</span>
-                </div>
-
-                <div>
-                    <strong>Lisa</strong>
-                    <span>BMW 3 Series</span>
-                </div>
-
-                <div class="reservation-time">
-                    09:00 - 12:00
-                </div>
-
-            </div>
-
-            <div class="reservation-row">
-
-                <div class="reservation-date">
-                    <strong>26</strong>
-                    <span>SEP</span>
-                </div>
-
-                <div>
-                    <strong>Max</strong>
-                    <span>Audi A4</span>
-                </div>
-
-                <div class="reservation-time">
-                    10:00 - 14:00
-                </div>
-
-            </div>
 
         </div>
+    }
+    else
+    {
+        <a href="/groups"
+           class="back-link">
+            ← Back to Groups
+        </a>
 
-    </div>
 
+        <div class="details-header">
 
-    <!-- RECENT TRIPS -->
-
-    <div class="details-card wide-card">
-
-        <div class="card-header">
             <div>
-                <h2>Recent Trips</h2>
-                <p>Latest completed trips in this group.</p>
-            </div>
 
-            <a href="/trips">
-                View All
-            </a>
-        </div>
+                <span class="eyebrow">
+                    GROUP DETAILS
+                </span>
 
-        <div class="trip-list">
+                <h1>
+                    @Group.Name
+                </h1>
 
-            <div class="trip-row">
-
-                <img src="images/vehicles/vw.png"
-                     alt="Volkswagen Golf" />
-
-                <div>
-                    <strong>Volkswagen Golf</strong>
-                    <span>Sebastian</span>
-                </div>
-
-                <div class="trip-meta">
-                    <strong>34 km</strong>
-                    <span>Today</span>
-                </div>
+                <p>
+                    Manage members and assigned vehicles.
+                </p>
 
             </div>
 
-            <div class="trip-row">
 
-                <img src="images/vehicles/bmw.png"
-                     alt="BMW 3 Series" />
+            <div class="header-actions">
 
-                <div>
-                    <strong>BMW 3 Series</strong>
-                    <span>Lisa</span>
-                </div>
+                <a href="@($"/groups/edit/{Group.Id}")"
+                   class="edit-btn">
+                    Edit Group
+                </a>
 
-                <div class="trip-meta">
-                    <strong>12 km</strong>
-                    <span>Yesterday</span>
-                </div>
-
-            </div>
-
-            <div class="trip-row">
-
-                <img src="images/vehicles/audi.png"
-                     alt="Audi A4" />
-
-                <div>
-                    <strong>Audi A4</strong>
-                    <span>Max</span>
-                </div>
-
-                <div class="trip-meta">
-                    <strong>28 km</strong>
-                    <span>2 Days Ago</span>
-                </div>
+                <button type="button"
+                        class="delete-btn"
+                        @onclick="OpenDeleteModal">
+                    Delete Group
+                </button>
 
             </div>
 
         </div>
 
-    </div>
+
+        <!-- OVERVIEW -->
+
+        <div class="overview-card">
+
+            <div class="group-icon">
+                👥
+            </div>
+
+
+            <div class="overview-main">
+
+                <span class="owner-label">
+                    OWNER
+                </span>
+
+                <strong>
+                    @Group.Owner
+                </strong>
+
+                <p>
+                    @(string.IsNullOrWhiteSpace(Group.Description)
+                        ? "No description."
+                        : Group.Description)
+                </p>
+
+            </div>
+
+
+            <div class="overview-stats">
+
+                <div>
+                    <span>Members</span>
+                    <strong>@Group.Members.Count</strong>
+                </div>
+
+                <div>
+                    <span>Vehicles</span>
+                    <strong>@Group.VehicleLicensePlates.Count</strong>
+                </div>
+
+                <div>
+                    <span>Created</span>
+                    <strong>@Group.CreatedAt.ToString("dd MMM yyyy")</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="details-grid">
+
+            <!-- MEMBERS -->
+
+            <div class="details-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <span class="section-label">
+                            PEOPLE
+                        </span>
+
+                        <h2>
+                            Members
+                        </h2>
+                    </div>
+
+                    <strong>
+                        @Group.Members.Count
+                    </strong>
+
+                </div>
+
+
+                <div class="member-list">
+
+                    @foreach (var member in Group.Members)
+                    {
+                        <div class="member-row">
+
+                            <div class="member-avatar">
+                                @GetInitials(member)
+                            </div>
+
+
+                            <div class="member-info">
+
+                                <strong>
+                                    @member
+                                </strong>
+
+                                @if (member.Equals(
+                                    Group.Owner,
+                                    StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <span>
+                                        Group Owner
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        Member
+                                    </span>
+                                }
+
+                            </div>
+
+
+                            @if (member.Equals(
+                                Group.Owner,
+                                StringComparison.OrdinalIgnoreCase))
+                            {
+                                <span class="owner-badge">
+                                    Owner
+                                </span>
+                            }
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- VEHICLES -->
+
+            <div class="details-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <span class="section-label">
+                            FLEET
+                        </span>
+
+                        <h2>
+                            Assigned Vehicles
+                        </h2>
+                    </div>
+
+                    <strong>
+                        @AssignedVehicles.Count()
+                    </strong>
+
+                </div>
+
+
+                @if (!AssignedVehicles.Any())
+                {
+                    <div class="empty-section">
+
+                        <span>🚗</span>
+
+                        <p>
+                            No vehicles assigned.
+                        </p>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="vehicle-list">
+
+                        @foreach (var vehicle in AssignedVehicles)
+                        {
+                            <a href="@($"/vehicles/{vehicle.LicensePlate}")"
+                               class="vehicle-row">
+
+                                <div class="vehicle-image">
+
+                                    <img src="@vehicle.Image"
+                                         alt="@vehicle.Name" />
+
+                                </div>
+
+
+                                <div class="vehicle-info">
+
+                                    <strong>
+                                        @vehicle.Name
+                                    </strong>
+
+                                    <span>
+                                        @vehicle.LicensePlate
+                                    </span>
+
+                                </div>
+
+
+                                <span class="vehicle-status @vehicle.StatusClass">
+                                    @vehicle.Status
+                                </span>
+
+                            </a>
+                        }
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+
+        @if (showDeleteModal)
+        {
+            <div class="modal-overlay">
+
+                <div class="modal-card">
+
+                    <h2>
+                        Delete Group?
+                    </h2>
+
+                    <p>
+                        The group "@Group.Name" will be permanently removed.
+                    </p>
+
+
+                    <div class="delete-summary">
+
+                        <span>
+                            @Group.Members.Count members
+                        </span>
+
+                        <span>
+                            @Group.VehicleLicensePlates.Count vehicles
+                        </span>
+
+                    </div>
+
+
+                    <div class="modal-actions">
+
+                        <button type="button"
+                                class="modal-secondary"
+                                @onclick="CloseDeleteModal">
+                            Back
+                        </button>
+
+                        <button type="button"
+                                class="modal-danger"
+                                @onclick="DeleteGroup">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    }
 
 </div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+
+    private GroupItem? Group;
+
+    private bool showDeleteModal;
+
+
+    private IEnumerable<VehicleItem> AssignedVehicles =>
+        Group is null
+            ? Enumerable.Empty<VehicleItem>()
+            : VehicleStore.Vehicles.Where(
+                vehicle =>
+                    Group.VehicleLicensePlates.Contains(
+                        vehicle.LicensePlate,
+                        StringComparer.OrdinalIgnoreCase));
+
+
+    protected override void OnParametersSet()
+    {
+        Group =
+            GroupStore.FindGroup(Id);
+    }
+
+
+    private void OpenDeleteModal()
+    {
+        showDeleteModal = true;
+    }
+
+
+    private void CloseDeleteModal()
+    {
+        showDeleteModal = false;
+    }
+
+
+    private void DeleteGroup()
+    {
+        if (Group is null)
+        {
+            return;
+        }
+
+
+        GroupStore.DeleteGroup(Group);
+
+        Navigation.NavigateTo(
+            "/groups");
+    }
+
+
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return "?";
+        }
+
+
+        var parts =
+            name.Split(
+                ' ',
+                StringSplitOptions.RemoveEmptyEntries);
+
+
+        if (parts.Length == 1)
+        {
+            return parts[0][0]
+                .ToString()
+                .ToUpper();
+        }
+
+
+        return
+            $"{parts[0][0]}{parts[^1][0]}"
+            .ToUpper();
+    }
+
+}

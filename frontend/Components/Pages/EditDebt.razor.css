@@ -1,6 +1,6 @@
-.create-expense-page {
+.edit-debt-page {
     width: 100%;
-    max-width: 1150px;
+    max-width: 1100px;
 
     margin: 0 auto;
 
@@ -29,11 +29,11 @@
 
 /* HEADER */
 
-.create-header {
+.edit-header {
     margin-bottom: 27px;
 }
 
-.create-header span {
+.edit-header span {
     color: #f59e0b;
 
     font-size: 10px;
@@ -42,14 +42,13 @@
     letter-spacing: 1.5px;
 }
 
-.create-header h1 {
+.edit-header h1 {
     margin: 7px 0 5px;
 
     font-size: 31px;
-    font-weight: 800;
 }
 
-.create-header p {
+.edit-header p {
     margin: 0;
 
     color: #777777;
@@ -60,12 +59,11 @@
 
 /* LAYOUT */
 
-.create-layout {
+.edit-layout {
     display: grid;
 
     grid-template-columns:
-        1.3fr
-        0.7fr;
+        1.3fr 0.7fr;
 
     gap: 23px;
 
@@ -73,10 +71,8 @@
 }
 
 
-/* CARDS */
-
-.create-form-card,
-.expense-preview-card {
+.edit-form-card,
+.preview-card {
     padding: 23px;
 
     border: 1px solid #252525;
@@ -88,15 +84,6 @@
 
 /* FORM */
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-
-    gap: 7px;
-
-    margin-bottom: 16px;
-}
-
 .form-row {
     display: grid;
 
@@ -106,6 +93,17 @@
     gap: 13px;
 }
 
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    margin-bottom: 16px;
+}
+
+
 .form-group label {
     color: #bbbbbb;
 
@@ -113,9 +111,9 @@
     font-weight: 700;
 }
 
+
 .form-group input,
-.form-group select,
-.form-group textarea {
+.form-group select {
     width: 100%;
 
     padding: 11px 12px;
@@ -132,16 +130,10 @@
     font-size: 12px;
 }
 
+
 .form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.form-group select:focus {
     border-color: #f59e0b;
-}
-
-.form-group textarea {
-    min-height: 90px;
-
-    resize: vertical;
 }
 
 
@@ -163,7 +155,7 @@
 }
 
 
-/* ACTIONS */
+/* BUTTONS */
 
 .form-actions {
     display: flex;
@@ -174,10 +166,10 @@
     margin-top: 20px;
 }
 
-.cancel-btn,
-.create-btn {
-    display: inline-flex;
 
+.cancel-btn,
+.save-btn {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 
@@ -187,11 +179,12 @@
 
     border-radius: 7px;
 
+    text-decoration: none;
+
     font-size: 11px;
     font-weight: 800;
-
-    text-decoration: none;
 }
+
 
 .cancel-btn {
     border: 1px solid #333333;
@@ -201,7 +194,8 @@
     color: #bbbbbb;
 }
 
-.create-btn {
+
+.save-btn {
     border: none;
 
     background: #f59e0b;
@@ -211,7 +205,8 @@
     cursor: pointer;
 }
 
-.create-btn:hover {
+
+.save-btn:hover {
     background: #fbbf24;
 }
 
@@ -221,7 +216,7 @@
 .preview-label {
     display: block;
 
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 
     color: #666666;
 
@@ -231,69 +226,60 @@
     letter-spacing: 1.1px;
 }
 
-.preview-vehicle {
-    display: flex;
-    justify-content: center;
+
+.preview-people {
+    display: grid;
+
+    grid-template-columns:
+        1fr auto 1fr;
+
     align-items: center;
 
-    height: 155px;
+    gap: 10px;
 
-    margin-bottom: 15px;
+    padding: 16px;
 
-    border-radius: 9px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #1b1b1b,
-            #0d0d0d
-        );
-}
-
-.preview-vehicle img {
-    width: 235px;
-    height: 135px;
-
-    object-fit: contain;
-}
-
-.empty-vehicle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    height: 135px;
-
-    margin-bottom: 14px;
-
-    border-radius: 9px;
+    border: 1px solid #252525;
+    border-radius: 8px;
 
     background: #0e0e0e;
-
-    font-size: 33px;
-}
-
-.expense-preview-card h2 {
-    margin: 0 0 4px;
-
-    font-size: 17px;
-}
-
-.preview-plate {
-    color: #777777;
-
-    font-size: 10px;
 }
 
 
-/* AMOUNT */
+.preview-people > div:not(.preview-arrow) {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.preview-people span {
+    color: #666666;
+
+    font-size: 8px;
+    font-weight: 800;
+}
+
+
+.preview-people strong {
+    font-size: 12px;
+}
+
+
+.preview-arrow {
+    color: #f59e0b;
+
+    font-size: 20px;
+}
+
 
 .preview-amount {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
 
-    margin: 19px 0;
+    margin: 15px 0;
 
     padding: 13px;
 
@@ -303,29 +289,27 @@
     background: #0e0e0e;
 }
 
+
 .preview-amount span {
-    color: #888888;
+    color: #777777;
 
     font-size: 10px;
-    font-weight: 700;
 }
+
 
 .preview-amount strong {
     color: #fbbf24;
 
-    font-size: 20px;
+    font-size: 21px;
 }
 
-
-/* INFO */
 
 .preview-info {
     display: grid;
 
-    grid-template-columns: 1fr;
-
     gap: 8px;
 }
+
 
 .preview-info div {
     display: flex;
@@ -341,14 +325,16 @@
     background: #101010;
 }
 
+
 .preview-info span {
     color: #666666;
 
-    font-size: 9px;
-    font-weight: 700;
+    font-size: 8px;
+    font-weight: 800;
 
     text-transform: uppercase;
 }
+
 
 .preview-info strong {
     font-size: 10px;
@@ -357,11 +343,51 @@
 }
 
 
-/* RESPONSIVE */
+.open-status {
+    color: #fbbf24;
+}
+
+
+.paid-status {
+    color: #4ade80;
+}
+
+
+/* NOT FOUND */
+
+.not-found-card {
+    padding: 40px;
+
+    border: 1px solid #252525;
+    border-radius: 12px;
+
+    background: #141414;
+
+    text-align: center;
+}
+
+
+.primary-btn {
+    display: inline-block;
+
+    margin-top: 15px;
+
+    padding: 10px 16px;
+
+    border-radius: 7px;
+
+    background: #f59e0b;
+    color: #090909;
+
+    text-decoration: none;
+
+    font-weight: 800;
+}
+
 
 @media (max-width: 850px) {
 
-    .create-layout {
+    .edit-layout {
         grid-template-columns: 1fr;
     }
 
@@ -370,7 +396,7 @@
 
 @media (max-width: 600px) {
 
-    .create-expense-page {
+    .edit-debt-page {
         padding: 25px 20px 50px;
     }
 

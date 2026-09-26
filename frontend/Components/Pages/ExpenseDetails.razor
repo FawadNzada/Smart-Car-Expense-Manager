@@ -1,0 +1,326 @@
+@page "/expenses/{Id:int}"
+
+@using frontend.Services
+
+@inject ExpenseStore ExpenseStore
+@inject VehicleStore VehicleStore
+@inject NavigationManager Navigation
+
+<PageTitle>Expense Details</PageTitle>
+
+<div class="expense-details-page">
+
+    @if (Expense is null)
+    {
+        <div class="not-found-card">
+
+            <h2>Expense not found</h2>
+
+            <p>
+                This expense could not be found.
+            </p>
+
+            <a href="/expenses"
+               class="primary-btn">
+                Back to Expenses
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <a href="/expenses"
+           class="back-link">
+            ← Back to Expenses
+        </a>
+
+
+        <div class="details-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    EXPENSE DETAILS
+                </span>
+
+                <h1>
+                    @Expense.Category
+                </h1>
+
+                <p>
+                    View and manage this expense.
+                </p>
+
+            </div>
+
+
+            <strong class="header-amount">
+                @FormatMoney(Expense.Amount)
+            </strong>
+
+        </div>
+
+
+        <div class="details-layout">
+
+            <div class="vehicle-card">
+
+                @if (Vehicle is not null)
+                {
+                    <img src="@Vehicle.Image"
+                         alt="@Vehicle.Name" />
+                }
+
+                <h2>
+                    @Expense.VehicleName
+                </h2>
+
+                <span>
+                    @Expense.LicensePlate
+                </span>
+
+            </div>
+
+
+            <div class="details-card">
+
+                <div class="category-header">
+
+                    <div class="category-icon @GetCategoryClass(Expense.Category)">
+                        @GetCategoryIcon(Expense.Category)
+                    </div>
+
+                    <div>
+
+                        <span>Category</span>
+
+                        <strong>
+                            @Expense.Category
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="details-grid">
+
+                    <div class="detail-item">
+
+                        <span>Amount</span>
+
+                        <strong class="money">
+                            @FormatMoney(Expense.Amount)
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>Paid By</span>
+
+                        <strong>
+                            @Expense.PaidBy
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>Date</span>
+
+                        <strong>
+                            @Expense.Date.ToString("dd MMM yyyy")
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span>Related Trip</span>
+
+                        <strong>
+                            @(string.IsNullOrWhiteSpace(Expense.TripRoute)
+                                ? "No related trip"
+                                : Expense.TripRoute)
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="notes-box">
+
+                    <span>Notes</span>
+
+                    <p>
+                        @(string.IsNullOrWhiteSpace(Expense.Notes)
+                            ? "No notes."
+                            : Expense.Notes)
+                    </p>
+
+                </div>
+
+
+                <div class="expense-actions">
+
+                    <a href="@($"/expenses/edit/{Expense.Id}")"
+                       class="edit-btn">
+                        Edit Expense
+                    </a>
+
+                    <button type="button"
+                            class="delete-btn"
+                            @onclick="OpenDeleteModal">
+                        Delete Expense
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        @if (showDeleteModal)
+        {
+            <div class="modal-overlay">
+
+                <div class="modal-card">
+
+                    <h2>
+                        Delete Expense?
+                    </h2>
+
+                    <p>
+                        This expense will be permanently removed.
+                    </p>
+
+
+                    <div class="delete-summary">
+
+                        <span>
+                            @Expense.Category
+                        </span>
+
+                        <strong>
+                            @FormatMoney(Expense.Amount)
+                        </strong>
+
+                    </div>
+
+
+                    <div class="modal-actions">
+
+                        <button type="button"
+                                class="modal-secondary"
+                                @onclick="CloseDeleteModal">
+                            Back
+                        </button>
+
+                        <button type="button"
+                                class="modal-danger"
+                                @onclick="DeleteExpense">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+
+    private ExpenseItem? Expense;
+
+    private bool showDeleteModal;
+
+
+    private VehicleItem? Vehicle =>
+        Expense is null
+            ? null
+            : VehicleStore.FindVehicle(
+                Expense.LicensePlate);
+
+
+    protected override void OnParametersSet()
+    {
+        Expense =
+            ExpenseStore.FindExpense(Id);
+    }
+
+
+    private void OpenDeleteModal()
+    {
+        showDeleteModal = true;
+    }
+
+
+    private void CloseDeleteModal()
+    {
+        showDeleteModal = false;
+    }
+
+
+    private void DeleteExpense()
+    {
+        if (Expense is null)
+        {
+            return;
+        }
+
+
+        ExpenseStore.DeleteExpense(
+            Expense);
+
+
+        Navigation.NavigateTo(
+            "/expenses");
+    }
+
+
+    private string FormatMoney(decimal amount)
+    {
+        return $"{amount:N2} €";
+    }
+
+
+    private string GetCategoryClass(string category)
+    {
+        return category switch
+        {
+            "Fuel" => "fuel",
+            "Parking" => "parking",
+            "Maintenance" => "maintenance",
+            _ => "other"
+        };
+    }
+
+
+    private string GetCategoryIcon(string category)
+    {
+        return category switch
+        {
+            "Fuel" => "⛽",
+            "Parking" => "🅿️",
+            "Maintenance" => "🔧",
+            _ => "💳"
+        };
+    }
+
+}

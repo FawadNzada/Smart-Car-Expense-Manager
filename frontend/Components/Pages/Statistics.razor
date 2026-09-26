@@ -1,298 +1,951 @@
 @page "/statistics"
 
+@using frontend.Services
+
+@inject VehicleStore VehicleStore
+@inject ReservationStore ReservationStore
+@inject TripStore TripStore
+@inject ExpenseStore ExpenseStore
+@inject DebtStore DebtStore
+
 <PageTitle>Statistics</PageTitle>
+
 
 <div class="statistics-page">
 
+    <!-- HEADER -->
+
     <div class="statistics-header">
+
         <div>
+            <span class="eyebrow">
+                ANALYTICS
+            </span>
+
             <h1>Statistics</h1>
-            <p>Insights about your carsharing usage and expenses.</p>
-        </div>
-
-        <select class="period-select">
-            <option>Last 6 Months</option>
-            <option>Last 3 Months</option>
-            <option>This Year</option>
-            <option>All Time</option>
-        </select>
-    </div>
-
-
-    <!-- SUMMARY -->
-
-    <div class="statistics-summary">
-
-        <div class="summary-card">
-            <div class="summary-icon">🛣️</div>
-
-            <div>
-                <span>Total Trips</span>
-                <strong>48</strong>
-            </div>
-        </div>
-
-
-        <div class="summary-card">
-            <div class="summary-icon">📍</div>
-
-            <div>
-                <span>Total Distance</span>
-                <strong>2,450 km</strong>
-            </div>
-        </div>
-
-
-        <div class="summary-card">
-            <div class="summary-icon">💰</div>
-
-            <div>
-                <span>Total Expenses</span>
-                <strong>€860</strong>
-            </div>
-        </div>
-
-
-        <div class="summary-card">
-            <div class="summary-icon">€</div>
-
-            <div>
-                <span>Avg. per Trip</span>
-                <strong>€17.92</strong>
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- CHARTS -->
-
-    <div class="statistics-grid">
-
-        <!-- TRIPS PER MONTH -->
-
-        <div class="statistics-card">
-
-            <div class="card-header">
-                <div>
-                    <h2>Trips per Month</h2>
-                    <p>Number of completed trips.</p>
-                </div>
-            </div>
-
-            <div class="bar-chart">
-
-                <div class="bar-item">
-                    <div class="bar-wrapper">
-                        <div class="bar bar-10"></div>
-                    </div>
-                    <span>Apr</span>
-                </div>
-
-                <div class="bar-item">
-                    <div class="bar-wrapper">
-                        <div class="bar bar-13"></div>
-                    </div>
-                    <span>May</span>
-                </div>
-
-                <div class="bar-item">
-                    <div class="bar-wrapper">
-                        <div class="bar bar-18"></div>
-                    </div>
-                    <span>Jun</span>
-                </div>
-
-                <div class="bar-item">
-                    <div class="bar-wrapper">
-                        <div class="bar bar-15"></div>
-                    </div>
-                    <span>Jul</span>
-                </div>
-
-                <div class="bar-item">
-                    <div class="bar-wrapper">
-                        <div class="bar bar-14"></div>
-                    </div>
-                    <span>Aug</span>
-                </div>
-
-                <div class="bar-item">
-                    <div class="bar-wrapper">
-                        <div class="bar bar-20"></div>
-                    </div>
-                    <span>Sep</span>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- EXPENSES BY CATEGORY -->
-
-        <div class="statistics-card">
-
-            <div class="card-header">
-                <div>
-                    <h2>Expenses by Category</h2>
-                    <p>Distribution of vehicle costs.</p>
-                </div>
-            </div>
-
-            <div class="expense-chart-layout">
-
-                <div class="donut-chart">
-                    <div class="donut-center">
-                        <span>Total</span>
-                        <strong>€860</strong>
-                    </div>
-                </div>
-
-                <div class="chart-legend">
-
-                    <div class="legend-row">
-                        <div>
-                            <span class="legend-dot fuel"></span>
-                            <span>Fuel</span>
-                        </div>
-
-                        <strong>55%</strong>
-                    </div>
-
-                    <div class="legend-row">
-                        <div>
-                            <span class="legend-dot maintenance"></span>
-                            <span>Maintenance</span>
-                        </div>
-
-                        <strong>30%</strong>
-                    </div>
-
-                    <div class="legend-row">
-                        <div>
-                            <span class="legend-dot other"></span>
-                            <span>Other</span>
-                        </div>
-
-                        <strong>15%</strong>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- VEHICLE USAGE -->
-
-    <div class="statistics-card vehicle-usage-card">
-
-        <div class="card-header">
-            <div>
-                <h2>Vehicle Usage</h2>
-                <p>Trips completed by each vehicle.</p>
-            </div>
-        </div>
-
-
-        <div class="vehicle-usage-list">
-
-            <div class="vehicle-usage-row">
-
-                <div class="vehicle-information">
-                    <img src="images/vehicles/vw.png"
-                         alt="Volkswagen Golf" />
-
-                    <div>
-                        <strong>Volkswagen Golf</strong>
-                        <span>34 Trips</span>
-                    </div>
-                </div>
-
-                <div class="usage-progress">
-                    <div class="usage-bar">
-                        <div class="usage-fill usage-71"></div>
-                    </div>
-
-                    <strong>71%</strong>
-                </div>
-
-            </div>
-
-
-            <div class="vehicle-usage-row">
-
-                <div class="vehicle-information">
-                    <img src="images/vehicles/bmw.png"
-                         alt="BMW 3 Series" />
-
-                    <div>
-                        <strong>BMW 3 Series</strong>
-                        <span>10 Trips</span>
-                    </div>
-                </div>
-
-                <div class="usage-progress">
-                    <div class="usage-bar">
-                        <div class="usage-fill usage-21"></div>
-                    </div>
-
-                    <strong>21%</strong>
-                </div>
-
-            </div>
-
-
-            <div class="vehicle-usage-row">
-
-                <div class="vehicle-information">
-                    <img src="images/vehicles/audi.png"
-                         alt="Audi A4" />
-
-                    <div>
-                        <strong>Audi A4</strong>
-                        <span>4 Trips</span>
-                    </div>
-                </div>
-
-                <div class="usage-progress">
-                    <div class="usage-bar">
-                        <div class="usage-fill usage-8"></div>
-                    </div>
-
-                    <strong>8%</strong>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- AI INSIGHT -->
-
-    <div class="insight-card">
-
-        <div class="insight-icon">
-            ✨
-        </div>
-
-        <div class="insight-content">
-            <span>AI COST INSIGHT</span>
-
-            <h2>Fuel is currently your largest expense category.</h2>
 
             <p>
-                Fuel accounts for approximately 55% of all recorded vehicle
-                expenses in the selected period.
+                Overview of fleet activity, costs and usage.
             </p>
         </div>
 
     </div>
 
+
+    <!-- TOP STATS -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                TOTAL EXPENSES
+            </span>
+
+            <strong class="stat-value money">
+                @FormatMoney(TotalExpenses)
+            </strong>
+
+            <span class="stat-description">
+                @ExpenseStore.Expenses.Count recorded expenses
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                TOTAL DISTANCE
+            </span>
+
+            <strong class="stat-value">
+                @($"{TotalDistance:N0} km")
+            </strong>
+
+            <span class="stat-description">
+                Completed trips
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                COMPLETED TRIPS
+            </span>
+
+            <strong class="stat-value">
+                @CompletedTrips
+            </strong>
+
+            <span class="stat-description">
+                of @TripStore.Trips.Count total trips
+            </span>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                OPEN DEBTS
+            </span>
+
+            <strong class="stat-value warning">
+                @FormatMoney(OpenDebtAmount)
+            </strong>
+
+            <span class="stat-description">
+                @OpenDebtCount outstanding payments
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- EXPENSES + TRIPS -->
+
+    <div class="statistics-grid">
+
+        <!-- EXPENSE CATEGORY -->
+
+        <div class="chart-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        EXPENSE ANALYSIS
+                    </span>
+
+                    <h2>
+                        Expenses by Category
+                    </h2>
+
+                </div>
+
+                <strong class="header-total">
+                    @FormatMoney(TotalExpenses)
+                </strong>
+
+            </div>
+
+
+            <div class="bar-list">
+
+                @foreach (var category in ExpenseCategories)
+                {
+                    var total = GetCategoryTotal(category);
+
+                    <div class="bar-item">
+
+                        <div class="bar-top">
+
+                            <div class="bar-name">
+
+                                <span class="category-icon">
+                                    @GetExpenseIcon(category)
+                                </span>
+
+                                <span>
+                                    @category
+                                </span>
+
+                            </div>
+
+                            <strong>
+                                @FormatMoney(total)
+                            </strong>
+
+                        </div>
+
+
+                        <div class="bar-track">
+
+                            <div class="bar-fill"
+                                 style="@($"width: {GetExpenseCategoryPercentage(category)}%;")">
+                            </div>
+
+                        </div>
+
+
+                        <span class="bar-percent">
+                            @GetExpenseCategoryPercentage(category)%
+                        </span>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+
+        <!-- TRIPS -->
+
+        <div class="chart-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        TRIP ACTIVITY
+                    </span>
+
+                    <h2>
+                        Trip Status
+                    </h2>
+
+                </div>
+
+                <strong class="header-total">
+                    @TripStore.Trips.Count
+                </strong>
+
+            </div>
+
+
+            <div class="status-stat-list">
+
+                <div class="status-stat">
+
+                    <div class="status-name">
+
+                        <span class="status-dot planned"></span>
+
+                        <span>
+                            Planned
+                        </span>
+
+                    </div>
+
+                    <div class="status-value">
+
+                        <strong>
+                            @CountTrips("Planned")
+                        </strong>
+
+                        <span>
+                            @GetTripPercentage("Planned")%
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="status-stat">
+
+                    <div class="status-name">
+
+                        <span class="status-dot active"></span>
+
+                        <span>
+                            Active
+                        </span>
+
+                    </div>
+
+                    <div class="status-value">
+
+                        <strong>
+                            @CountTrips("Active")
+                        </strong>
+
+                        <span>
+                            @GetTripPercentage("Active")%
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="status-stat">
+
+                    <div class="status-name">
+
+                        <span class="status-dot completed"></span>
+
+                        <span>
+                            Completed
+                        </span>
+
+                    </div>
+
+                    <div class="status-value">
+
+                        <strong>
+                            @CountTrips("Completed")
+                        </strong>
+
+                        <span>
+                            @GetTripPercentage("Completed")%
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="status-stat">
+
+                    <div class="status-name">
+
+                        <span class="status-dot cancelled"></span>
+
+                        <span>
+                            Cancelled
+                        </span>
+
+                    </div>
+
+                    <div class="status-value">
+
+                        <strong>
+                            @CountTrips("Cancelled")
+                        </strong>
+
+                        <span>
+                            @GetTripPercentage("Cancelled")%
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="trip-summary">
+
+                <div>
+
+                    <span>Total Distance</span>
+
+                    <strong>
+                        @($"{TotalDistance:N0} km")
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>Average Distance</span>
+
+                    <strong>
+                        @($"{AverageTripDistance:N1} km")
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- VEHICLES -->
+
+    <div class="chart-card vehicle-statistics">
+
+        <div class="card-header">
+
+            <div>
+
+                <span class="section-label">
+                    FLEET ANALYSIS
+                </span>
+
+                <h2>
+                    Costs by Vehicle
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="vehicle-stat-list">
+
+            @foreach (var vehicle in VehicleStore.Vehicles)
+            {
+                <div class="vehicle-stat-row">
+
+                    <div class="vehicle-stat-info">
+
+                        <div class="vehicle-image">
+
+                            <img src="@vehicle.Image"
+                                 alt="@vehicle.Name" />
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                @vehicle.Name
+                            </strong>
+
+                            <span>
+                                @vehicle.LicensePlate
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="vehicle-distance">
+
+                        <span>
+                            Distance
+                        </span>
+
+                        <strong>
+                            @($"{GetVehicleDistance(vehicle.LicensePlate):N0} km")
+                        </strong>
+
+                    </div>
+
+
+                    <div class="vehicle-expenses">
+
+                        <div class="vehicle-expense-top">
+
+                            <span>
+                                Expenses
+                            </span>
+
+                            <strong>
+                                @FormatMoney(GetVehicleExpenseTotal(vehicle.LicensePlate))
+                            </strong>
+
+                        </div>
+
+                        <div class="vehicle-bar-track">
+
+                            <div class="vehicle-bar-fill"
+                                 style="@($"width: {GetVehicleExpensePercentage(vehicle.LicensePlate)}%;")">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- RESERVATIONS + DEBTS -->
+
+    <div class="statistics-grid">
+
+        <!-- RESERVATIONS -->
+
+        <div class="chart-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        BOOKINGS
+                    </span>
+
+                    <h2>
+                        Reservations
+                    </h2>
+
+                </div>
+
+                <strong class="header-total">
+                    @ReservationStore.Reservations.Count
+                </strong>
+
+            </div>
+
+
+            <div class="metric-grid">
+
+                <div class="metric-box">
+
+                    <span>Upcoming</span>
+
+                    <strong class="green">
+                        @UpcomingReservations
+                    </strong>
+
+                </div>
+
+
+                <div class="metric-box">
+
+                    <span>Completed</span>
+
+                    <strong class="blue">
+                        @CompletedReservations
+                    </strong>
+
+                </div>
+
+
+                <div class="metric-box">
+
+                    <span>Cancelled</span>
+
+                    <strong class="red">
+                        @CancelledReservations
+                    </strong>
+
+                </div>
+
+
+                <div class="metric-box">
+
+                    <span>Total</span>
+
+                    <strong>
+                        @ReservationStore.Reservations.Count
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DEBTS -->
+
+        <div class="chart-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        PAYMENTS
+                    </span>
+
+                    <h2>
+                        Debt Overview
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="debt-stat-block">
+
+                <div class="debt-big-number">
+
+                    <span>
+                        Outstanding
+                    </span>
+
+                    <strong>
+                        @FormatMoney(OpenDebtAmount)
+                    </strong>
+
+                </div>
+
+
+                <div class="debt-divider"></div>
+
+
+                <div class="debt-stat-row">
+
+                    <span>
+                        Open debts
+                    </span>
+
+                    <strong class="warning-text">
+                        @OpenDebtCount
+                    </strong>
+
+                </div>
+
+
+                <div class="debt-stat-row">
+
+                    <span>
+                        Paid debts
+                    </span>
+
+                    <strong class="success-text">
+                        @PaidDebtCount
+                    </strong>
+
+                </div>
+
+
+                <div class="debt-stat-row">
+
+                    <span>
+                        Paid amount
+                    </span>
+
+                    <strong>
+                        @FormatMoney(PaidDebtAmount)
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FLEET STATUS -->
+
+    <div class="fleet-section">
+
+        <div class="section-heading">
+
+            <span class="section-label">
+                FLEET STATUS
+            </span>
+
+            <h2>
+                Vehicle Availability
+            </h2>
+
+        </div>
+
+
+        <div class="fleet-grid">
+
+            <div class="fleet-card">
+
+                <span class="fleet-dot available"></span>
+
+                <strong>
+                    @CountVehicles("Available")
+                </strong>
+
+                <span>
+                    Available
+                </span>
+
+            </div>
+
+
+            <div class="fleet-card">
+
+                <span class="fleet-dot in-use"></span>
+
+                <strong>
+                    @CountVehicles("In Use")
+                </strong>
+
+                <span>
+                    In Use
+                </span>
+
+            </div>
+
+
+            <div class="fleet-card">
+
+                <span class="fleet-dot reserved"></span>
+
+                <strong>
+                    @CountVehicles("Reserved")
+                </strong>
+
+                <span>
+                    Reserved
+                </span>
+
+            </div>
+
+
+            <div class="fleet-card">
+
+                <span class="fleet-dot unavailable"></span>
+
+                <strong>
+                    @CountVehicles("Unavailable")
+                </strong>
+
+                <span>
+                    Unavailable
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
+
+
+@code {
+
+    private readonly string[] ExpenseCategories =
+    {
+        "Fuel",
+        "Parking",
+        "Maintenance",
+        "Other"
+    };
+
+
+    private decimal TotalExpenses =>
+        ExpenseStore.Expenses.Sum(
+            expense => expense.Amount);
+
+
+    private int CompletedTrips =>
+        TripStore.Trips.Count(
+            trip => trip.Status == "Completed");
+
+
+    private int TotalDistance =>
+        TripStore.Trips
+            .Where(trip =>
+                trip.Status == "Completed"
+                && trip.EndMileage >= trip.StartMileage)
+            .Sum(trip =>
+                trip.EndMileage - trip.StartMileage);
+
+
+    private double AverageTripDistance
+    {
+        get
+        {
+            var completed =
+                TripStore.Trips
+                    .Where(trip =>
+                        trip.Status == "Completed"
+                        && trip.EndMileage >= trip.StartMileage)
+                    .ToList();
+
+
+            if (completed.Count == 0)
+            {
+                return 0;
+            }
+
+
+            return completed.Average(
+                trip =>
+                    trip.EndMileage - trip.StartMileage);
+        }
+    }
+
+
+    private decimal OpenDebtAmount =>
+        DebtStore.Debts
+            .Where(debt =>
+                debt.Status == "Open")
+            .Sum(debt =>
+                debt.Amount);
+
+
+    private decimal PaidDebtAmount =>
+        DebtStore.Debts
+            .Where(debt =>
+                debt.Status == "Paid")
+            .Sum(debt =>
+                debt.Amount);
+
+
+    private int OpenDebtCount =>
+        DebtStore.Debts.Count(
+            debt => debt.Status == "Open");
+
+
+    private int PaidDebtCount =>
+        DebtStore.Debts.Count(
+            debt => debt.Status == "Paid");
+
+
+    private int UpcomingReservations =>
+        ReservationStore.Reservations.Count(
+            reservation =>
+                reservation.Status != "Cancelled"
+                && reservation.Status != "Completed"
+                && reservation.Date.Date >= DateTime.Today);
+
+
+    private int CompletedReservations =>
+        ReservationStore.Reservations.Count(
+            reservation =>
+                reservation.Status == "Completed");
+
+
+    private int CancelledReservations =>
+        ReservationStore.Reservations.Count(
+            reservation =>
+                reservation.Status == "Cancelled");
+
+
+    private decimal GetCategoryTotal(
+        string category)
+    {
+        return ExpenseStore.Expenses
+            .Where(expense =>
+                expense.Category.Equals(
+                    category,
+                    StringComparison.OrdinalIgnoreCase))
+            .Sum(expense =>
+                expense.Amount);
+    }
+
+
+    private int GetExpenseCategoryPercentage(
+        string category)
+    {
+        if (TotalExpenses <= 0)
+        {
+            return 0;
+        }
+
+
+        var percentage =
+            GetCategoryTotal(category)
+            / TotalExpenses
+            * 100;
+
+
+        return (int)Math.Round(percentage);
+    }
+
+
+    private int CountTrips(
+        string status)
+    {
+        return TripStore.Trips.Count(
+            trip =>
+                trip.Status.Equals(
+                    status,
+                    StringComparison.OrdinalIgnoreCase));
+    }
+
+
+    private int GetTripPercentage(
+        string status)
+    {
+        if (TripStore.Trips.Count == 0)
+        {
+            return 0;
+        }
+
+
+        var percentage =
+            (double)CountTrips(status)
+            / TripStore.Trips.Count
+            * 100;
+
+
+        return (int)Math.Round(percentage);
+    }
+
+
+    private decimal GetVehicleExpenseTotal(
+        string licensePlate)
+    {
+        return ExpenseStore.Expenses
+            .Where(expense =>
+                expense.LicensePlate.Equals(
+                    licensePlate,
+                    StringComparison.OrdinalIgnoreCase))
+            .Sum(expense =>
+                expense.Amount);
+    }
+
+
+    private decimal MaximumVehicleExpense =>
+        VehicleStore.Vehicles.Count == 0
+            ? 0
+            : VehicleStore.Vehicles
+                .Select(vehicle =>
+                    GetVehicleExpenseTotal(
+                        vehicle.LicensePlate))
+                .DefaultIfEmpty(0)
+                .Max();
+
+
+    private int GetVehicleExpensePercentage(
+        string licensePlate)
+    {
+        if (MaximumVehicleExpense <= 0)
+        {
+            return 0;
+        }
+
+
+        var percentage =
+            GetVehicleExpenseTotal(licensePlate)
+            / MaximumVehicleExpense
+            * 100;
+
+
+        return (int)Math.Round(percentage);
+    }
+
+
+    private int GetVehicleDistance(
+        string licensePlate)
+    {
+        return TripStore.Trips
+            .Where(trip =>
+                trip.LicensePlate.Equals(
+                    licensePlate,
+                    StringComparison.OrdinalIgnoreCase)
+                && trip.Status == "Completed"
+                && trip.EndMileage >= trip.StartMileage)
+            .Sum(trip =>
+                trip.EndMileage - trip.StartMileage);
+    }
+
+
+    private int CountVehicles(
+        string status)
+    {
+        return VehicleStore.Vehicles.Count(
+            vehicle =>
+                vehicle.Status.Equals(
+                    status,
+                    StringComparison.OrdinalIgnoreCase));
+    }
+
+
+    private string FormatMoney(
+        decimal amount)
+    {
+        return $"{amount:N2} €";
+    }
+
+
+    private string GetExpenseIcon(
+        string category)
+    {
+        return category switch
+        {
+            "Fuel" => "⛽",
+            "Parking" => "🅿️",
+            "Maintenance" => "🔧",
+            _ => "💳"
+        };
+    }
+
+}

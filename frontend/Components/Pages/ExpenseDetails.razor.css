@@ -1,0 +1,417 @@
+.expense-details-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 38px 60px;
+    color: white;
+}
+
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: #888888;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.back-link:hover {
+    color: #f59e0b;
+}
+
+
+/* HEADER */
+
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 25px;
+    margin-bottom: 27px;
+}
+
+.eyebrow {
+    color: #f59e0b;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.details-header h1 {
+    margin: 7px 0 5px;
+    font-size: 31px;
+}
+
+.details-header p {
+    margin: 0;
+    color: #777777;
+    font-size: 12px;
+}
+
+.header-amount {
+    color: #fbbf24;
+    font-size: 25px;
+}
+
+
+/* LAYOUT */
+
+.details-layout {
+    display: grid;
+    grid-template-columns: 310px 1fr;
+    gap: 22px;
+    align-items: start;
+}
+
+
+/* CARDS */
+
+.vehicle-card,
+.details-card {
+    border: 1px solid #252525;
+    border-radius: 13px;
+    background: #141414;
+}
+
+.vehicle-card {
+    padding: 24px;
+    text-align: center;
+}
+
+.vehicle-card img {
+    width: 245px;
+    height: 145px;
+    object-fit: contain;
+}
+
+.vehicle-card h2 {
+    margin: 12px 0 4px;
+    font-size: 18px;
+}
+
+.vehicle-card span {
+    color: #777777;
+    font-size: 11px;
+}
+
+
+.details-card {
+    padding: 23px;
+}
+
+
+/* CATEGORY */
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 18px;
+}
+
+.category-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    font-size: 21px;
+}
+
+.category-icon.fuel {
+    background: rgba(245, 158, 11, 0.12);
+}
+
+.category-icon.parking {
+    background: rgba(59, 130, 246, 0.12);
+}
+
+.category-icon.maintenance {
+    background: rgba(168, 85, 247, 0.12);
+}
+
+.category-icon.other {
+    background: rgba(113, 113, 122, 0.12);
+}
+
+.category-header div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.category-header span {
+    color: #666666;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.category-header strong {
+    font-size: 14px;
+}
+
+
+/* DETAILS */
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    padding: 11px 12px;
+
+    border: 1px solid #242424;
+    border-radius: 8px;
+
+    background: #101010;
+}
+
+.detail-item span {
+    color: #666666;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.detail-item strong {
+    font-size: 12px;
+}
+
+.detail-item .money {
+    color: #fbbf24;
+}
+
+
+/* NOTES */
+
+.notes-box {
+    margin-top: 12px;
+
+    padding: 13px;
+
+    border: 1px solid #242424;
+    border-radius: 8px;
+
+    background: #101010;
+}
+
+.notes-box span {
+    color: #666666;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.notes-box p {
+    margin: 7px 0 0;
+    color: #bbbbbb;
+    font-size: 11px;
+}
+
+
+/* ACTIONS */
+
+.expense-actions {
+    display: flex;
+    gap: 9px;
+    margin-top: 20px;
+}
+
+.edit-btn,
+.delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 39px;
+
+    padding: 0 16px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.edit-btn {
+    border: none;
+    background: #f59e0b;
+    color: #090909;
+}
+
+.edit-btn:hover {
+    background: #fbbf24;
+    color: #090909;
+}
+
+.delete-btn {
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    background: rgba(239, 68, 68, 0.08);
+    color: #f87171;
+}
+
+
+/* MODAL */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 410px;
+
+    padding: 24px;
+
+    border: 1px solid #303030;
+    border-radius: 12px;
+
+    background: #151515;
+}
+
+.modal-card h2 {
+    margin: 0 0 8px;
+    font-size: 19px;
+}
+
+.modal-card p {
+    margin: 0 0 17px;
+    color: #888888;
+    font-size: 11px;
+}
+
+.delete-summary {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 12px;
+
+    border: 1px solid #282828;
+    border-radius: 8px;
+
+    background: #0e0e0e;
+}
+
+.delete-summary span {
+    color: #bbbbbb;
+    font-size: 11px;
+}
+
+.delete-summary strong {
+    color: #fbbf24;
+    font-size: 13px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.modal-actions button {
+    min-height: 37px;
+    padding: 0 14px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.modal-secondary {
+    border: 1px solid #333333;
+    background: #1c1c1c;
+    color: #bbbbbb;
+}
+
+.modal-danger {
+    border: none;
+    background: #dc2626;
+    color: white;
+}
+
+
+/* NOT FOUND */
+
+.not-found-card {
+    padding: 40px;
+
+    border: 1px solid #252525;
+    border-radius: 12px;
+
+    background: #141414;
+
+    text-align: center;
+}
+
+.primary-btn {
+    display: inline-block;
+
+    margin-top: 15px;
+
+    padding: 10px 16px;
+
+    border-radius: 7px;
+
+    background: #f59e0b;
+    color: #090909;
+
+    text-decoration: none;
+
+    font-weight: 800;
+}
+
+
+@media (max-width: 850px) {
+
+    .details-layout {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .expense-details-page {
+        padding: 25px 20px 50px;
+    }
+
+    .details-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

@@ -1,56 +1,154 @@
 @page "/login"
 
+@using frontend.Services
+
+@inject AuthStore AuthStore
+@inject NavigationManager Navigation
+
 <PageTitle>Login</PageTitle>
+
 
 <div class="auth-page">
 
-    <div class="auth-panel">
+    <div class="auth-card">
 
         <div class="auth-brand">
-            <span>SMART CARSHARING</span>
-            <h1>Welcome back</h1>
-            <p>Sign in to continue managing your shared vehicles and expenses.</p>
+            SMART CARSHARING
         </div>
 
-        <div class="auth-form-card">
 
-            <h2>Login</h2>
-            <p>Enter your account details.</p>
+        <h1>Welcome Back</h1>
 
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email"
-                       placeholder="Enter your email" />
+        <p class="auth-subtitle">
+            Sign in to manage your vehicles and trips.
+        </p>
+
+
+        <div class="form-group">
+
+            <label>Email</label>
+
+            <input type="email"
+                   placeholder="you@example.com"
+                   @bind="email"
+                   @bind:event="oninput" />
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Password</label>
+
+            <input type="password"
+                   placeholder="Enter your password"
+                   @bind="password"
+                   @bind:event="oninput"
+                   @onkeydown="HandleKeyDown" />
+
+        </div>
+
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div class="form-error">
+                @errorMessage
             </div>
+        }
 
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password"
-                       placeholder="Enter your password" />
-            </div>
 
-            <div class="auth-options">
-                <label class="remember">
-                    <input type="checkbox" />
-                    <span>Remember me</span>
-                </label>
+        <button type="button"
+                class="login-btn"
+                @onclick="SignIn">
+            Sign In
+        </button>
 
-                <a href="#">
-                    Forgot password?
-                </a>
-            </div>
 
-            <button class="auth-main-btn">
-                Login
-            </button>
+        <div class="demo-box">
 
-            <div class="auth-switch">
-                <span>Don't have an account?</span>
-                <a href="/register">Create Account</a>
-            </div>
+            <span>Demo Account</span>
+
+            <strong>
+                demo@smartcar.at
+            </strong>
+
+            <small>
+                Password: 1234
+            </small>
+
+        </div>
+
+
+        <div class="auth-footer">
+
+            <span>
+                Don't have an account?
+            </span>
+
+            <a href="/register">
+                Create Account
+            </a>
 
         </div>
 
     </div>
 
 </div>
+
+
+@code {
+
+    private string email = "";
+
+    private string password = "";
+
+    private string errorMessage = "";
+
+
+    private void SignIn()
+    {
+        errorMessage = "";
+
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            errorMessage =
+                "Please enter your email.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage =
+                "Please enter your password.";
+
+            return;
+        }
+
+
+        if (!AuthStore.Login(
+                email,
+                password,
+                out errorMessage))
+        {
+            return;
+        }
+
+
+        Navigation.NavigateTo(
+            "/dashboard");
+    }
+
+
+    private void HandleKeyDown(
+        KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            SignIn();
+        }
+    }
+
+}

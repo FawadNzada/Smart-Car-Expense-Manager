@@ -1,0 +1,465 @@
+@page "/debts/edit/{Id:int}"
+
+@using frontend.Services
+
+@inject DebtStore DebtStore
+@inject ExpenseStore ExpenseStore
+@inject NavigationManager Navigation
+
+<PageTitle>Edit Debt</PageTitle>
+
+
+<div class="edit-debt-page">
+
+    @if (Debt is null)
+    {
+        <div class="not-found-card">
+
+            <h2>Debt not found</h2>
+
+            <a href="/debts"
+               class="primary-btn">
+                Back to Debts
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <a href="@($"/debts/{Debt.Id}")"
+           class="back-link">
+            ← Back to Debt
+        </a>
+
+
+        <div class="edit-header">
+
+            <span>
+                DEBT MANAGEMENT
+            </span>
+
+            <h1>Edit Debt</h1>
+
+            <p>
+                Update debt information.
+            </p>
+
+        </div>
+
+
+        <div class="edit-layout">
+
+
+            <div class="edit-form-card">
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>Who owes?</label>
+
+                        <input type="text"
+                               @bind="fromPerson"
+                               @bind:event="oninput" />
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Owes to</label>
+
+                        <input type="text"
+                               @bind="toPerson"
+                               @bind:event="oninput" />
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>Amount (€)</label>
+
+                        <input type="number"
+                               min="0.01"
+                               step="0.01"
+                               @bind="amount" />
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Date</label>
+
+                        <input type="date"
+                               @bind="debtDate" />
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Related Expense</label>
+
+                    <select @bind="selectedExpenseId">
+
+                        <option value="0">
+                            No related expense
+                        </option>
+
+                        @foreach (var expense in ExpenseStore.Expenses)
+                        {
+                            <option value="@expense.Id">
+                                @expense.Category -
+                                @expense.VehicleName -
+                                @($"{expense.Amount:N2} €")
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Status</label>
+
+                    <select @bind="status">
+
+                        <option value="Open">
+                            Open
+                        </option>
+
+                        <option value="Paid">
+                            Paid
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Description</label>
+
+                    <input type="text"
+                           @bind="description"
+                           @bind:event="oninput" />
+
+                </div>
+
+
+                @if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    <div class="form-error">
+                        @errorMessage
+                    </div>
+                }
+
+
+                <div class="form-actions">
+
+                    <a href="@($"/debts/{Debt.Id}")"
+                       class="cancel-btn">
+                        Cancel
+                    </a>
+
+                    <button type="button"
+                            class="save-btn"
+                            @onclick="SaveChanges">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="preview-card">
+
+                <span class="preview-label">
+                    DEBT PREVIEW
+                </span>
+
+
+                <div class="preview-people">
+
+                    <div>
+
+                        <span>FROM</span>
+
+                        <strong>
+                            @(string.IsNullOrWhiteSpace(fromPerson)
+                                ? "Person"
+                                : fromPerson)
+                        </strong>
+
+                    </div>
+
+
+                    <div class="preview-arrow">
+                        →
+                    </div>
+
+
+                    <div>
+
+                        <span>TO</span>
+
+                        <strong>
+                            @(string.IsNullOrWhiteSpace(toPerson)
+                                ? "Person"
+                                : toPerson)
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="preview-amount">
+
+                    <span>Amount</span>
+
+                    <strong>
+                        @($"{amount:N2} €")
+                    </strong>
+
+                </div>
+
+
+                <div class="preview-info">
+
+                    <div>
+
+                        <span>Status</span>
+
+                        <strong class="@GetStatusClass()">
+                            @status
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Date</span>
+
+                        <strong>
+                            @debtDate.ToString("dd MMM yyyy")
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Expense</span>
+
+                        <strong>
+                            @(SelectedExpense is null
+                                ? "No expense"
+                                : $"{SelectedExpense.Category} – {SelectedExpense.VehicleName}")
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+
+    private DebtItem? Debt;
+
+    private bool loaded;
+
+
+    private string fromPerson = "";
+
+    private string toPerson = "";
+
+    private decimal amount;
+
+    private DateTime debtDate;
+
+    private int selectedExpenseId;
+
+    private string status = "Open";
+
+    private string description = "";
+
+    private string errorMessage = "";
+
+
+    private ExpenseItem? SelectedExpense =>
+        selectedExpenseId == 0
+            ? null
+            : ExpenseStore.FindExpense(
+                selectedExpenseId);
+
+
+    protected override void OnParametersSet()
+    {
+        if (loaded)
+        {
+            return;
+        }
+
+
+        Debt =
+            DebtStore.FindDebt(Id);
+
+
+        if (Debt is null)
+        {
+            return;
+        }
+
+
+        fromPerson =
+            Debt.FromPerson;
+
+        toPerson =
+            Debt.ToPerson;
+
+        amount =
+            Debt.Amount;
+
+        debtDate =
+            Debt.Date;
+
+        selectedExpenseId =
+            Debt.ExpenseId ?? 0;
+
+        status =
+            Debt.Status;
+
+        description =
+            Debt.Description;
+
+
+        loaded = true;
+    }
+
+
+    private void SaveChanges()
+    {
+        if (Debt is null)
+        {
+            return;
+        }
+
+
+        errorMessage = "";
+
+
+        if (string.IsNullOrWhiteSpace(fromPerson))
+        {
+            errorMessage =
+                "Please enter who owes the money.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(toPerson))
+        {
+            errorMessage =
+                "Please enter who should receive the money.";
+
+            return;
+        }
+
+
+        if (fromPerson.Trim().Equals(
+                toPerson.Trim(),
+                StringComparison.OrdinalIgnoreCase))
+        {
+            errorMessage =
+                "A person cannot owe money to themselves.";
+
+            return;
+        }
+
+
+        if (amount <= 0)
+        {
+            errorMessage =
+                "Amount must be greater than 0.";
+
+            return;
+        }
+
+
+        if (debtDate.Date > DateTime.Today)
+        {
+            errorMessage =
+                "Debt date cannot be in the future.";
+
+            return;
+        }
+
+
+        Debt.FromPerson =
+            fromPerson.Trim();
+
+        Debt.ToPerson =
+            toPerson.Trim();
+
+        Debt.Amount =
+            amount;
+
+        Debt.Date =
+            debtDate.Date;
+
+        Debt.Description =
+            string.IsNullOrWhiteSpace(description)
+                ? "Shared expense"
+                : description.Trim();
+
+        Debt.ExpenseId =
+            SelectedExpense?.Id;
+
+        Debt.ExpenseDescription =
+            SelectedExpense is null
+                ? ""
+                : $"{SelectedExpense.Category} – {SelectedExpense.VehicleName}";
+
+        Debt.Status =
+            status;
+
+
+        Navigation.NavigateTo(
+            $"/debts/{Debt.Id}");
+    }
+
+
+    private string GetStatusClass()
+    {
+        return status == "Paid"
+            ? "paid-status"
+            : "open-status";
+    }
+
+}

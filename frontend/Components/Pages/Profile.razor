@@ -1,189 +1,374 @@
 @page "/profile"
 
+@using frontend.Services
+
+@inject AuthStore AuthStore
+@inject NavigationManager Navigation
+
 <PageTitle>Profile</PageTitle>
+
 
 <div class="profile-page">
 
-    <div class="profile-header">
-        <div>
-            <h1>Profile</h1>
-            <p>Manage your account and view your activity.</p>
-        </div>
-    </div>
+    @if (!AuthStore.IsLoggedIn
+        || AuthStore.CurrentUser is null)
+    {
+        <div class="login-required">
 
-    <div class="profile-layout">
-
-        <!-- LEFT -->
-        <div class="profile-main-card">
-
-            <div class="profile-top">
-
-                <div class="profile-avatar">
-                    SJ
-                </div>
-
-                <div class="profile-user-info">
-                    <h2>Sebastian Junior</h2>
-                    <span>Group Member</span>
-                </div>
-
+            <div class="login-icon">
+                👤
             </div>
 
-            <div class="profile-details-grid">
+            <h1>Sign in required</h1>
 
-                <div class="profile-field">
-                    <span>Email</span>
-                    <strong>sebastian@email.com</strong>
-                </div>
+            <p>
+                Sign in to view and manage your profile.
+            </p>
 
-                <div class="profile-field">
-                    <span>Role</span>
-                    <strong>Group Member</strong>
-                </div>
-
-                <div class="profile-field">
-                    <span>Phone</span>
-                    <strong>+43 660 1234567</strong>
-                </div>
-
-                <div class="profile-field">
-                    <span>Member Since</span>
-                    <strong>12 Jan 2026</strong>
-                </div>
-
-            </div>
-
-            <div class="profile-actions">
-                <button class="edit-profile-btn">
-                    Edit Profile
-                </button>
-            </div>
+            <a href="/login">
+                Sign In
+            </a>
 
         </div>
+    }
+    else
+    {
+        <div class="profile-header">
 
+            <div>
 
-        <!-- RIGHT -->
-        <div class="profile-side">
-
-            <div class="group-card-profile">
-
-                <span class="section-label">
-                    GROUP MEMBERSHIP
+                <span class="eyebrow">
+                    ACCOUNT
                 </span>
 
-                <h2>Carshare Group</h2>
+                <h1>Profile</h1>
 
                 <p>
-                    You are currently a member of this group.
+                    Manage your personal account information.
                 </p>
 
-                <div class="group-meta">
-                    <span>Members</span>
-                    <strong>4</strong>
-                </div>
-
-                <button class="leave-group-btn">
-                    Leave Group
-                </button>
-
             </div>
 
 
-            <div class="preferences-card">
+            <button type="button"
+                    class="logout-btn"
+                    @onclick="Logout">
+                Sign Out
+            </button>
 
-                <span class="section-label">
-                    PREFERENCES
+        </div>
+
+
+        <div class="profile-layout">
+
+            <!-- PROFILE CARD -->
+
+            <div class="profile-card">
+
+                <div class="avatar">
+                    @GetInitials(AuthStore.CurrentUser.FullName)
+                </div>
+
+
+                <h2>
+                    @AuthStore.CurrentUser.FullName
+                </h2>
+
+
+                <span class="profile-email">
+                    @AuthStore.CurrentUser.Email
                 </span>
 
-                <div class="preference-row">
-                    <span>Notifications</span>
 
-                    <label class="switch">
-                        <input type="checkbox" checked />
-                        <span class="slider"></span>
-                    </label>
-                </div>
+                <div class="member-since">
 
-                <div class="preference-row">
-                    <span>Dark Mode</span>
+                    <span>
+                        Member since
+                    </span>
 
-                    <label class="switch">
-                        <input type="checkbox" checked />
-                        <span class="slider"></span>
-                    </label>
+                    <strong>
+                        @AuthStore.CurrentUser.CreatedAt.ToString("dd MMM yyyy")
+                    </strong>
+
                 </div>
 
             </div>
 
-        </div>
 
-    </div>
+            <!-- SETTINGS -->
 
+            <div class="settings-card">
 
-    <!-- STATS -->
-    <div class="profile-stats">
+                <div class="settings-header">
 
-        <div class="stat-card">
-            <span>Total Trips</span>
-            <strong>24</strong>
-        </div>
+                    <div>
 
-        <div class="stat-card">
-            <span>Total Expenses Paid</span>
-            <strong>€320</strong>
-        </div>
+                        <span>
+                            PROFILE INFORMATION
+                        </span>
 
-        <div class="stat-card">
-            <span>Reservations</span>
-            <strong>12</strong>
-        </div>
+                        <h2>
+                            Personal Details
+                        </h2>
 
-        <div class="stat-card">
-            <span>Vehicles Used</span>
-            <strong>3</strong>
-        </div>
-
-    </div>
+                    </div>
 
 
-    <!-- RECENT ACTIVITY -->
-    <div class="activity-card">
+                    @if (!editMode)
+                    {
+                        <button type="button"
+                                class="edit-profile-btn"
+                                @onclick="StartEditing">
+                            Edit Profile
+                        </button>
+                    }
 
-        <div class="activity-header">
-            <h2>Recent Activity</h2>
-        </div>
-
-        <div class="activity-list">
-
-            <div class="activity-row">
-                <div class="activity-icon">🚗</div>
-
-                <div>
-                    <strong>Volkswagen Golf</strong>
-                    <span>Trip completed today</span>
                 </div>
+
+
+                @if (!editMode)
+                {
+                    <div class="profile-info-grid">
+
+                        <div class="info-item">
+
+                            <span>Full Name</span>
+
+                            <strong>
+                                @AuthStore.CurrentUser.FullName
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>Email</span>
+
+                            <strong>
+                                @AuthStore.CurrentUser.Email
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>Phone</span>
+
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(AuthStore.CurrentUser.Phone)
+                                    ? "Not provided"
+                                    : AuthStore.CurrentUser.Phone)
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>Location</span>
+
+                            <strong>
+                                @(string.IsNullOrWhiteSpace(AuthStore.CurrentUser.Location)
+                                    ? "Not provided"
+                                    : AuthStore.CurrentUser.Location)
+                            </strong>
+
+                        </div>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="edit-form">
+
+                        <div class="form-group">
+
+                            <label>Full Name</label>
+
+                            <input type="text"
+                                   @bind="fullName"
+                                   @bind:event="oninput" />
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Email</label>
+
+                            <input type="email"
+                                   value="@AuthStore.CurrentUser.Email"
+                                   disabled />
+
+                            <small>
+                                Email changes will be handled by the backend later.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Phone</label>
+
+                            <input type="text"
+                                   placeholder="Optional"
+                                   @bind="phone"
+                                   @bind:event="oninput" />
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Location</label>
+
+                            <input type="text"
+                                   placeholder="e.g. Linz"
+                                   @bind="location"
+                                   @bind:event="oninput" />
+
+                        </div>
+
+
+                        @if (!string.IsNullOrWhiteSpace(errorMessage))
+                        {
+                            <div class="form-error">
+                                @errorMessage
+                            </div>
+                        }
+
+
+                        <div class="form-actions">
+
+                            <button type="button"
+                                    class="cancel-btn"
+                                    @onclick="CancelEditing">
+                                Cancel
+                            </button>
+
+                            <button type="button"
+                                    class="save-btn"
+                                    @onclick="SaveProfile">
+                                Save Changes
+                            </button>
+
+                        </div>
+
+                    </div>
+                }
+
             </div>
 
-            <div class="activity-row">
-                <div class="activity-icon">⛽</div>
-
-                <div>
-                    <strong>Fuel Expense</strong>
-                    <span>€68 added</span>
-                </div>
-            </div>
-
-            <div class="activity-row">
-                <div class="activity-icon">📅</div>
-
-                <div>
-                    <strong>Reservation</strong>
-                    <span>Tomorrow 09:00 - 12:00</span>
-                </div>
-            </div>
-
         </div>
-
-    </div>
+    }
 
 </div>
+
+
+@code {
+
+    private bool editMode;
+
+    private string fullName = "";
+
+    private string phone = "";
+
+    private string location = "";
+
+    private string errorMessage = "";
+
+
+    private void StartEditing()
+    {
+        if (AuthStore.CurrentUser is null)
+        {
+            return;
+        }
+
+
+        fullName =
+            AuthStore.CurrentUser.FullName;
+
+        phone =
+            AuthStore.CurrentUser.Phone;
+
+        location =
+            AuthStore.CurrentUser.Location;
+
+        errorMessage = "";
+
+        editMode = true;
+    }
+
+
+    private void CancelEditing()
+    {
+        editMode = false;
+
+        errorMessage = "";
+    }
+
+
+    private void SaveProfile()
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            errorMessage =
+                "Name cannot be empty.";
+
+            return;
+        }
+
+
+        AuthStore.UpdateProfile(
+            fullName,
+            phone,
+            location);
+
+
+        editMode = false;
+
+        errorMessage = "";
+    }
+
+
+    private void Logout()
+    {
+        AuthStore.Logout();
+
+        Navigation.NavigateTo(
+            "/");
+    }
+
+
+    private string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return "?";
+        }
+
+
+        var parts =
+            name.Split(
+                ' ',
+                StringSplitOptions.RemoveEmptyEntries);
+
+
+        if (parts.Length == 1)
+        {
+            return parts[0][0]
+                .ToString()
+                .ToUpper();
+        }
+
+
+        return
+            $"{parts[0][0]}{parts[^1][0]}"
+            .ToUpper();
+    }
+
+}

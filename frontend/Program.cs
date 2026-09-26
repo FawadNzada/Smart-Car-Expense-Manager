@@ -10,6 +10,11 @@ builder.Services.AddRazorComponents()
 builder.Services.AddSingleton<VehicleStore>();
 builder.Services.AddSingleton<ReservationStore>();
 builder.Services.AddSingleton<TripStore>();
+builder.Services.AddSingleton<ExpenseStore>();
+builder.Services.AddSingleton<DebtStore>();
+builder.Services.AddSingleton<GroupStore>();
+
+builder.Services.AddScoped<AuthStore>();
 
 var app = builder.Build();
 

@@ -1,0 +1,496 @@
+@page "/expenses/edit/{Id:int}"
+
+@using frontend.Services
+
+@inject ExpenseStore ExpenseStore
+@inject VehicleStore VehicleStore
+@inject TripStore TripStore
+@inject NavigationManager Navigation
+
+<PageTitle>Edit Expense</PageTitle>
+
+<div class="edit-expense-page">
+
+    @if (Expense is null)
+    {
+        <div class="not-found-card">
+
+            <h2>Expense not found</h2>
+
+            <a href="/expenses"
+               class="primary-btn">
+                Back to Expenses
+            </a>
+
+        </div>
+    }
+    else
+    {
+        <a href="@($"/expenses/{Expense.Id}")"
+           class="back-link">
+            ← Back to Expense
+        </a>
+
+
+        <div class="edit-header">
+
+            <span>
+                EXPENSE MANAGEMENT
+            </span>
+
+            <h1>Edit Expense</h1>
+
+            <p>
+                Update expense information.
+            </p>
+
+        </div>
+
+
+        <div class="edit-layout">
+
+
+            <div class="edit-form-card">
+
+                <div class="form-group">
+
+                    <label>Vehicle</label>
+
+                    <select @bind="selectedLicensePlate"
+                            @bind:after="VehicleChanged">
+
+                        @foreach (var vehicle in VehicleStore.Vehicles)
+                        {
+                            <option value="@vehicle.LicensePlate">
+                                @vehicle.Name (@vehicle.LicensePlate)
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Related Trip</label>
+
+                    <select @bind="selectedTripId">
+
+                        <option value="0">
+                            No related trip
+                        </option>
+
+                        @foreach (var trip in AvailableTrips)
+                        {
+                            <option value="@trip.Id">
+                                @trip.StartLocation → @trip.Destination
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>Category</label>
+
+                        <select @bind="category">
+
+                            <option value="Fuel">
+                                Fuel
+                            </option>
+
+                            <option value="Parking">
+                                Parking
+                            </option>
+
+                            <option value="Maintenance">
+                                Maintenance
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Amount (€)</label>
+
+                        <input type="number"
+                               min="0.01"
+                               step="0.01"
+                               @bind="amount" />
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>Date</label>
+
+                        <input type="date"
+                               @bind="expenseDate" />
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Paid By</label>
+
+                        <input type="text"
+                               @bind="paidBy"
+                               @bind:event="oninput" />
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Notes</label>
+
+                    <textarea @bind="notes"
+                              @bind:event="oninput">
+                    </textarea>
+
+                </div>
+
+
+                @if (!string.IsNullOrWhiteSpace(errorMessage))
+                {
+                    <div class="form-error">
+                        @errorMessage
+                    </div>
+                }
+
+
+                <div class="form-actions">
+
+                    <a href="@($"/expenses/{Expense.Id}")"
+                       class="cancel-btn">
+                        Cancel
+                    </a>
+
+                    <button type="button"
+                            class="save-btn"
+                            @onclick="SaveChanges">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="preview-card">
+
+                <span class="preview-label">
+                    EXPENSE PREVIEW
+                </span>
+
+
+                @if (SelectedVehicle is not null)
+                {
+                    <div class="preview-vehicle">
+
+                        <img src="@SelectedVehicle.Image"
+                             alt="@SelectedVehicle.Name" />
+
+                    </div>
+
+                    <h2>
+                        @SelectedVehicle.Name
+                    </h2>
+
+                    <span class="plate">
+                        @SelectedVehicle.LicensePlate
+                    </span>
+                }
+
+
+                <div class="preview-amount">
+
+                    <span>
+                        @category
+                    </span>
+
+                    <strong>
+                        @($"{amount:N2} €")
+                    </strong>
+
+                </div>
+
+
+                <div class="preview-info">
+
+                    <div>
+
+                        <span>Paid By</span>
+
+                        <strong>
+                            @(string.IsNullOrWhiteSpace(paidBy)
+                                ? "Name"
+                                : paidBy)
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Date</span>
+
+                        <strong>
+                            @expenseDate.ToString("dd MMM yyyy")
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>Trip</span>
+
+                        <strong>
+                            @(SelectedTrip is null
+                                ? "No trip"
+                                : $"{SelectedTrip.StartLocation} → {SelectedTrip.Destination}")
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+
+    private ExpenseItem? Expense;
+
+    private bool loaded;
+
+
+    private string selectedLicensePlate = "";
+
+    private int selectedTripId;
+
+    private string category = "Fuel";
+
+    private decimal amount;
+
+    private DateTime expenseDate;
+
+    private string paidBy = "";
+
+    private string notes = "";
+
+    private string errorMessage = "";
+
+
+    private VehicleItem? SelectedVehicle =>
+        VehicleStore.FindVehicle(
+            selectedLicensePlate);
+
+
+    private IEnumerable<TripItem> AvailableTrips =>
+        TripStore.Trips.Where(
+            trip =>
+                trip.LicensePlate.Equals(
+                    selectedLicensePlate,
+                    StringComparison.OrdinalIgnoreCase));
+
+
+    private TripItem? SelectedTrip =>
+        selectedTripId == 0
+            ? null
+            : TripStore.FindTrip(
+                selectedTripId);
+
+
+    protected override void OnParametersSet()
+    {
+        if (loaded)
+        {
+            return;
+        }
+
+
+        Expense =
+            ExpenseStore.FindExpense(Id);
+
+
+        if (Expense is null)
+        {
+            return;
+        }
+
+
+        selectedLicensePlate =
+            Expense.LicensePlate;
+
+        selectedTripId =
+            Expense.TripId ?? 0;
+
+        category =
+            Expense.Category;
+
+        amount =
+            Expense.Amount;
+
+        expenseDate =
+            Expense.Date;
+
+        paidBy =
+            Expense.PaidBy;
+
+        notes =
+            Expense.Notes;
+
+
+        loaded = true;
+    }
+
+
+    private void VehicleChanged()
+    {
+        if (selectedTripId == 0)
+        {
+            return;
+        }
+
+
+        var trip =
+            TripStore.FindTrip(
+                selectedTripId);
+
+
+        if (trip is null
+            || !trip.LicensePlate.Equals(
+                selectedLicensePlate,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            selectedTripId = 0;
+        }
+    }
+
+
+    private void SaveChanges()
+    {
+        if (Expense is null)
+        {
+            return;
+        }
+
+
+        errorMessage = "";
+
+
+        if (SelectedVehicle is null)
+        {
+            errorMessage =
+                "Please select a vehicle.";
+
+            return;
+        }
+
+
+        if (amount <= 0)
+        {
+            errorMessage =
+                "Amount must be greater than 0.";
+
+            return;
+        }
+
+
+        if (string.IsNullOrWhiteSpace(paidBy))
+        {
+            errorMessage =
+                "Please enter who paid the expense.";
+
+            return;
+        }
+
+
+        if (expenseDate.Date > DateTime.Today)
+        {
+            errorMessage =
+                "Expense date cannot be in the future.";
+
+            return;
+        }
+
+
+        if (SelectedTrip is not null
+            && !SelectedTrip.LicensePlate.Equals(
+                SelectedVehicle.LicensePlate,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            errorMessage =
+                "The selected trip does not belong to this vehicle.";
+
+            return;
+        }
+
+
+        Expense.VehicleName =
+            SelectedVehicle.Name;
+
+        Expense.LicensePlate =
+            SelectedVehicle.LicensePlate;
+
+        Expense.TripId =
+            SelectedTrip?.Id;
+
+        Expense.TripRoute =
+            SelectedTrip is null
+                ? ""
+                : $"{SelectedTrip.StartLocation} → {SelectedTrip.Destination}";
+
+        Expense.Category =
+            category;
+
+        Expense.Amount =
+            amount;
+
+        Expense.Date =
+            expenseDate.Date;
+
+        Expense.PaidBy =
+            paidBy.Trim();
+
+        Expense.Notes =
+            notes.Trim();
+
+
+        Navigation.NavigateTo(
+            $"/expenses/{Expense.Id}");
+    }
+
+}

@@ -1,278 +1,674 @@
 @page "/dashboard"
 
+@using frontend.Services
+
+@inject VehicleStore VehicleStore
+@inject ReservationStore ReservationStore
+@inject TripStore TripStore
+@inject ExpenseStore ExpenseStore
+@inject DebtStore DebtStore
+
 <PageTitle>Dashboard</PageTitle>
+
 
 <div class="dashboard-page">
 
+    <!-- HEADER -->
+
     <div class="dashboard-header">
+
         <div>
+
+            <span class="eyebrow">
+                OVERVIEW
+            </span>
+
             <h1>Dashboard</h1>
-            <p>Overview of your carsharing group.</p>
+
+            <p>
+                Overview of your vehicles, trips, reservations and expenses.
+            </p>
+
         </div>
 
-        <div class="dashboard-actions">
-            <input type="text"
-                   class="dashboard-search"
-                   placeholder="Search..." />
-
-            <button class="notification-btn">
-                🔔
-            </button>
-
-            <div class="profile-circle">
-                SJ
-            </div>
-        </div>
     </div>
 
 
-    <!-- STATISTICS -->
+    <!-- MAIN STATS -->
 
     <div class="stats-grid">
 
-        <div class="stat-card">
-            <div class="stat-icon">🚗</div>
+        <a href="/vehicles"
+           class="stat-card">
 
-            <div>
-                <span>Vehicles</span>
-                <strong>3</strong>
+            <div class="stat-top">
+
+                <span class="stat-icon">
+                    🚗
+                </span>
+
+                <span class="stat-label">
+                    VEHICLES
+                </span>
+
             </div>
-        </div>
 
-        <div class="stat-card">
-            <div class="stat-icon">📅</div>
+            <strong class="stat-value">
+                @VehicleStore.Vehicles.Count
+            </strong>
 
-            <div>
-                <span>Reservations</span>
-                <strong>12</strong>
-            </div>
-        </div>
+            <span class="stat-bottom">
+                @AvailableVehicles available
+            </span>
 
-        <div class="stat-card">
-            <div class="stat-icon">🛣️</div>
-
-            <div>
-                <span>Trips</span>
-                <strong>48</strong>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">💰</div>
-
-            <div>
-                <span>Total Expenses</span>
-                <strong>€ 860</strong>
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- CURRENT VEHICLE -->
-
-    <div class="section-header">
-        <div>
-            <h2>Current Vehicle</h2>
-            <p>Your currently selected vehicle.</p>
-        </div>
-
-        <a href="/vehicles" class="view-all-link">
-            View Vehicles →
         </a>
+
+
+        <a href="/reservations"
+           class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-icon">
+                    📅
+                </span>
+
+                <span class="stat-label">
+                    UPCOMING RESERVATIONS
+                </span>
+
+            </div>
+
+            <strong class="stat-value">
+                @UpcomingReservations.Count()
+            </strong>
+
+            <span class="stat-bottom">
+                Active bookings
+            </span>
+
+        </a>
+
+
+        <a href="/trips"
+           class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-icon">
+                    🛣️
+                </span>
+
+                <span class="stat-label">
+                    ACTIVE TRIPS
+                </span>
+
+            </div>
+
+            <strong class="stat-value">
+                @ActiveTrips
+            </strong>
+
+            <span class="stat-bottom">
+                @CompletedTrips completed
+            </span>
+
+        </a>
+
+
+        <a href="/expenses"
+           class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-icon">
+                    💶
+                </span>
+
+                <span class="stat-label">
+                    TOTAL EXPENSES
+                </span>
+
+            </div>
+
+            <strong class="stat-value money">
+                @FormatMoney(TotalExpenses)
+            </strong>
+
+            <span class="stat-bottom">
+                @ExpenseStore.Expenses.Count recorded expenses
+            </span>
+
+        </a>
+
     </div>
 
-    <div class="current-vehicle-card">
 
-        <div class="current-vehicle-info">
+    <!-- SECOND ROW -->
 
-            <div class="vehicle-title-row">
+    <div class="dashboard-grid">
+
+
+        <!-- RESERVATIONS -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
                 <div>
-                    <span class="section-label">
-                        CURRENT VEHICLE
+
+                    <span class="card-label">
+                        SCHEDULE
                     </span>
 
-                    <h2>Volkswagen Golf</h2>
-                    <p>L-123AB</p>
+                    <h2>
+                        Upcoming Reservations
+                    </h2>
+
                 </div>
 
-                <span class="status-badge">
-                    Available
-                </span>
-            </div>
-
-            <div class="vehicle-dashboard-stats">
-
-                <div class="vehicle-stat">
-                    <span>Fuel Level</span>
-                    <strong>75%</strong>
-                </div>
-
-                <div class="vehicle-stat">
-                    <span>Mileage</span>
-                    <strong>48,250 km</strong>
-                </div>
-
-                <div class="vehicle-stat">
-                    <span>Reservations</span>
-                    <strong>12</strong>
-                </div>
+                <a href="/reservations">
+                    View all →
+                </a>
 
             </div>
 
-            <div class="fuel-wrapper">
-                <div class="fuel-label">
-                    <span>⛽ Fuel</span>
-                    <span>75%</span>
-                </div>
 
-                <div class="fuel-bar">
-                    <div class="fuel-fill"></div>
+            @if (!UpcomingReservations.Any())
+            {
+                <div class="empty-card">
+
+                    <span>📅</span>
+
+                    <p>
+                        No upcoming reservations.
+                    </p>
+
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="dashboard-list">
+
+                    @foreach (var reservation in UpcomingReservations.Take(3))
+                    {
+                        <a href="@($"/reservations/{reservation.Id}")"
+                           class="reservation-row">
+
+                            <div class="vehicle-mini">
+
+                                <img src="@reservation.VehicleImage"
+                                     alt="@reservation.VehicleName" />
+
+                            </div>
+
+
+                            <div class="row-main">
+
+                                <strong>
+                                    @reservation.VehicleName
+                                </strong>
+
+                                <span>
+                                    @reservation.Driver
+                                </span>
+
+                            </div>
+
+
+                            <div class="row-date">
+
+                                <strong>
+                                    @reservation.Date.ToString("dd MMM")
+                                </strong>
+
+                                <span>
+                                    @reservation.StartTime.ToString(@"hh\:mm")
+                                    -
+                                    @reservation.EndTime.ToString(@"hh\:mm")
+                                </span>
+
+                            </div>
+
+
+                            <span class="status-badge @GetReservationStatusClass(reservation.Status)">
+                                @reservation.Status
+                            </span>
+
+                        </a>
+                    }
+
+                </div>
+            }
 
         </div>
 
 
-        <div class="current-vehicle-image">
-            <img src="images/vehicles/vw.png"
-                 alt="Volkswagen Golf" />
+
+        <!-- DEBTS -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="card-label">
+                        PAYMENTS
+                    </span>
+
+                    <h2>
+                        Open Debts
+                    </h2>
+
+                </div>
+
+                <a href="/debts">
+                    View all →
+                </a>
+
+            </div>
+
+
+            <div class="debt-overview">
+
+                <span>
+                    Outstanding
+                </span>
+
+                <strong>
+                    @FormatMoney(OpenDebtAmount)
+                </strong>
+
+                <small>
+                    @OpenDebtCount open debts
+                </small>
+
+            </div>
+
+
+            @if (OpenDebts.Any())
+            {
+                <div class="small-list">
+
+                    @foreach (var debt in OpenDebts.Take(3))
+                    {
+                        <a href="@($"/debts/{debt.Id}")"
+                           class="debt-row">
+
+                            <div>
+
+                                <strong>
+                                    @debt.FromPerson
+                                </strong>
+
+                                <span>
+                                    owes @debt.ToPerson
+                                </span>
+
+                            </div>
+
+                            <strong class="debt-amount">
+                                @FormatMoney(debt.Amount)
+                            </strong>
+
+                        </a>
+                    }
+
+                </div>
+            }
+
         </div>
 
     </div>
 
 
-    <!-- LOWER DASHBOARD -->
+    <!-- LOWER ROW -->
 
-    <div class="dashboard-bottom-grid">
+    <div class="dashboard-grid lower-grid">
 
 
-        <!-- RECENT ACTIVITY -->
+        <!-- RECENT EXPENSES -->
 
-        <div class="dashboard-panel">
+        <div class="dashboard-card">
 
-            <div class="panel-header">
-                <h2>Recent Activity</h2>
+            <div class="card-header">
 
-                <a href="/trips">
-                    View All
+                <div>
+
+                    <span class="card-label">
+                        COSTS
+                    </span>
+
+                    <h2>
+                        Recent Expenses
+                    </h2>
+
+                </div>
+
+                <a href="/expenses">
+                    View all →
                 </a>
+
             </div>
 
-            <div class="activity-list">
 
-                <div class="activity-row">
-                    <div class="activity-icon">📅</div>
+            @if (!RecentExpenses.Any())
+            {
+                <div class="empty-card">
 
-                    <div class="activity-main">
-                        <strong>New reservation</strong>
-                        <span>Volkswagen Golf</span>
-                    </div>
+                    <span>💶</span>
 
-                    <div class="activity-meta">
-                        Today, 14:30
-                    </div>
+                    <p>
+                        No expenses recorded.
+                    </p>
+
+                </div>
+            }
+            else
+            {
+                <div class="dashboard-list">
+
+                    @foreach (var expense in RecentExpenses)
+                    {
+                        <a href="@($"/expenses/{expense.Id}")"
+                           class="expense-row">
+
+                            <div class="expense-icon">
+                                @GetExpenseIcon(expense.Category)
+                            </div>
+
+
+                            <div class="row-main">
+
+                                <strong>
+                                    @expense.Category
+                                </strong>
+
+                                <span>
+                                    @expense.VehicleName
+                                </span>
+
+                            </div>
+
+
+                            <div class="expense-right">
+
+                                <strong>
+                                    @FormatMoney(expense.Amount)
+                                </strong>
+
+                                <span>
+                                    @expense.Date.ToString("dd MMM")
+                                </span>
+
+                            </div>
+
+                        </a>
+                    }
+
+                </div>
+            }
+
+        </div>
+
+
+
+        <!-- FLEET -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="card-label">
+                        FLEET
+                    </span>
+
+                    <h2>
+                        Vehicle Status
+                    </h2>
+
                 </div>
 
-                <div class="activity-row">
-                    <div class="activity-icon">⛽</div>
+                <a href="/vehicles">
+                    View fleet →
+                </a>
 
-                    <div class="activity-main">
-                        <strong>Fuel expense added</strong>
-                        <span>€45.00</span>
+            </div>
+
+
+            <div class="fleet-status-list">
+
+                <div class="fleet-status-row">
+
+                    <div>
+
+                        <span class="status-dot available"></span>
+
+                        <span>
+                            Available
+                        </span>
+
                     </div>
 
-                    <div class="activity-meta">
-                        Today, 11:20
-                    </div>
+                    <strong>
+                        @CountVehicles("Available")
+                    </strong>
+
                 </div>
 
-                <div class="activity-row">
-                    <div class="activity-icon">🛣️</div>
 
-                    <div class="activity-main">
-                        <strong>Trip completed</strong>
-                        <span>32 km</span>
+                <div class="fleet-status-row">
+
+                    <div>
+
+                        <span class="status-dot in-use"></span>
+
+                        <span>
+                            In Use
+                        </span>
+
                     </div>
 
-                    <div class="activity-meta">
-                        Yesterday
-                    </div>
+                    <strong>
+                        @CountVehicles("In Use")
+                    </strong>
+
                 </div>
 
-                <div class="activity-row">
-                    <div class="activity-icon">🚗</div>
 
-                    <div class="activity-main">
-                        <strong>Vehicle added</strong>
-                        <span>BMW 3 Series</span>
+                <div class="fleet-status-row">
+
+                    <div>
+
+                        <span class="status-dot reserved"></span>
+
+                        <span>
+                            Reserved
+                        </span>
+
                     </div>
 
-                    <div class="activity-meta">
-                        Yesterday
-                    </div>
+                    <strong>
+                        @CountVehicles("Reserved")
+                    </strong>
+
                 </div>
+
+
+                <div class="fleet-status-row">
+
+                    <div>
+
+                        <span class="status-dot unavailable"></span>
+
+                        <span>
+                            Unavailable
+                        </span>
+
+                    </div>
+
+                    <strong>
+                        @CountVehicles("Unavailable")
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="fleet-total">
+
+                <span>
+                    Total fleet
+                </span>
+
+                <strong>
+                    @VehicleStore.Vehicles.Count vehicles
+                </strong>
 
             </div>
 
         </div>
 
-
-        <!-- UPCOMING RESERVATIONS -->
-
-        <div class="dashboard-panel">
-
-            <div class="panel-header">
-                <h2>Upcoming Reservations</h2>
-
-                <a href="/reservations">
-                    View All
-                </a>
-            </div>
-
-            <div class="reservation-list">
-
-                <div class="reservation-row">
-
-                    <div class="reservation-date">
-                        <strong>24</strong>
-                        <span>SEP</span>
-                    </div>
-
-                    <div class="reservation-info">
-                        <strong>Volkswagen Golf</strong>
-                        <span>John Doe</span>
-                    </div>
-
-                    <div class="reservation-time">
-                        15:00 – 18:00
-                    </div>
-
-                </div>
+    </div>
 
 
-                <div class="reservation-row">
+    <!-- QUICK ACTIONS -->
 
-                    <div class="reservation-date">
-                        <strong>25</strong>
-                        <span>SEP</span>
-                    </div>
+    <div class="quick-section">
 
-                    <div class="reservation-info">
-                        <strong>BMW 3 Series</strong>
-                        <span>Emily</span>
-                    </div>
+        <span class="card-label">
+            QUICK ACTIONS
+        </span>
 
-                    <div class="reservation-time">
-                        10:00 – 13:00
-                    </div>
+        <div class="quick-actions">
 
-                </div>
+            <a href="/createvehicle">
+                <span>🚗</span>
+                Add Vehicle
+            </a>
 
-            </div>
+            <a href="/createreservation">
+                <span>📅</span>
+                New Reservation
+            </a>
+
+            <a href="/createtrip">
+                <span>🛣️</span>
+                New Trip
+            </a>
+
+            <a href="/createexpense">
+                <span>💶</span>
+                New Expense
+            </a>
+
+            <a href="/createdebt">
+                <span>💸</span>
+                New Debt
+            </a>
 
         </div>
 
     </div>
 
 </div>
+
+
+@code {
+
+    private int AvailableVehicles =>
+        VehicleStore.Vehicles.Count(
+            vehicle => vehicle.Status == "Available");
+
+
+    private IEnumerable<ReservationItem> UpcomingReservations =>
+        ReservationStore.Reservations
+            .Where(reservation =>
+                reservation.Status != "Cancelled"
+                && reservation.Status != "Completed"
+                && reservation.Date.Date >= DateTime.Today)
+            .OrderBy(reservation => reservation.Date)
+            .ThenBy(reservation => reservation.StartTime);
+
+
+    private int ActiveTrips =>
+        TripStore.Trips.Count(
+            trip => trip.Status == "Active");
+
+
+    private int CompletedTrips =>
+        TripStore.Trips.Count(
+            trip => trip.Status == "Completed");
+
+
+    private decimal TotalExpenses =>
+        ExpenseStore.Expenses.Sum(
+            expense => expense.Amount);
+
+
+    private IEnumerable<ExpenseItem> RecentExpenses =>
+        ExpenseStore.Expenses
+            .OrderByDescending(expense => expense.Date)
+            .ThenByDescending(expense => expense.Id)
+            .Take(4);
+
+
+    private IEnumerable<DebtItem> OpenDebts =>
+        DebtStore.Debts
+            .Where(debt => debt.Status == "Open")
+            .OrderByDescending(debt => debt.Date)
+            .ThenByDescending(debt => debt.Id);
+
+
+    private decimal OpenDebtAmount =>
+        OpenDebts.Sum(
+            debt => debt.Amount);
+
+
+    private int OpenDebtCount =>
+        OpenDebts.Count();
+
+
+    private int CountVehicles(string status)
+    {
+        return VehicleStore.Vehicles.Count(
+            vehicle =>
+                vehicle.Status.Equals(
+                    status,
+                    StringComparison.OrdinalIgnoreCase));
+    }
+
+
+    private string FormatMoney(decimal amount)
+    {
+        return $"{amount:N2} €";
+    }
+
+
+    private string GetExpenseIcon(string category)
+    {
+        return category switch
+        {
+            "Fuel" => "⛽",
+            "Parking" => "🅿️",
+            "Maintenance" => "🔧",
+            _ => "💳"
+        };
+    }
+
+
+    private string GetReservationStatusClass(string status)
+    {
+        return status switch
+        {
+            "Upcoming" => "upcoming",
+            "Planned" => "planned",
+            _ => "planned"
+        };
+    }
+
+}
