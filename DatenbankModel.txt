@@ -1,0 +1,32 @@
+User
+ ├── Groups
+ ├── Expenses
+ ├── Trips
+ ├── Reservations
+ └── Debts
+
+Group
+ ├── Users
+ └── Vehicles
+
+Vehicle
+ ├── Reservations
+ ├── Trips
+ └── Expenses
+
+Trip
+ └── Vehicle + Driver(User)
+
+Expense
+ ├── Vehicle
+ ├── PaidBy(User)
+ └── Trip (optional)
+
+Debt
+ ├── FromUser
+ ├── ToUser
+ └── Expense (optional)
+
+Reservation
+ ├── Vehicle
+ └── Driver(User)
