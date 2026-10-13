@@ -1,0 +1,252 @@
+<div class="vehicles-page">
+
+  <header class="vehicles-header">
+
+    <div>
+      <span class="page-label">FLEET MANAGEMENT</span>
+
+      <h1>Vehicles</h1>
+
+      <p>
+        Manage, monitor and access all vehicles in your shared fleet.
+      </p>
+    </div>
+
+    <a
+      routerLink="/createvehicle"
+      class="add-vehicle-btn">
+
+      <span>+</span>
+      Add Vehicle
+
+    </a>
+
+  </header>
+
+
+  <section class="fleet-toolbar">
+
+    <div class="search-box">
+
+      <svg viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m20 20-4-4"></path>
+      </svg>
+
+      <input
+        type="text"
+        placeholder="Search by vehicle, brand or license plate..."
+        [(ngModel)]="searchTerm">
+
+    </div>
+
+
+    <div class="filter-area">
+
+      <span class="vehicle-count">
+        {{ filteredVehicles.length }} Vehicles
+      </span>
+
+      <select
+        [(ngModel)]="selectedStatus">
+
+        <option value="All">
+          All Status
+        </option>
+
+        <option value="Available">
+          Available
+        </option>
+
+        <option value="In Use">
+          In Use
+        </option>
+
+        <option value="Reserved">
+          Reserved
+        </option>
+
+        <option value="Unavailable">
+          Unavailable
+        </option>
+
+      </select>
+
+    </div>
+
+  </section>
+
+
+  @if (filteredVehicles.length > 0) {
+
+    <section class="vehicle-grid">
+
+      @for (
+        vehicle of filteredVehicles;
+        track vehicle.licensePlate
+      ) {
+
+        <a
+          [routerLink]="[
+            '/vehicles',
+            vehicle.licensePlate
+          ]"
+          class="vehicle-card">
+
+
+          <div class="vehicle-visual">
+
+            <div class="vehicle-glow"></div>
+
+
+            <span
+              class="status-pill"
+              [class.available]="vehicle.status === 'Available'"
+              [class.in-use]="vehicle.status === 'In Use'"
+              [class.reserved]="vehicle.status === 'Reserved'"
+              [class.unavailable]="vehicle.status === 'Unavailable'">
+
+              <span class="status-dot"></span>
+
+              {{ vehicle.status }}
+
+            </span>
+
+
+            @if (vehicle.image) {
+
+              <img
+                [src]="vehicle.image"
+                [alt]="vehicle.name">
+
+            } @else {
+
+              <div class="vehicle-placeholder">
+
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 16h14l-1.5-5.2A2.5 2.5 0 0 0 15.1 9H8.9a2.5 2.5 0 0 0-2.4 1.8z"></path>
+                  <path d="M4 16v3M20 16v3M3 16h18"></path>
+                  <circle cx="7" cy="17" r="1.5"></circle>
+                  <circle cx="17" cy="17" r="1.5"></circle>
+                </svg>
+
+              </div>
+
+            }
+
+          </div>
+
+
+          <div class="vehicle-body">
+
+            <div class="vehicle-title-row">
+
+              <div>
+                <span class="vehicle-brand">
+                  {{ vehicle.brand }}
+                </span>
+
+                <h2>
+                  {{ vehicle.model }}
+                </h2>
+              </div>
+
+              <span class="details-arrow">
+                ›
+              </span>
+
+            </div>
+
+
+            <div class="vehicle-meta">
+
+              <div>
+
+                <span>License Plate</span>
+
+                <strong>
+                  {{ vehicle.licensePlate }}
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>Fuel Level</span>
+
+                <strong>
+                  {{ vehicle.fuelLevel }}%
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="fuel-section">
+
+              <div class="fuel-header">
+
+                <span>
+                  Fuel
+                </span>
+
+                <strong>
+                  {{ vehicle.fuelLevel }}%
+                </strong>
+
+              </div>
+
+
+              <div class="fuel-track">
+
+                <div
+                  class="fuel-fill"
+                  [style.width.%]="vehicle.fuelLevel">
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </a>
+
+      }
+
+    </section>
+
+  } @else {
+
+    <div class="empty-fleet">
+
+      <div class="empty-icon">
+
+        <svg viewBox="0 0 24 24">
+          <path d="M5 16h14l-1.5-5.2A2.5 2.5 0 0 0 15.1 9H8.9a2.5 2.5 0 0 0-2.4 1.8z"></path>
+          <path d="M4 16v3M20 16v3M3 16h18"></path>
+        </svg>
+
+      </div>
+
+      <h2>No vehicles found</h2>
+
+      <p>
+        Try another search term or change the status filter.
+      </p>
+
+      <button
+        type="button"
+        (click)="resetFilters()">
+
+        Reset Filters
+
+      </button>
+
+    </div>
+
+  }
+
+</div>

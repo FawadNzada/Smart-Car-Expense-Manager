@@ -1,0 +1,590 @@
+<div class="dashboard-page">
+
+  <div class="dashboard-topbar">
+
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m20 20-4-4"></path>
+      </svg>
+
+      <input
+        type="text"
+        placeholder="Search vehicles, trips, reservations...">
+    </div>
+
+    <div class="top-actions">
+
+      <button type="button" class="top-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+          <path d="M10 21h4"></path>
+        </svg>
+      </button>
+
+      <button type="button" class="top-icon gold">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+        </svg>
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <section class="dashboard-hero">
+
+    <div class="hero-ambient"></div>
+
+    <div class="hero-copy">
+
+      <span class="hero-label">
+        SMART CARSHARING
+      </span>
+
+      <h1>
+        Good Morning,
+        <strong>Sebastian!</strong>
+      </h1>
+
+      <p>
+        Ready for your next trip? Here's what's happening
+        with your carsharing community.
+      </p>
+
+      <a
+        routerLink="/createreservation"
+        class="hero-action">
+
+        <svg viewBox="0 0 24 24">
+          <rect x="4" y="5" width="16" height="15" rx="2"></rect>
+          <path d="M8 3v4M16 3v4M4 10h16M12 13v5M9.5 15.5h5"></path>
+        </svg>
+
+        <span>New Reservation</span>
+
+        <b>›</b>
+
+      </a>
+
+    </div>
+
+
+    <div class="hero-car">
+
+      <div class="car-glow"></div>
+
+      <img
+        src="images/vehicles/mercedes.png"
+        alt="Mercedes">
+
+      <div class="road-glow"></div>
+
+    </div>
+
+
+    <div class="weather-card">
+
+      <div class="weather-top">
+
+        <div>
+          <strong>Today</strong>
+          <span>13 Oct 2026</span>
+        </div>
+
+        <div class="weather-sun">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path>
+          </svg>
+        </div>
+
+      </div>
+
+      <div class="temperature">
+        16°C
+      </div>
+
+      <span class="weather-status">
+        Partly cloudy
+      </span>
+
+      <p>
+        Perfect weather for a road trip!
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <section class="kpi-grid">
+
+    <a routerLink="/vehicles" class="kpi-card">
+
+      <div class="kpi-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 16h14l-1.5-5.2A2.5 2.5 0 0 0 15.1 9H8.9a2.5 2.5 0 0 0-2.4 1.8z"></path>
+          <path d="M4 16v3M20 16v3M3 16h18"></path>
+          <circle cx="7" cy="17" r="1.5"></circle>
+          <circle cx="17" cy="17" r="1.5"></circle>
+        </svg>
+      </div>
+
+      <div class="kpi-copy">
+        <strong>{{ vehicles.length }}</strong>
+        <span>Vehicles</span>
+        <small>↑ Fleet overview</small>
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+
+    <a routerLink="/reservations" class="kpi-card">
+
+      <div class="kpi-icon">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+          <path d="M7 3v4M17 3v4M3 10h18"></path>
+          <path d="M8 14h3M8 17h6"></path>
+        </svg>
+      </div>
+
+      <div class="kpi-copy">
+        <strong>{{ upcomingReservations.length }}</strong>
+        <span>Active Reservations</span>
+        <small>↑ Upcoming bookings</small>
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+
+    <a routerLink="/trips" class="kpi-card">
+
+      <div class="kpi-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M7 21c2.7-5.7 2.7-12.3 0-18"></path>
+          <path d="M17 21c-2.7-5.7-2.7-12.3 0-18"></path>
+          <path d="M12 3v4M12 11v4M12 19v2"></path>
+        </svg>
+      </div>
+
+      <div class="kpi-copy">
+        <strong>1,254 km</strong>
+        <span>Total Distance</span>
+        <small>↑ Trip activity</small>
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+
+    <a routerLink="/expenses" class="kpi-card">
+
+      <div class="kpi-icon">
+        <svg viewBox="0 0 24 24">
+          <ellipse cx="12" cy="6" rx="7" ry="3"></ellipse>
+          <path d="M5 6v5c0 1.7 3.1 3 7 3s7-1.3 7-3V6"></path>
+          <path d="M5 11v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"></path>
+        </svg>
+      </div>
+
+      <div class="kpi-copy">
+        <strong>{{ formatMoney(totalExpenses) }}</strong>
+        <span>Total Expenses</span>
+        <small>↑ Cost overview</small>
+      </div>
+
+      <span class="card-arrow">›</span>
+
+    </a>
+
+  </section>
+
+
+  <section class="analytics-grid">
+
+    <article class="dashboard-panel expense-panel">
+
+      <div class="panel-header">
+        <h2>Expense Overview</h2>
+
+        <button type="button" class="panel-filter">
+          This Month
+          <span>⌄</span>
+        </button>
+      </div>
+
+
+      <div class="expense-chart">
+
+        <div class="chart-y-axis">
+          <span>€200</span>
+          <span>€150</span>
+          <span>€100</span>
+          <span>€50</span>
+          <span>€0</span>
+        </div>
+
+        <div class="chart-bars">
+
+          <div class="bar-column">
+            <div class="chart-bar" style="height: 78%"></div>
+            <span>Fuel</span>
+          </div>
+
+          <div class="bar-column">
+            <div class="chart-bar" style="height: 35%"></div>
+            <span>Parking</span>
+          </div>
+
+          <div class="bar-column">
+            <div class="chart-bar" style="height: 55%"></div>
+            <span>Maintenance</span>
+          </div>
+
+          <div class="bar-column">
+            <div class="chart-bar" style="height: 22%"></div>
+            <span>Other</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <article class="dashboard-panel trip-panel">
+
+      <div class="panel-header">
+        <h2>Trip Activity</h2>
+
+        <a routerLink="/trips">
+          ›
+        </a>
+      </div>
+
+
+      <div class="trip-content">
+
+        <div class="donut-chart">
+          <div class="donut-hole">
+            <strong>12</strong>
+            <span>Total Trips</span>
+          </div>
+        </div>
+
+
+        <div class="trip-legend">
+
+          <div>
+            <span class="legend-dot green"></span>
+            <span>Completed</span>
+            <strong>8</strong>
+          </div>
+
+          <div>
+            <span class="legend-dot gold"></span>
+            <span>Ongoing</span>
+            <strong>2</strong>
+          </div>
+
+          <div>
+            <span class="legend-dot beige"></span>
+            <span>Planned</span>
+            <strong>2</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="trip-mini-stats">
+
+        <div>
+          <div class="mini-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 21c2.7-5.7 2.7-12.3 0-18"></path>
+              <path d="M17 21c-2.7-5.7-2.7-12.3 0-18"></path>
+            </svg>
+          </div>
+
+          <div>
+            <strong>105 km</strong>
+            <small>Ø Distance per Trip</small>
+          </div>
+        </div>
+
+
+        <div>
+          <div class="mini-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12z"></path>
+              <circle cx="12" cy="9" r="2"></circle>
+            </svg>
+          </div>
+
+          <div>
+            <strong>1,254 km</strong>
+            <small>Total Distance</small>
+          </div>
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <article class="dashboard-panel vehicle-panel">
+
+      <div class="panel-header">
+        <h2>Vehicle Availability</h2>
+        <a routerLink="/vehicles">View All</a>
+      </div>
+
+
+      <div class="availability-list">
+
+        @for (
+          vehicle of vehicles.slice(0, 4);
+          track vehicle.licensePlate
+        ) {
+
+          <a
+            [routerLink]="['/vehicles', vehicle.licensePlate]"
+            class="availability-row">
+
+            <div class="availability-image">
+              <img
+                [src]="vehicle.image"
+                [alt]="vehicle.name">
+            </div>
+
+            <div class="availability-info">
+              <strong>{{ vehicle.name }}</strong>
+              <span>{{ vehicle.licensePlate }}</span>
+            </div>
+
+            <span
+              class="availability-status"
+              [class.available]="vehicle.status === 'Available'"
+              [class.reserved]="vehicle.status === 'Reserved'"
+              [class.in-use]="vehicle.status === 'In Use'"
+              [class.unavailable]="vehicle.status === 'Unavailable'">
+
+              {{ vehicle.status }}
+
+            </span>
+
+          </a>
+
+        }
+
+      </div>
+
+    </article>
+
+  </section>
+
+
+  <section class="dashboard-bottom-grid">
+
+    <article class="dashboard-panel">
+
+      <div class="panel-header">
+        <h2>Upcoming Reservations</h2>
+        <a routerLink="/reservations">View All</a>
+      </div>
+
+      <div class="reservation-list">
+
+        @for (
+          reservation of upcomingReservations.slice(0, 3);
+          track reservation.id
+        ) {
+
+          <a
+            [routerLink]="['/reservations', reservation.id]"
+            class="reservation-item">
+
+            <img
+              [src]="reservation.vehicleImage"
+              [alt]="reservation.vehicleName">
+
+            <div>
+              <strong>{{ reservation.vehicleName }}</strong>
+
+              <span>
+                {{ reservation.driver }}
+                ·
+                {{ formatDate(reservation.date) }}
+              </span>
+            </div>
+
+            <span class="reservation-time">
+              {{ reservation.startTime }}
+            </span>
+
+          </a>
+
+        }
+
+      </div>
+
+    </article>
+
+
+    <article class="dashboard-panel">
+
+      <div class="panel-header">
+        <h2>Recent Activity</h2>
+        <a routerLink="/expenses">View All</a>
+      </div>
+
+      <div class="activity-list">
+
+        <div class="activity-item">
+
+          <div class="activity-icon">
+            <svg viewBox="0 0 24 24">
+              <rect x="4" y="5" width="16" height="15" rx="2"></rect>
+              <path d="M8 3v4M16 3v4M4 10h16"></path>
+            </svg>
+          </div>
+
+          <div>
+            <strong>New reservation created</strong>
+            <span>Upcoming vehicle booking</span>
+          </div>
+
+          <small>2h ago</small>
+
+        </div>
+
+
+        <div class="activity-item">
+
+          <div class="activity-icon green">
+            <svg viewBox="0 0 24 24">
+              <path d="m5 12 4 4 10-10"></path>
+            </svg>
+          </div>
+
+          <div>
+            <strong>Trip completed</strong>
+            <span>Vehicle trip finished</span>
+          </div>
+
+          <small>1d ago</small>
+
+        </div>
+
+
+        <div class="activity-item">
+
+          <div class="activity-icon">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M15 8.5c-.8-.8-1.8-1.2-3-1.2-2 0-3.5 1.1-3.5 2.7 0 1.6 1.1 2.3 3.7 2.8 2.1.4 3.3 1.1 3.3 2.7 0 1.7-1.5 2.8-3.6 2.8M12 5v14"></path>
+            </svg>
+          </div>
+
+          <div>
+            <strong>New expense added</strong>
+            <span>Fuel expense recorded</span>
+          </div>
+
+          <small>2d ago</small>
+
+        </div>
+
+
+        <div class="activity-item">
+
+          <div class="activity-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 7h11l-3-3M17 17H6l3 3"></path>
+            </svg>
+          </div>
+
+          <div>
+            <strong>Debt marked as paid</strong>
+            <span>Settlement completed</span>
+          </div>
+
+          <small>3d ago</small>
+
+        </div>
+
+      </div>
+
+    </article>
+
+
+    <article class="dashboard-panel next-trip-panel">
+
+      <div class="panel-header">
+        <h2>Your Next Trip</h2>
+        <a routerLink="/trips">View Details</a>
+      </div>
+
+
+      <div class="trip-map">
+
+        <span class="map-point start"></span>
+
+        <span class="map-route"></span>
+
+        <span class="map-point end"></span>
+
+      </div>
+
+
+      @if (upcomingReservations.length > 0) {
+
+        <div class="next-trip-info">
+
+          <img
+            [src]="upcomingReservations[0].vehicleImage"
+            [alt]="upcomingReservations[0].vehicleName">
+
+          <div>
+            <strong>
+              {{ upcomingReservations[0].vehicleName }}
+            </strong>
+
+            <span>
+              {{ formatDate(upcomingReservations[0].date) }}
+              ·
+              {{ upcomingReservations[0].startTime }}
+            </span>
+          </div>
+
+        </div>
+
+      }
+
+
+      <a
+        routerLink="/reservations"
+        class="next-trip-button">
+
+        <span>View Reservation</span>
+        <b>›</b>
+
+      </a>
+
+    </article>
+
+  </section>
+
+</div>

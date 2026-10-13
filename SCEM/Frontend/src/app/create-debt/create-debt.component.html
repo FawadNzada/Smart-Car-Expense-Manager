@@ -1,0 +1,86 @@
+<div class="create-debt-page">
+  <a routerLink="/debts" class="back-link">← Back to Debts</a>
+
+  <div class="create-header">
+    <span class="section-label">DEBT</span>
+    <h1>Add Debt</h1>
+    <p>Record a shared repayment obligation.</p>
+  </div>
+
+  <div class="create-layout">
+    <div class="create-form-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label>From</label>
+          <input [(ngModel)]="fromPerson" placeholder="Who owes?">
+        </div>
+        <div class="form-group">
+          <label>To</label>
+          <input [(ngModel)]="toPerson" placeholder="Who receives?">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" step="0.01" [(ngModel)]="amount">
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" [(ngModel)]="debtDate">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Related Expense</label>
+        <select [(ngModel)]="selectedExpenseId">
+          <option [ngValue]="0">No related expense</option>
+          @for (e of expenses; track e.id) {
+            <option [ngValue]="e.id">{{ e.category }} – {{ e.vehicleName }} – {{ e.amount }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <input [(ngModel)]="description" placeholder="Shared expense">
+      </div>
+
+      @if (errorMessage) {
+        <div class="form-error">{{ errorMessage }}</div>
+      }
+
+      <div class="form-actions">
+        <a routerLink="/debts" class="cancel-btn">Cancel</a>
+        <button type="button" class="create-btn" (click)="saveDebt()">Add Debt</button>
+      </div>
+    </div>
+
+    <div class="debt-preview-card">
+      <span class="preview-label">LIVE PREVIEW</span>
+
+      <div class="preview-people">
+        <div>
+          <span>FROM</span>
+          <strong>{{ fromPerson || 'From' }}</strong>
+        </div>
+        <div class="preview-arrow">→</div>
+        <div>
+          <span>TO</span>
+          <strong>{{ toPerson || 'To' }}</strong>
+        </div>
+      </div>
+
+      <div class="preview-amount">
+        <span>Amount</span>
+        <strong>{{ money(amount || 0) }}</strong>
+      </div>
+
+      <div class="preview-info">
+        <div><span>Date</span><strong>{{ debtDate }}</strong></div>
+        <div><span>Status</span><strong class="open-status">Open</strong></div>
+        <div><span>Description</span><strong>{{ description || 'Shared expense' }}</strong></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,343 @@
+<div class="home-page">
+
+  <!-- TOP BAR -->
+
+  <div class="home-topbar">
+
+    <div></div>
+
+    <div class="home-auth-buttons">
+
+      <button
+        type="button"
+        class="login-btn"
+        (click)="login()">
+        Login
+      </button>
+
+      <button
+        type="button"
+        class="register-btn"
+        (click)="register()">
+        Register
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- HERO -->
+
+  <section class="home-hero">
+
+    <div class="hero-background-glow"></div>
+
+
+    <!-- LEFT SIDE -->
+
+    <div class="hero-copy">
+
+      <span class="hero-eyebrow">
+        SMART CARSHARING
+      </span>
+
+
+      <h1>
+        Manage Shared Vehicles
+
+        <span>
+          Smarter.
+        </span>
+      </h1>
+
+
+      <p>
+        Reserve vehicles, track trips, manage expenses and optimize
+        repayments with intelligent cost management and AI-powered
+        receipt recognition.
+      </p>
+
+
+      <div class="hero-actions">
+
+        <a
+          routerLink="/dashboard"
+          class="primary-btn">
+          Get Started
+        </a>
+
+        <a
+          href="#features"
+          class="secondary-btn">
+          Learn More
+        </a>
+
+      </div>
+
+
+      <div class="hero-stats">
+
+        <div>
+          <strong>3</strong>
+          <span>Vehicles</span>
+        </div>
+
+        <div>
+          <strong>12</strong>
+          <span>Reservations</span>
+        </div>
+
+        <div>
+          <strong>48</strong>
+          <span>Trips</span>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- RIGHT SIDE -->
+
+    <div class="hero-preview">
+
+      <div class="preview-glow"></div>
+
+
+      <div class="preview-card">
+
+        <div class="preview-card-header">
+
+          <div>
+            <span>
+              Current Vehicle
+            </span>
+
+            <h2>
+              Volkswagen Golf
+            </h2>
+          </div>
+
+
+          <span class="available-badge">
+            Available
+          </span>
+
+        </div>
+
+
+        <div class="preview-car">
+
+          <img
+            src="images/vehicles/vw.png"
+            alt="Volkswagen Golf">
+
+        </div>
+
+
+        <div class="preview-details">
+
+          <div>
+            <span>License Plate</span>
+
+            <strong>
+              L-123AB
+            </strong>
+          </div>
+
+
+          <div>
+            <span>Fuel Level</span>
+
+            <strong>
+              75%
+            </strong>
+          </div>
+
+
+          <div>
+            <span>Mileage</span>
+
+            <strong>
+              48,250 km
+            </strong>
+          </div>
+
+        </div>
+
+
+        <div class="preview-fuel">
+
+          <div class="fuel-heading">
+
+            <span>
+              Fuel
+            </span>
+
+            <strong>
+              75%
+            </strong>
+
+          </div>
+
+
+          <div class="fuel-track">
+
+            <div class="fuel-value"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FEATURES -->
+
+  <section
+    class="home-features"
+    id="features">
+
+    <div class="features-heading">
+
+      <span>
+        CORE FEATURES
+      </span>
+
+      <h2>
+        Everything you need for shared mobility
+      </h2>
+
+      <p>
+        Manage vehicles, reservations, trips and shared costs from one place.
+      </p>
+
+    </div>
+
+
+    <div class="home-feature-grid">
+
+      <article class="feature-card">
+
+        <div class="feature-icon">
+          🚗
+        </div>
+
+        <h3>
+          Vehicle Management
+        </h3>
+
+        <p>
+          Keep track of your shared vehicles, availability and important
+          vehicle information.
+        </p>
+
+        <a routerLink="/vehicles">
+          View Vehicles →
+        </a>
+
+      </article>
+
+
+      <article class="feature-card">
+
+        <div class="feature-icon">
+          📅
+        </div>
+
+        <h3>
+          Reservations
+        </h3>
+
+        <p>
+          Plan reservations and prevent scheduling conflicts between drivers.
+        </p>
+
+        <a routerLink="/reservations">
+          View Reservations →
+        </a>
+
+      </article>
+
+
+      <article class="feature-card">
+
+        <div class="feature-icon">
+          🛣️
+        </div>
+
+        <h3>
+          Trip Tracking
+        </h3>
+
+        <p>
+          Record completed and active trips including mileage and destinations.
+        </p>
+
+        <a routerLink="/trips">
+          View Trips →
+        </a>
+
+      </article>
+
+
+      <article class="feature-card">
+
+        <div class="feature-icon">
+          💳
+        </div>
+
+        <h3>
+          Smart Expenses
+        </h3>
+
+        <p>
+          Record shared expenses and keep track of who paid for each cost.
+        </p>
+
+        <a routerLink="/expenses">
+          View Expenses →
+        </a>
+
+      </article>
+
+    </div>
+
+  </section>
+
+
+  <!-- CTA -->
+
+  <section class="home-cta">
+
+    <div>
+
+      <span>
+        READY TO START?
+      </span>
+
+      <h2>
+        Manage your shared vehicles smarter.
+      </h2>
+
+      <p>
+        Keep vehicles, trips, reservations and costs organized in one system.
+      </p>
+
+    </div>
+
+
+    <a
+      routerLink="/dashboard"
+      class="primary-btn">
+      Open Dashboard
+    </a>
+
+  </section>
+
+</div>

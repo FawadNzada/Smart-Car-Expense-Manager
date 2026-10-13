@@ -1,0 +1,195 @@
+<div class="debts-page">
+
+  <div class="debts-header">
+    <div>
+      <span class="eyebrow">DEBT MANAGEMENT</span>
+      <h1>Debts</h1>
+      <p>Track shared costs and outstanding payments.</p>
+    </div>
+
+    <a routerLink="/createdebt" class="new-debt-btn">
+      + New Debt
+    </a>
+  </div>
+
+
+  <!-- SUMMARY -->
+
+  <div class="summary-grid">
+
+    <div class="summary-card">
+      <span>Open Amount</span>
+      <strong>{{ money(openAmount) }}</strong>
+    </div>
+
+    <div class="summary-card">
+      <span>Open Debts</span>
+      <strong>{{ openCount }}</strong>
+    </div>
+
+    <div class="summary-card">
+      <span>Paid Amount</span>
+      <strong>{{ money(paidAmount) }}</strong>
+    </div>
+
+    <div class="summary-card">
+      <span>Paid Debts</span>
+      <strong>{{ paidCount }}</strong>
+    </div>
+
+  </div>
+
+
+  <!-- FILTER -->
+
+  <div class="debt-filter-bar">
+
+    @for (f of ['All', 'Open', 'Paid']; track f) {
+
+      <button
+        type="button"
+        class="debt-filter-btn"
+        [class.debt-filter-active]="activeFilter === f"
+        (click)="setFilter(f)">
+        {{ f }}
+      </button>
+
+    }
+
+  </div>
+
+
+  <!-- DEBTS -->
+
+  <div class="debts-list">
+
+    @if (!filteredDebts.length) {
+
+      <div class="empty-state">
+
+        <div class="empty-icon">€</div>
+
+        <h3>No debts found</h3>
+
+        <p>
+          There are currently no expenses in this category.
+        </p>
+
+      </div>
+
+    }
+    @else {
+
+      @for (d of filteredDebts; track d.id) {
+
+        <div
+          class="debt-card"
+          role="button"
+          tabindex="0"
+          (click)="openDebt(d.id)">
+
+          <div [class]="'debt-icon ' + statusClass(d.status)">
+            {{ d.status === 'Paid' ? '✓' : '€' }}
+          </div>
+
+
+          <div class="debt-main">
+
+            <div class="debt-title-row">
+
+              <div>
+
+                <h2>
+                  {{ d.fromPerson }}
+                  <span>owes</span>
+                  {{ d.toPerson }}
+                </h2>
+
+                <p class="debt-description">
+                  {{ d.description }}
+                </p>
+
+              </div>
+
+
+              <div class="amount-area">
+
+                <strong>
+                  {{ money(d.amount) }}
+                </strong>
+
+                <span
+                  [class]="'status-badge ' + statusClass(d.status)">
+                  {{ d.status }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="debt-info-grid">
+
+              <div class="info-box">
+                <span>From</span>
+                <strong>{{ d.fromPerson }}</strong>
+              </div>
+
+              <div class="info-box">
+                <span>To</span>
+                <strong>{{ d.toPerson }}</strong>
+              </div>
+
+              <div class="info-box">
+                <span>Date</span>
+                <strong>{{ d.date | date:'dd MMM yyyy' }}</strong>
+              </div>
+
+              <div class="info-box">
+                <span>Related Expense</span>
+                <strong>
+                  {{ d.expenseDescription || 'No expense' }}
+                </strong>
+              </div>
+
+            </div>
+
+
+            <div
+              class="debt-actions"
+              (click)="$event.stopPropagation()">
+
+              @if (d.status === 'Open') {
+
+                <button
+                  type="button"
+                  class="paid-btn"
+                  (click)="markAsPaid(d)">
+                  Mark as Paid
+                </button>
+
+              }
+              @else {
+
+                <button
+                  type="button"
+                  class="reopen-btn"
+                  (click)="reopenDebt(d)">
+                  Reopen
+                </button>
+
+              }
+
+            </div>
+
+          </div>
+
+        </div>
+
+      }
+
+    }
+
+  </div>
+
+</div>

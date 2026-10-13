@@ -1,0 +1,97 @@
+<div class="edit-reservation-page">
+  @if (!reservation) {
+    <div class="not-found-card">
+      <h1>Reservation not found</h1>
+      <a routerLink="/reservations" class="primary-btn">Back to Reservations</a>
+    </div>
+  } @else {
+    <a [routerLink]="['/reservations', reservation.id]" class="back-link">← Back to Reservation</a>
+
+    <div class="edit-header">
+      <span class="section-label">RESERVATION MANAGEMENT</span>
+      <h1>Edit Reservation</h1>
+      <p>Update reservation details and save your changes.</p>
+    </div>
+
+    <div class="edit-layout">
+      <div class="edit-form-card">
+        <div class="form-group">
+          <label>Vehicle</label>
+          <select [(ngModel)]="selectedLicensePlate">
+            @for (vehicle of vehicles; track vehicle.licensePlate) {
+              <option [value]="vehicle.licensePlate">{{ vehicle.name }} – {{ vehicle.licensePlate }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Driver</label>
+          <input type="text" [(ngModel)]="driver">
+        </div>
+
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" [(ngModel)]="reservationDate">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Start Time</label>
+            <input type="time" [(ngModel)]="startTime">
+          </div>
+          <div class="form-group">
+            <label>End Time</label>
+            <input type="time" [(ngModel)]="endTime">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          <select [(ngModel)]="status">
+            <option>Planned</option>
+            <option>Upcoming</option>
+            <option>Completed</option>
+            <option>Cancelled</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea [(ngModel)]="notes"></textarea>
+        </div>
+
+        @if (errorMessage) {
+          <div class="form-error">{{ errorMessage }}</div>
+        }
+
+        <div class="form-actions">
+          <a [routerLink]="['/reservations', reservation.id]" class="cancel-btn">Cancel</a>
+          <button type="button" class="save-btn" (click)="saveChanges()">Save Changes</button>
+        </div>
+      </div>
+
+      <div class="edit-preview-card">
+        <span class="preview-label">RESERVATION PREVIEW</span>
+
+        @if (selectedVehicle) {
+          <div class="preview-vehicle">
+            <span [class]="'preview-status ' + statusClass()">{{ status }}</span>
+            <img [src]="selectedVehicle.image" [alt]="selectedVehicle.name">
+          </div>
+
+          <div class="preview-content">
+            <h2>{{ selectedVehicle.name }}</h2>
+            <span class="preview-plate">{{ selectedVehicle.licensePlate }}</span>
+
+            <div class="preview-info">
+              <div><span>Driver</span><strong>{{ driver || '-' }}</strong></div>
+              <div><span>Date</span><strong>{{ dateLong(reservationDate) }}</strong></div>
+              <div><span>Time</span><strong>{{ startTime }} – {{ endTime }}</strong></div>
+              <div><span>Duration</span><strong>{{ durationText() }}</strong></div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

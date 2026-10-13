@@ -1,0 +1,8 @@
+<div class="reservations-page">
+  <div class="reservations-header"><div><span class="eyebrow">RESERVATION MANAGEMENT</span><h1>Reservations</h1><p>Manage vehicle reservations and upcoming bookings.</p></div><a routerLink="/createreservation" class="new-reservation-btn">+ New Reservation</a></div>
+  <div class="reservation-tabs">@for(f of ['All','Upcoming','Past','Completed','Cancelled'];track f){<button [class]="tabClass(f)" (click)="setFilter(f)">{{f}}</button>}</div>
+  <div class="reservations-list">
+    @if(!filteredReservations.length){<div class="empty-state"><div class="empty-icon">📅</div><h3>No reservations found</h3><p>There are currently no reservations in this category.</p></div>}
+    @else{@for(r of filteredReservations;track r.id){<a [routerLink]="['/reservations',r.id]" class="reservation-card reservation-card-link"><div class="vehicle-image"><img [src]="r.vehicleImage" [alt]="r.vehicleName"></div><div class="reservation-main"><div class="vehicle-title-row"><div><h2>{{r.vehicleName}}</h2><span class="license-plate">{{r.licensePlate}}</span></div><span class="status-badge" [class]="'status-badge '+statusClass(r)">{{displayStatus(r)}}</span></div><div class="reservation-info-grid"><div class="info-box"><span>Driver</span><strong>{{r.driver}}</strong></div><div class="info-box"><span>Date</span><strong>{{dateLong(r.date)}}</strong></div><div class="info-box"><span>Time</span><strong>{{r.startTime}} - {{r.endTime}}</strong></div><div class="info-box"><span>Duration</span><strong>{{duration(r)}}</strong></div></div></div></a>}}
+  </div>
+</div>

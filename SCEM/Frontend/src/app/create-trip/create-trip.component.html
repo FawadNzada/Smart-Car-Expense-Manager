@@ -1,0 +1,115 @@
+<div class="create-trip-page">
+  <a routerLink="/trips" class="back-link">← Back to Trips</a>
+
+  <div class="create-header">
+    <span>TRIP MANAGEMENT</span>
+    <h1>New Trip</h1>
+    <p>Create a new vehicle trip.</p>
+  </div>
+
+  <div class="create-layout">
+    <div class="create-form-card">
+      <div class="form-group">
+        <label>Vehicle</label>
+        <select [(ngModel)]="selectedLicensePlate">
+          <option value="">Select vehicle</option>
+          @for (v of vehicles; track v.licensePlate) {
+            <option [value]="v.licensePlate">{{ v.name }} ({{ v.licensePlate }})</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Driver</label>
+        <input type="text" placeholder="Enter driver name" [(ngModel)]="driver">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Location</label>
+          <input type="text" placeholder="e.g. Linz" [(ngModel)]="startLocation">
+        </div>
+        <div class="form-group">
+          <label>Destination</label>
+          <input type="text" placeholder="e.g. Salzburg" [(ngModel)]="destination">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" [(ngModel)]="tripDate">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Start Time</label>
+          <input type="time" [(ngModel)]="startTime">
+        </div>
+        <div class="form-group">
+          <label>Expected End Time</label>
+          <input type="time" [(ngModel)]="endTime">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Start Mileage</label>
+        <input type="number" min="0" [(ngModel)]="startMileage">
+      </div>
+
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea placeholder="Optional notes..." [(ngModel)]="notes"></textarea>
+      </div>
+
+      @if (errorMessage) {
+        <div class="form-error">{{ errorMessage }}</div>
+      }
+
+      <div class="form-actions">
+        <a routerLink="/trips" class="cancel-btn">Cancel</a>
+        <button type="button" class="create-btn" (click)="saveTrip()">Create Trip</button>
+      </div>
+    </div>
+
+    <div class="trip-preview-card">
+      <span class="preview-label">TRIP PREVIEW</span>
+
+      @if (selectedVehicle) {
+        <div class="preview-vehicle">
+          <span class="preview-status">Planned</span>
+          <img [src]="selectedVehicle.image" [alt]="selectedVehicle.name">
+        </div>
+
+        <div class="preview-content">
+          <h2>{{ selectedVehicle.name }}</h2>
+          <span class="preview-plate">{{ selectedVehicle.licensePlate }}</span>
+
+          <div class="preview-route">
+            <div>
+              <span>FROM</span>
+              <strong>{{ startLocation || 'Start location' }}</strong>
+            </div>
+            <div class="route-arrow">→</div>
+            <div>
+              <span>TO</span>
+              <strong>{{ destination || 'Destination' }}</strong>
+            </div>
+          </div>
+
+          <div class="preview-info">
+            <div><span>Driver</span><strong>{{ driver || 'Driver' }}</strong></div>
+            <div><span>Date</span><strong>{{ tripDate }}</strong></div>
+            <div><span>Time</span><strong>{{ startTime }} - {{ endTime }}</strong></div>
+            <div><span>Start Mileage</span><strong>{{ startMileage }} km</strong></div>
+          </div>
+        </div>
+      } @else {
+        <div class="empty-preview">
+          <div class="empty-preview-icon">🚘</div>
+          <h3>Select a vehicle</h3>
+          <p>Your trip preview will appear here.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

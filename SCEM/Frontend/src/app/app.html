@@ -1,0 +1,19 @@
+<div class="page">
+
+  <app-menu></app-menu>
+
+  <main class="main-area">
+
+    <div
+      class="page-content-animation"
+      [class.page-enter]="pageAnimation()">
+
+      <router-outlet
+        (activate)="restartPageAnimation()">
+      </router-outlet>
+
+    </div>
+
+  </main>
+
+</div>

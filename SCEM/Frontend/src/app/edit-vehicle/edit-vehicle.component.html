@@ -1,0 +1,307 @@
+<div class="edit-vehicle-page">
+
+  @if (!vehicle) {
+
+    <div class="not-found-card">
+
+      <h1>
+        Vehicle not found
+      </h1>
+
+      <p>
+        The requested vehicle could not be found.
+      </p>
+
+      <a
+        routerLink="/vehicles"
+        class="primary-btn">
+
+        Back to Vehicles
+
+      </a>
+
+    </div>
+
+  } @else {
+
+    <!-- BACK -->
+
+    <a
+      [routerLink]="[
+        '/vehicles',
+        originalLicensePlate
+      ]"
+      class="back-link">
+
+      ← Back to Vehicle
+
+    </a>
+
+
+    <!-- HEADER -->
+
+    <div class="edit-header">
+
+      <div>
+
+        <span class="section-label">
+          VEHICLE
+        </span>
+
+        <h1>
+          Edit Vehicle
+        </h1>
+
+        <p>
+          Update the vehicle information.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="edit-layout">
+
+
+      <!-- FORM -->
+
+      <div class="edit-form-card">
+
+
+        <!-- BRAND -->
+
+        <div class="form-group">
+
+          <label>
+            Brand
+          </label>
+
+          <input
+            type="text"
+            placeholder="e.g. Volkswagen"
+            [(ngModel)]="brand">
+
+        </div>
+
+
+        <!-- MODEL -->
+
+        <div class="form-group">
+
+          <label>
+            Model
+          </label>
+
+          <input
+            type="text"
+            placeholder="e.g. Golf"
+            [(ngModel)]="model">
+
+        </div>
+
+
+        <!-- LICENSE PLATE -->
+
+        <div class="form-group">
+
+          <label>
+            License Plate
+          </label>
+
+          <input
+            type="text"
+            placeholder="e.g. L-123AB"
+            [(ngModel)]="licensePlate">
+
+        </div>
+
+
+        <!-- FUEL -->
+
+        <div class="form-group">
+
+          <label>
+            Fuel Level
+          </label>
+
+          <input
+            type="number"
+            min="0"
+            max="100"
+            [(ngModel)]="fuelLevel">
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="form-group">
+
+          <label>
+            Status
+          </label>
+
+          <select
+            [(ngModel)]="status">
+
+            <option value="Available">
+              Available
+            </option>
+
+            <option value="In Use">
+              In Use
+            </option>
+
+            <option value="Reserved">
+              Reserved
+            </option>
+
+            <option value="Unavailable">
+              Unavailable
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- ERROR -->
+
+        @if (errorMessage) {
+
+          <div class="form-error">
+            {{ errorMessage }}
+          </div>
+
+        }
+
+
+        <!-- ACTIONS -->
+
+        <div class="form-actions">
+
+          <a
+            [routerLink]="[
+              '/vehicles',
+              originalLicensePlate
+            ]"
+            class="cancel-btn">
+
+            Cancel
+
+          </a>
+
+
+          <button
+            type="button"
+            class="save-btn"
+            (click)="saveChanges()">
+
+            Save Changes
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- LIVE PREVIEW -->
+
+      <div class="edit-preview-card">
+
+        <span class="preview-label">
+          LIVE PREVIEW
+        </span>
+
+
+        <div class="preview-image">
+
+          <div
+            [class]="
+              'preview-status '
+              +
+              getStatusClass(status)
+            ">
+
+            {{ status }}
+
+          </div>
+
+
+          @if (getVehicleImage()) {
+
+            <img
+              [src]="getVehicleImage()"
+              [alt]="brand + ' ' + model">
+
+          } @else {
+
+            <div class="preview-image-empty">
+
+              <div class="preview-placeholder">
+                🚗
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <div class="preview-content">
+
+          <h2>
+            {{ brand || 'Vehicle Brand' }}
+            {{ model || 'Model' }}
+          </h2>
+
+
+          <span class="preview-plate">
+
+            {{
+              licensePlate
+              ||
+              'LICENSE PLATE'
+            }}
+
+          </span>
+
+
+          <div class="preview-fuel">
+
+            <div>
+
+              <span>
+                Fuel Level
+              </span>
+
+              <strong>
+                {{ fuelLevel }}%
+              </strong>
+
+            </div>
+
+
+            <div class="preview-fuel-track">
+
+              <div
+                class="preview-fuel-fill"
+                [style.width.%]="fuelLevel">
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>

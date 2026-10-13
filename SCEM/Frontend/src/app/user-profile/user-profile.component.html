@@ -1,0 +1,138 @@
+<div class="profile-page">
+  <div class="profile-header">
+    <h1>Profile</h1>
+    <p>Manage your account and view your activity.</p>
+  </div>
+
+  <div class="profile-top-grid">
+    <section class="profile-main-card">
+      <div class="profile-identity">
+        <div class="avatar">{{ initials() }}</div>
+        <div>
+          <h2>{{ name }}</h2>
+          <span>{{ role }}</span>
+        </div>
+      </div>
+
+      @if (!editMode) {
+        <div class="profile-info-grid">
+          <div class="profile-info-item">
+            <span>Email</span>
+            <strong>{{ email }}</strong>
+          </div>
+          <div class="profile-info-item">
+            <span>Role</span>
+            <strong>{{ role }}</strong>
+          </div>
+          <div class="profile-info-item">
+            <span>Phone</span>
+            <strong>{{ phone }}</strong>
+          </div>
+          <div class="profile-info-item">
+            <span>Member Since</span>
+            <strong>{{ memberSince }}</strong>
+          </div>
+        </div>
+
+        <div class="profile-main-actions">
+          <button type="button" class="edit-profile-btn" (click)="startEditing()">
+            Edit Profile
+          </button>
+        </div>
+      } @else {
+        <div class="edit-profile-form">
+          <div class="edit-grid">
+            <label>
+              <span>Full Name</span>
+              <input type="text" [(ngModel)]="name">
+            </label>
+            <label>
+              <span>Email</span>
+              <input type="email" [value]="email" disabled>
+            </label>
+            <label>
+              <span>Phone</span>
+              <input type="text" [(ngModel)]="phone">
+            </label>
+            <label>
+              <span>Role</span>
+              <input type="text" [value]="role" disabled>
+            </label>
+          </div>
+
+          @if (errorMessage) {
+            <div class="form-error">{{ errorMessage }}</div>
+          }
+
+          <div class="edit-actions">
+            <button type="button" class="cancel-edit-btn" (click)="cancelEditing()">Cancel</button>
+            <button type="button" class="save-edit-btn" (click)="saveProfile()">Save Changes</button>
+          </div>
+        </div>
+      }
+    </section>
+
+    <div class="profile-side-column">
+      <section class="membership-card">
+        <span class="card-eyebrow">GROUP MEMBERSHIP</span>
+        <h2>Carshare Group</h2>
+        <p>You are currently a member of this group.</p>
+
+        <div class="membership-row">
+          <span>Members</span>
+          <strong>4</strong>
+        </div>
+
+        <button type="button" class="leave-group-btn">Leave Group</button>
+      </section>
+
+      <section class="preferences-card">
+        <span class="card-eyebrow">PREFERENCES</span>
+
+        <button type="button" class="preference-row" (click)="toggleNotifications()">
+          <span>Notifications</span>
+          <span class="toggle" [class.on]="notificationsEnabled"><i></i></span>
+        </button>
+
+        <button type="button" class="preference-row" (click)="toggleDarkMode()">
+          <span>Dark Mode</span>
+          <span class="toggle" [class.on]="darkModeEnabled"><i></i></span>
+        </button>
+      </section>
+    </div>
+  </div>
+
+  <div class="profile-stats-grid">
+    <div class="profile-stat-card">
+      <span>Total Trips</span>
+      <strong>24</strong>
+    </div>
+    <div class="profile-stat-card">
+      <span>Total Expenses Paid</span>
+      <strong>€320</strong>
+    </div>
+    <div class="profile-stat-card">
+      <span>Reservations</span>
+      <strong>12</strong>
+    </div>
+    <div class="profile-stat-card">
+      <span>Vehicles Used</span>
+      <strong>3</strong>
+    </div>
+  </div>
+
+  <section class="recent-activity-card">
+    <div class="recent-header">Recent Activity</div>
+    <div class="activity-row">
+      <div class="activity-icon">🚗</div>
+      <div class="activity-main">
+        <strong>Volkswagen Golf</strong>
+        <span>Recent vehicle activity</span>
+      </div>
+      <div class="activity-meta">
+        <span>Reservation completed</span>
+        <strong>Today</strong>
+      </div>
+    </div>
+  </section>
+</div>

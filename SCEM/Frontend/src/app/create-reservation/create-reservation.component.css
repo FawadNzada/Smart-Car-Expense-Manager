@@ -1,0 +1,332 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.create-reservation-page {
+  min-height: 100vh;
+
+  padding:
+    34px
+    clamp(24px, 3vw, 48px)
+    65px;
+
+  background:
+    radial-gradient(
+      circle at 72% 0%,
+      rgba(202, 140, 26, 0.075),
+      transparent 28%
+    ),
+    #07090a;
+
+  color: #f2f2f2;
+}
+
+
+/* BACK */
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+
+  margin-bottom: 27px;
+
+  color: #d8a437;
+
+  text-decoration: none;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  transition:
+    color .2s ease,
+    transform .2s ease;
+}
+
+.back-link:hover {
+  color: #f0ba45;
+  transform: translateX(-3px);
+}
+
+
+/* HEADER */
+
+.create-header {
+  margin-bottom: 28px;
+}
+
+.create-header > span {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #d7a238;
+
+  font-size: 10px;
+  font-weight: 850;
+
+  letter-spacing: .18em;
+}
+
+.create-header h1 {
+  margin: 0;
+
+  font-size:
+    clamp(2.5rem, 4vw, 4rem);
+
+  line-height: 1;
+
+  letter-spacing: -.045em;
+}
+
+.create-header p {
+  margin: 8px 0 0;
+
+  color: #777d80;
+
+  font-size: 12px;
+}
+
+
+/* FORM */
+
+.reservation-form {
+  width: 100%;
+
+  padding: 27px;
+
+  border:
+    1px solid rgba(255,255,255,.07);
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18,21,23,.94),
+      rgba(7,9,10,.98)
+    );
+
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.025),
+    0 24px 55px rgba(0,0,0,.18);
+}
+
+
+/* GROUP */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  margin-bottom: 17px;
+}
+
+.form-group label {
+  color: #999da0;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+
+/* INPUT */
+
+.form-group input,
+.form-group select,
+.notes-group textarea {
+  width: 100%;
+
+  border:
+    1px solid rgba(255,255,255,.075);
+
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #0a0d0e;
+
+  color: #ececec;
+
+  font-family: inherit;
+  font-size: 11px;
+
+  color-scheme: dark;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+.form-group input,
+.form-group select {
+  height: 45px;
+
+  padding: 0 13px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.notes-group textarea:focus {
+  border-color:
+    rgba(220,168,54,.42);
+
+  background: #0c0f10;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(216,151,27,.055);
+}
+
+.form-group input::placeholder,
+.notes-group textarea::placeholder {
+  color: #51565a;
+}
+
+
+/* NOTES */
+
+.notes-group textarea {
+  min-height: 115px;
+
+  padding: 13px;
+
+  resize: vertical;
+}
+
+
+/* ERROR */
+
+.form-error {
+  margin-top: 5px;
+
+  padding: 11px 12px;
+
+  border:
+    1px solid rgba(239,68,68,.2);
+
+  border-radius: 8px;
+
+  background:
+    rgba(239,68,68,.065);
+
+  color: #ed7a7a;
+
+  font-size: 10px;
+}
+
+
+/* ACTIONS */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 9px;
+
+  margin-top: 27px;
+
+  padding-top: 21px;
+
+  border-top:
+    1px solid rgba(255,255,255,.055);
+}
+
+.cancel-btn,
+.create-btn {
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 17px;
+
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.cancel-btn {
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  background: #111416;
+
+  color: #d6d6d6;
+}
+
+.create-btn {
+  border:
+    1px solid rgba(224,170,54,.28);
+
+  background:
+    linear-gradient(
+      135deg,
+      #efbd4e,
+      #b87913
+    );
+
+  box-shadow:
+    0 8px 24px
+    rgba(205,140,22,.14);
+
+  color: #14100a;
+}
+
+.cancel-btn:hover,
+.create-btn:hover {
+  transform: translateY(-1px);
+}
+
+.create-btn:hover {
+  box-shadow:
+    0 12px 30px
+    rgba(205,140,22,.2);
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+  .create-reservation-page {
+    padding:
+      24px
+      18px
+      50px;
+  }
+
+  .reservation-form {
+    padding: 20px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-btn,
+  .create-btn {
+    width: 100%;
+  }
+
+}

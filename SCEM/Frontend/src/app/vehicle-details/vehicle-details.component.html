@@ -1,0 +1,274 @@
+<div class="vehicle-details-page">
+
+  <a
+    routerLink="/vehicles"
+    class="back-link">
+    ← Back to Vehicles
+  </a>
+
+
+  @if (!vehicle) {
+
+    <div class="not-found-card">
+
+      <h1>
+        Vehicle not found
+      </h1>
+
+      <p>
+        The requested vehicle could not be found.
+      </p>
+
+      <a
+        routerLink="/vehicles"
+        class="primary-btn">
+        Back to Vehicles
+      </a>
+
+    </div>
+
+  } @else {
+
+
+    <!-- HEADER -->
+
+    <div class="details-header">
+
+      <div>
+
+        <span class="section-label">
+          VEHICLE DETAILS
+        </span>
+
+        <h1>
+          {{ vehicle.name }}
+        </h1>
+
+        <p>
+          {{ vehicle.licensePlate }}
+        </p>
+
+      </div>
+
+
+      <div class="details-actions">
+
+        <a
+          [routerLink]="[
+            '/vehicles/edit',
+            vehicle.licensePlate
+          ]"
+          class="secondary-btn">
+          Edit Vehicle
+        </a>
+
+
+        <button
+          type="button"
+          class="delete-btn"
+          (click)="showDelete()">
+          Delete Vehicle
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- DETAILS -->
+
+    <div class="details-grid">
+
+
+      <!-- VEHICLE IMAGE -->
+
+      <div class="vehicle-image-card">
+
+        <div
+          class="vehicle-status"
+          [class.available]="vehicle.statusClass === 'available'"
+          [class.in-use]="vehicle.statusClass === 'in-use'"
+          [class.reserved]="vehicle.statusClass === 'reserved'"
+          [class.unavailable]="vehicle.statusClass === 'unavailable'">
+
+          {{ vehicle.status }}
+
+        </div>
+
+
+        @if (vehicle.image) {
+
+          <img
+            [src]="vehicle.image"
+            [alt]="vehicle.name">
+
+        } @else {
+
+          <div class="image-placeholder">
+            🚗
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- INFORMATION -->
+
+      <div class="vehicle-info-card">
+
+        <span class="section-label">
+          VEHICLE INFORMATION
+        </span>
+
+
+        <div class="info-grid">
+
+          <div class="info-item">
+
+            <span>
+              Brand
+            </span>
+
+            <strong>
+              {{ vehicle.brand }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span>
+              Model
+            </span>
+
+            <strong>
+              {{ vehicle.model }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span>
+              License Plate
+            </span>
+
+            <strong>
+              {{ vehicle.licensePlate }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span>
+              Status
+            </span>
+
+            <strong>
+              {{ vehicle.status }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- FUEL -->
+
+        <div class="fuel-section">
+
+          <div class="fuel-header">
+
+            <span>
+              Fuel Level
+            </span>
+
+            <strong>
+              {{ vehicle.fuelLevel }}%
+            </strong>
+
+          </div>
+
+
+          <div class="fuel-track">
+
+            <div
+              class="fuel-fill"
+              [style.width.%]="vehicle.fuelLevel">
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- DELETE MODAL -->
+
+    @if (showDeleteConfirmation) {
+
+      <div
+        class="delete-overlay"
+        (click)="cancelDelete()">
+
+        <div
+          class="delete-modal"
+          (click)="$event.stopPropagation()">
+
+
+          <div class="delete-icon">
+            🗑️
+          </div>
+
+
+          <span class="delete-label">
+            DELETE VEHICLE
+          </span>
+
+
+          <h2>
+            Delete {{ vehicle.name }}?
+          </h2>
+
+
+          <p>
+            This vehicle will be removed from the vehicle list.
+          </p>
+
+
+          <div class="delete-modal-actions">
+
+            <button
+              type="button"
+              class="modal-cancel-btn"
+              (click)="cancelDelete()">
+              Cancel
+            </button>
+
+
+            <button
+              type="button"
+              class="modal-delete-btn"
+              (click)="deleteVehicle()">
+              Delete Vehicle
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+  }
+
+</div>

@@ -1,0 +1,485 @@
+:host {
+  display: block;
+
+  width: 230px;
+  min-width: 230px;
+
+  min-height: 100vh;
+}
+
+
+/* ========================================
+   SIDEBAR
+   ======================================== */
+
+.sidebar {
+  position: sticky;
+
+  top: 0;
+
+  width: 230px;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+
+  padding:
+    25px
+    16px
+    18px;
+
+  border-right:
+    1px solid
+    rgba(255, 255, 255, 0.075);
+
+  background:
+    radial-gradient(
+      circle at 15% 5%,
+      rgba(245, 158, 11, 0.055),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      #080b0d 0%,
+      #050607 100%
+    );
+
+  box-shadow:
+    18px 0 45px
+    rgba(0, 0, 0, 0.25);
+
+  overflow: hidden;
+}
+
+
+/* ========================================
+   BRAND
+   ======================================== */
+
+.sidebar-brand {
+  padding:
+    0
+    9px
+    30px;
+}
+
+.brand-mark {
+  width: 145px;
+  height: 39px;
+
+  margin-bottom: -2px;
+
+  color: #f5bd45;
+}
+
+.brand-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1px;
+
+  padding-left: 10px;
+}
+
+.brand-text strong {
+  color: #f0b83c;
+
+  font-size: 11px;
+  font-weight: 850;
+
+  letter-spacing: 0.25em;
+}
+
+.brand-text span {
+  color: #f2f2f2;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  letter-spacing: 0.24em;
+}
+
+
+/* ========================================
+   NAVIGATION
+   ======================================== */
+
+.sidebar-nav {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.nav-item {
+  position: relative;
+
+  min-height: 47px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding:
+    0
+    14px;
+
+  border:
+    1px solid
+    transparent;
+
+  border-radius: 11px;
+
+  color: #a6abb0;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  overflow: hidden;
+
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+
+/* hover */
+
+.nav-item:hover {
+  color: #f3f3f3;
+
+  background:
+    rgba(255, 255, 255, 0.025);
+
+  transform:
+    translateX(2px);
+}
+
+
+/* ========================================
+   ICONS
+   ======================================== */
+
+.nav-icon {
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.nav-icon svg {
+  width: 20px;
+  height: 20px;
+
+  fill: none;
+
+  stroke: currentColor;
+
+  stroke-width: 1.7;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* ========================================
+   ACTIVE ITEM
+   ======================================== */
+
+.nav-item.active {
+  border-color:
+    rgba(245, 188, 62, 0.18);
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(245, 158, 11, 0.24),
+      rgba(245, 158, 11, 0.08)
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    inset 3px 0 0 #f6bf43,
+    0 6px 25px
+    rgba(245, 158, 11, 0.06);
+}
+
+.nav-item.active::before {
+  content: "";
+
+  position: absolute;
+
+  left: -23px;
+  top: 50%;
+
+  width: 55px;
+  height: 55px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(245, 158, 11, 0.17);
+
+  filter:
+    blur(18px);
+
+  transform:
+    translateY(-50%);
+
+  pointer-events: none;
+}
+
+.nav-item.active .nav-icon {
+  color: #f6c448;
+}
+
+.nav-item.active .nav-label {
+  font-weight: 700;
+}
+
+
+/* ========================================
+   USER AREA
+   ======================================== */
+
+.sidebar-user {
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns:
+    42px
+    minmax(0, 1fr)
+    20px;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 18px;
+
+  padding:
+    17px
+    7px
+    4px;
+
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.07);
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border:
+    1px solid
+    rgba(245, 188, 62, 0.7);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 30% 25%,
+      #444,
+      #121416 65%
+    );
+
+  box-shadow:
+    0 0 20px
+    rgba(245, 158, 11, 0.08);
+
+  color: #f5bf45;
+
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.user-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.user-info strong {
+  overflow: hidden;
+
+  color: #f1f1f1;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-info span {
+  color: #73787c;
+
+  font-size: 9px;
+}
+
+.user-arrow {
+  color: #73777b;
+
+  text-decoration: none;
+
+  font-size: 20px;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.user-arrow:hover {
+  color: #f5bf45;
+
+  transform:
+    translateX(2px);
+}
+
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 950px) {
+
+  :host {
+    width: 78px;
+    min-width: 78px;
+  }
+
+  .sidebar {
+    width: 78px;
+
+    padding:
+      22px
+      10px;
+  }
+
+  .sidebar-brand {
+    padding:
+      0
+      0
+      25px;
+  }
+
+  .brand-mark {
+    width: 58px;
+
+    margin: auto;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .nav-item {
+    justify-content: center;
+
+    padding: 0;
+  }
+
+  .nav-label {
+    display: none;
+  }
+
+  .sidebar-user {
+    display: flex;
+    justify-content: center;
+
+    padding:
+      17px
+      0
+      0;
+  }
+
+  .user-info,
+  .user-arrow {
+    display: none;
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  :host {
+    width: 100%;
+    min-width: 100%;
+
+    min-height: auto;
+  }
+
+  .sidebar {
+    position: relative;
+
+    width: 100%;
+    height: auto;
+
+    padding:
+      12px
+      14px;
+
+    border-right: 0;
+
+    border-bottom:
+      1px solid
+      rgba(255, 255, 255, 0.07);
+  }
+
+  .sidebar-brand,
+  .sidebar-user {
+    display: none;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+
+    overflow-x: auto;
+
+    gap: 5px;
+  }
+
+  .nav-item {
+    min-width: 48px;
+
+    flex-shrink: 0;
+
+    padding:
+      0
+      12px;
+  }
+
+  .nav-label {
+    display: none;
+  }
+
+}

@@ -1,0 +1,16 @@
+<div class="reservation-details-page">
+  <a routerLink="/reservations" class="back-link">← Back to Reservations</a>
+  @if (!reservation) {
+    <div class="not-found-card"><h1>Reservation not found</h1><a routerLink="/reservations" class="primary-btn">Back to Reservations</a></div>
+  } @else {
+    <div class="details-header">
+      <div><span class="section-label">RESERVATION DETAILS</span><h1>{{ reservation.vehicleName }}</h1><p>Reservation #{{ reservation.id }}</p></div>
+      <div class="details-actions"><a [routerLink]="['/reservations/edit', reservation.id]" class="edit-reservation-btn">Edit Reservation</a>@if (reservation.status !== 'Cancelled' && reservation.status !== 'Completed') {<button class="cancel-reservation-btn" (click)="showCancelConfirmation = true">Cancel Reservation</button>}</div>
+    </div>
+    <div class="details-grid">
+      <div class="vehicle-card"><div class="vehicle-image"><span [class]="'reservation-status ' + statusClass()">{{ displayStatus() }}</span><img [src]="reservation.vehicleImage" [alt]="reservation.vehicleName"></div><div class="vehicle-content"><h2>{{ reservation.vehicleName }}</h2><span>{{ reservation.licensePlate }}</span></div></div>
+      <div class="reservation-info-card"><span class="section-label">RESERVATION INFORMATION</span><div class="info-grid"><div class="info-item"><span>Driver</span><strong>{{ reservation.driver }}</strong></div><div class="info-item"><span>Date</span><strong>{{ dateLong(reservation.date) }}</strong></div><div class="info-item"><span>Start Time</span><strong>{{ reservation.startTime }}</strong></div><div class="info-item"><span>End Time</span><strong>{{ reservation.endTime }}</strong></div><div class="info-item"><span>Duration</span><strong>{{ durationText() }}</strong></div><div class="info-item"><span>Status</span><strong>{{ displayStatus() }}</strong></div></div><div class="notes-section"><span>Notes</span><p>{{ reservation.notes || 'No notes.' }}</p></div></div>
+    </div>
+    @if (showCancelConfirmation) {<div class="cancel-overlay"><div class="cancel-modal"><div class="cancel-icon">⚠️</div><span class="cancel-label">CANCEL RESERVATION</span><h2>Cancel this reservation?</h2><p>The reservation will remain in the history as cancelled.</p><div class="cancel-modal-actions"><button class="keep-btn" (click)="showCancelConfirmation = false">Keep Reservation</button><button class="confirm-cancel-btn" (click)="cancelReservation()">Cancel Reservation</button></div></div></div>}
+  }
+</div>

@@ -1,0 +1,68 @@
+<div class="trips-page">
+  <div class="trips-header">
+    <div>
+      <span class="eyebrow">TRIP MANAGEMENT</span>
+      <h1>Trips</h1>
+      <p>Track and manage all vehicle trips.</p>
+    </div>
+    <a routerLink="/createtrip" class="new-trip-btn">+ Log Trip</a>
+  </div>
+
+  <div class="trip-toolbar">
+    <div class="search-wrap">
+      <span>⌕</span>
+      <input
+        type="text"
+        placeholder="Search trips..."
+        [(ngModel)]="searchTerm">
+    </div>
+
+    <select [(ngModel)]="selectedVehicle">
+      <option value="All">All Vehicles</option>
+      @for (vehicle of vehicleOptions; track vehicle) {
+        <option [value]="vehicle">{{ vehicle }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="trip-table-card">
+    <div class="trip-table-head">
+      <span>VEHICLE</span>
+      <span>DRIVER</span>
+      <span>DATE</span>
+      <span>DISTANCE</span>
+      <span>DURATION</span>
+    </div>
+
+    @if (!filteredTrips.length) {
+      <div class="empty-state">
+        <div class="empty-icon">🚘</div>
+        <h3>No trips found</h3>
+        <p>Try another vehicle or search term.</p>
+      </div>
+    } @else {
+      @for (t of filteredTrips; track t.id) {
+        <a [routerLink]="['/trips', t.id]" class="trip-table-row">
+          <div class="vehicle-cell">
+            <div class="vehicle-thumb">
+              <img [src]="t.vehicleImage" [alt]="t.vehicleName">
+            </div>
+            <div>
+              <strong>{{ t.vehicleName }}</strong>
+              <span>{{ t.licensePlate }}</span>
+            </div>
+          </div>
+
+          <div class="driver-cell">
+            <span class="driver-avatar">{{ t.driver.charAt(0) }}</span>
+            <strong>{{ t.driver }}</strong>
+          </div>
+
+          <strong class="table-value">{{ displayDate(t.date) }}</strong>
+          <strong class="distance-value">{{ distance(t) }}</strong>
+          <strong class="table-value">{{ duration(t) }}</strong>
+        </a>
+      }
+    }
+  </div>
+</div>

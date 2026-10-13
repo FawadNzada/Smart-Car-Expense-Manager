@@ -1,0 +1,118 @@
+<div class="create-reservation-page">
+
+  <a
+    routerLink="/reservations"
+    class="back-link">
+    ← Back to Reservations
+  </a>
+
+  <div class="create-header">
+    <span>RESERVATION MANAGEMENT</span>
+
+    <h1>New Reservation</h1>
+
+    <p>Create a new vehicle reservation.</p>
+  </div>
+
+
+  <div class="reservation-form">
+
+    <div class="form-group">
+      <label for="vehicle">Vehicle</label>
+
+      <select
+        id="vehicle"
+        [(ngModel)]="selectedLicensePlate">
+
+        <option value="">
+          Select vehicle
+        </option>
+
+        @for (vehicle of vehicles; track vehicle.licensePlate) {
+          <option [value]="vehicle.licensePlate">
+            {{ vehicle.name }} ({{ vehicle.licensePlate }})
+          </option>
+        }
+
+      </select>
+    </div>
+
+
+    <div class="form-group">
+      <label for="driver">Driver</label>
+
+      <input
+        id="driver"
+        type="text"
+        placeholder="Enter driver name"
+        [(ngModel)]="driver">
+    </div>
+
+
+    <div class="form-group">
+      <label for="date">Date</label>
+
+      <input
+        id="date"
+        type="date"
+        [(ngModel)]="reservationDate">
+    </div>
+
+
+    <div class="form-group">
+      <label for="startTime">Start Time</label>
+
+      <input
+        id="startTime"
+        type="time"
+        [(ngModel)]="startTime">
+    </div>
+
+
+    <div class="form-group">
+      <label for="endTime">End Time</label>
+
+      <input
+        id="endTime"
+        type="time"
+        [(ngModel)]="endTime">
+    </div>
+
+
+    <div class="form-group notes-group">
+      <label for="notes">Notes</label>
+
+      <textarea
+        id="notes"
+        placeholder="Optional notes..."
+        [(ngModel)]="notes"></textarea>
+    </div>
+
+
+    @if (errorMessage) {
+      <div class="form-error">
+        {{ errorMessage }}
+      </div>
+    }
+
+
+    <div class="form-actions">
+
+      <a
+        routerLink="/reservations"
+        class="cancel-btn">
+        Cancel
+      </a>
+
+      <button
+        type="button"
+        class="create-btn"
+        (click)="saveReservation()">
+        Create Reservation
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

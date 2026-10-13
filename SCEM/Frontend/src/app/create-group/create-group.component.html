@@ -1,0 +1,113 @@
+<div class="create-group-page">
+  <a routerLink="/groups" class="back-link">← Back to Groups</a>
+
+  <div class="create-header">
+    <span>GROUP MANAGEMENT</span>
+    <h1>New Group</h1>
+    <p>Create a carsharing group and assign members and vehicles.</p>
+  </div>
+
+  <div class="create-layout">
+    <div class="create-form-card">
+      <div class="form-group">
+        <label>Group Name</label>
+        <input type="text" placeholder="e.g. Weekend Crew" [(ngModel)]="groupName">
+      </div>
+
+      <div class="form-group">
+        <label>Owner</label>
+        <input type="text" placeholder="e.g. Sebastian" [(ngModel)]="owner">
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea placeholder="What is this group used for?" [(ngModel)]="description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Members</label>
+        <input type="text" placeholder="Lisa, Max, Sebastian" [(ngModel)]="membersText">
+        <small>Separate members with commas.</small>
+      </div>
+
+      <div class="vehicle-selection">
+        <label>Vehicles</label>
+
+        @for (vehicle of vehicles; track vehicle.licensePlate) {
+          <label class="vehicle-option">
+            <input
+              type="checkbox"
+              [checked]="isVehicleSelected(vehicle.licensePlate)"
+              (change)="toggleVehicle(vehicle.licensePlate, $any($event.target).checked)">
+
+            <div class="vehicle-option-image">
+              <img [src]="vehicle.image" [alt]="vehicle.name">
+            </div>
+
+            <div class="vehicle-option-info">
+              <strong>{{ vehicle.name }}</strong>
+              <span>{{ vehicle.licensePlate }}</span>
+            </div>
+
+            <span [class]="'vehicle-status ' + vehicle.statusClass">
+              {{ vehicle.status }}
+            </span>
+          </label>
+        }
+      </div>
+
+      @if (errorMessage) {
+        <div class="form-error">{{ errorMessage }}</div>
+      }
+
+      <div class="form-actions">
+        <a routerLink="/groups" class="cancel-btn">Cancel</a>
+        <button type="button" class="create-btn" (click)="saveGroup()">Create Group</button>
+      </div>
+    </div>
+
+    <div class="group-preview-card">
+      <span class="preview-label">GROUP PREVIEW</span>
+
+      <div class="preview-icon">👥</div>
+
+      <h2>{{ groupName || 'Group Name' }}</h2>
+
+      <span class="preview-owner">
+        Owner: {{ owner || 'Owner' }}
+      </span>
+
+      <p>{{ description || 'Your group description will appear here.' }}</p>
+
+      <div class="preview-stats">
+        <div>
+          <span>Members</span>
+          <strong>{{ previewMembers.length }}</strong>
+        </div>
+        <div>
+          <span>Vehicles</span>
+          <strong>{{ selectedVehicleObjects.length }}</strong>
+        </div>
+      </div>
+
+      @if (previewMembers.length) {
+        <div class="preview-members">
+          @for (member of previewMembers; track member) {
+            <span>{{ member }}</span>
+          }
+        </div>
+      }
+
+      @if (selectedVehicleObjects.length) {
+        <div class="preview-vehicles">
+          @for (vehicle of selectedVehicleObjects; track vehicle.licensePlate) {
+            <div>
+              <img [src]="vehicle.image" [alt]="vehicle.name">
+              <span>{{ vehicle.name }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
