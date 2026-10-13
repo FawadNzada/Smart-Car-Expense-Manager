@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demosypui
+  namespace: student-h-aitenbichler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demosypui
+  template:
+    metadata:
+      labels:
+        app: demosypui
+    spec:
+      containers:
+        - name: demosypui
+          image: docker.io/aiten/demosypui:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+            requests:
+              cpu: "250m"
+              memory: "128Mi"            
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demosypui-svc
+  namespace: student-h-aitenbichler
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: demosypui
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demosypui-ingress
+  namespace: student-h-aitenbichler
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host:  h-aitenbichler.cloud.htl-leonding.ac.at
+      http:
+        paths:
+          - path: /demosypui(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: demosypui-svc
+                port:
+                  number: 80

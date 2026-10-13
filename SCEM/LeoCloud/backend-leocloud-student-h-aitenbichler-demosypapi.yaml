@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demosypapi
+  namespace: student-h-aitenbichler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demosypapi
+  template:
+    metadata:
+      labels:
+        app: demosypapi
+    spec:
+      volumes:
+        - name: sqlite-storage
+          persistentVolumeClaim:
+            claimName: demosypapi-database
+      containers:
+        - name: demosypapi
+          image: docker.io/aiten/demosypapi:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - name: sqlite-storage
+              mountPath: /app/Data
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demosypapi-svc
+  namespace: student-h-aitenbichler
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: demosypapi
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demosypapi-ingress
+  namespace: student-h-aitenbichler
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host:  h-aitenbichler.cloud.htl-leonding.ac.at
+      http:
+        paths:
+          - path: /demosypapi(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: demosypapi-svc
+                port:
+                  number: 80
