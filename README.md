@@ -156,4 +156,4 @@ Abendschule HTL Leonding – Fach: Systemprojektplanung
 
 ## Betreuer
 
-Prof. David Klewein
+Prof. Sivak Dejan
