@@ -1,19 +1,54 @@
 :host {
   display: block;
-
   min-height: 100vh;
 }
 
-
-/* ==============================
-   PAGE
-   ============================== */
+/* MAIN LAYOUT */
 
 .page {
   display: flex;
 
   width: 100%;
   min-height: 100vh;
+
+  background: #080808;
+
+  color: white;
+}
+
+/* SIDEBAR */
+
+.page > app-menu {
+  display: block;
+
+  flex: 0 0 190px;
+
+  width: 190px;
+  height: 100vh;
+
+  position: sticky;
+  top: 0;
+
+  align-self: flex-start;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  background: #0b0c0e;
+
+  border-right: 1px solid #202124;
+
+  box-sizing: border-box;
+}
+
+/* MAIN CONTENT */
+
+.main-area {
+  flex: 1;
+
+  min-width: 0;
+
+  overflow-x: hidden;
 
   background:
     radial-gradient(
@@ -22,23 +57,9 @@
       transparent 35%
     ),
     #080808;
-
-  color: white;
 }
 
-
-/* ==============================
-   MAIN CONTENT
-   ============================== */
-
-.main-area {
-  flex: 1;
-
-  min-width: 0;
-
-  overflow-x: hidden;
-}
-
+/* PAGE ANIMATION */
 
 .page-content-animation {
   width: 100%;
@@ -48,53 +69,46 @@
 
   transform: translateY(0);
 
-  will-change:
-    opacity,
-    transform;
+  will-change: opacity, transform;
 }
 
-
-/* ==============================
-   ORIGINAL PAGE TRANSITION
-   600 ms
-   ============================== */
+/* ORIGINAL 600MS ANIMATION */
 
 .page-content-animation.page-enter {
-  animation:
-    pageAppear
-    600ms
-    ease-out
-    both;
+  animation: pageAppear 600ms ease-out both;
 }
-
 
 @keyframes pageAppear {
 
   from {
     opacity: 0;
-
-    transform:
-      translateY(35px);
+    transform: translateY(35px);
   }
 
   to {
     opacity: 1;
-
-    transform:
-      translateY(0);
+    transform: translateY(0);
   }
 
 }
 
-
-/* ==============================
-   RESPONSIVE
-   ============================== */
+/* RESPONSIVE */
 
 @media (max-width: 800px) {
 
   .page {
     flex-direction: column;
+  }
+
+  .page > app-menu {
+    width: 100%;
+    height: auto;
+
+    flex: none;
+
+    position: relative;
+
+    overflow: visible;
   }
 
   .main-area {
@@ -103,10 +117,7 @@
 
 }
 
-
-/* ==============================
-   ACCESSIBILITY
-   ============================== */
+/* ACCESSIBILITY */
 
 @media (prefers-reduced-motion: reduce) {
 
