@@ -1,21 +1,27 @@
+/* ===========================
+   HOME BASE
+   =========================== */
+
 :host {
   display: block;
   width: 100%;
   min-width: 0;
 }
 
+* {
+  box-sizing: border-box;
+}
 
 .home-page {
   width: 100%;
-  min-width: 0;
-
+  min-height: 100vh;
   overflow-x: hidden;
 
   background:
     radial-gradient(
       circle at 78% 18%,
       rgba(245, 158, 11, 0.07),
-      transparent 30%
+      transparent 35%
     ),
     #080808;
 
@@ -23,121 +29,152 @@
 }
 
 
-/* ==============================
+/* ===========================
    TOP BAR
-   ============================== */
+   =========================== */
 
 .home-topbar {
   width: 100%;
-
-  box-sizing: border-box;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 12px 28px 0;
 }
-
 
 .home-auth-buttons {
   display: flex;
   align-items: center;
-
   gap: 12px;
 }
 
 
+/* ===========================
+   LOGIN / REGISTER
+   =========================== */
+
 .login-btn,
 .register-btn {
   min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   padding: 0 20px;
 
   border-radius: 10px;
 
   font-family: inherit;
-
   font-size: 14px;
   font-weight: 800;
 
   cursor: pointer;
 
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
-
 
 .login-btn {
   border: 1px solid #806000;
-
   background: transparent;
-
   color: #fbbf24;
 }
 
-
 .login-btn:hover {
   border-color: #f59e0b;
-
-  background:
-    rgba(245, 158, 11, 0.08);
-
-  transform: translateY(-2px);
+  background: rgba(245, 158, 11, 0.08);
 }
-
 
 .register-btn {
   border: 1px solid #f59e0b;
 
-  background:
-    linear-gradient(
-      135deg,
-      #f59e0b,
-      #c98300
-    );
+  background: linear-gradient(
+    135deg,
+    #f59e0b,
+    #c98300
+  );
 
   color: #111111;
+}
 
-  box-shadow:
-    0 0 18px rgba(245, 158, 11, 0.14);
+.register-btn:hover {
+  background: #ffcb35;
 }
 
 
-.register-btn:hover {
+/* ===========================
+   WELCOME USER
+   =========================== */
+
+.account-btn,
+.account-btn:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 11px;
+
+  min-height: 46px;
+  padding: 10px 20px;
+
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.12),
+    rgba(255, 255, 255, 0.02)
+  );
+
+  color: #f5f5f5;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  transition: all 0.2s ease;
+}
+
+.account-btn:hover {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.15);
+  color: #ffffff;
   transform: translateY(-2px);
 }
 
+.welcome-icon {
+  font-size: 20px;
+}
 
-/* ==============================
-   HERO
-   ============================== */
+.welcome-text {
+  color: #f5f5f5;
+  white-space: nowrap;
+}
+
+
+/* ===========================
+   HERO SECTION
+   =========================== */
 
 .home-hero {
   position: relative;
 
   width: 100%;
 
-  box-sizing: border-box;
-
   display: grid;
 
   grid-template-columns:
     minmax(0, 1fr)
-    minmax(480px, 0.95fr);
+    minmax(420px, 0.95fr);
 
   align-items: center;
 
-  gap: 60px;
+  gap: 55px;
 
   padding:
     55px
     clamp(38px, 5vw, 85px)
     110px;
 }
-
 
 .hero-background-glow {
   position: absolute;
@@ -150,8 +187,7 @@
 
   border-radius: 50%;
 
-  background:
-    rgba(245, 158, 11, 0.06);
+  background: rgba(245, 158, 11, 0.06);
 
   filter: blur(110px);
 
@@ -159,14 +195,17 @@
 }
 
 
+/* ===========================
+   HERO TEXT
+   =========================== */
+
 .hero-copy {
   position: relative;
-
   z-index: 2;
 
+  min-width: 0;
   max-width: 760px;
 }
-
 
 .hero-eyebrow {
   display: inline-block;
@@ -181,14 +220,12 @@
   letter-spacing: 0.18em;
 }
 
-
 .hero-copy h1 {
   margin: 0;
 
   color: #f5f5f5;
 
-  font-size:
-    clamp(4rem, 5.5vw, 6.4rem);
+  font-size: clamp(3.5rem, 5.5vw, 6.4rem);
 
   line-height: 0.96;
 
@@ -197,15 +234,13 @@
   letter-spacing: -0.055em;
 }
 
-
 .hero-copy h1 span {
   display: block;
 
-  margin-top: 20px;
+  margin-top: 25px;
 
   color: #fbbf24;
 }
-
 
 .hero-copy > p {
   max-width: 680px;
@@ -220,9 +255,9 @@
 }
 
 
-/* ==============================
+/* ===========================
    HERO BUTTONS
-   ============================== */
+   =========================== */
 
 .hero-actions {
   display: flex;
@@ -233,7 +268,6 @@
   margin-top: 30px;
 }
 
-
 .primary-btn,
 .secondary-btn {
   min-height: 48px;
@@ -241,8 +275,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  box-sizing: border-box;
 
   padding: 0 22px;
 
@@ -253,26 +285,20 @@
   font-size: 14px;
   font-weight: 800;
 
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
-
 
 .primary-btn {
   border: 1px solid #f59e0b;
 
-  background:
-    linear-gradient(
-      135deg,
-      #f59e0b,
-      #c98300
-    );
+  background: linear-gradient(
+    135deg,
+    #f59e0b,
+    #c98300
+  );
 
   color: #111111;
 }
-
 
 .secondary-btn {
   border: 1px solid #806000;
@@ -282,23 +308,20 @@
   color: #fbbf24;
 }
 
-
 .primary-btn:hover,
 .secondary-btn:hover {
   transform: translateY(-2px);
 }
 
 
-/* ==============================
+/* ===========================
    HERO STATISTICS
-   ============================== */
+   =========================== */
 
 .hero-stats {
   display: flex;
-
   margin-top: 46px;
 }
-
 
 .hero-stats > div {
   min-width: 120px;
@@ -312,11 +335,9 @@
   border-right: 1px solid #454545;
 }
 
-
 .hero-stats > div:last-child {
   border-right: none;
 }
-
 
 .hero-stats strong {
   margin-bottom: 6px;
@@ -326,75 +347,82 @@
   font-size: 24px;
 }
 
-
 .hero-stats span {
   color: #737373;
-
   font-size: 11px;
 }
 
 
-/* ==============================
-   VEHICLE PREVIEW
-   ============================== */
+/* ===========================
+   FLEET PREVIEW
+   =========================== */
 
 .hero-preview {
   position: relative;
-
   z-index: 2;
-
   min-width: 0;
 }
-
 
 .preview-glow {
   position: absolute;
 
-  width: 75%;
-  height: 70%;
+  width: 80%;
+  height: 75%;
 
-  left: 12%;
-  bottom: -10%;
+  left: 10%;
+  bottom: -8%;
 
   border-radius: 50%;
 
-  background:
-    rgba(245, 158, 11, 0.12);
+  background: rgba(245, 158, 11, 0.14);
 
-  filter: blur(90px);
+  filter: blur(95px);
 
   pointer-events: none;
 }
 
 
-.preview-card {
+/* ===========================
+   FLEET CARD
+   =========================== */
+
+.fleet-card {
   position: relative;
 
-  overflow: hidden;
-
   width: 100%;
-
-  max-width: 750px;
+  max-width: 760px;
 
   margin-left: auto;
 
-  border: 1px solid #8a5b00;
+  overflow: hidden;
+
+  border: 1px solid rgba(245, 158, 11, 0.65);
   border-radius: 20px;
 
-  background:
-    linear-gradient(
-      145deg,
-      #111111,
-      #080808
-    );
+  background: linear-gradient(
+    145deg,
+    #111315,
+    #070809
+  );
 
   box-shadow:
-    0 30px 70px rgba(0, 0, 0, 0.45);
+    0 35px 80px rgba(0, 0, 0, 0.55),
+    0 0 35px rgba(245, 158, 11, 0.055);
+
+  transition: transform 0.3s ease;
+}
+
+.fleet-card:hover {
+  transform: translateY(-4px);
 }
 
 
-.preview-card-header {
-  min-height: 86px;
+/* ===========================
+   FLEET HEADER
+   =========================== */
+
+.fleet-card-header {
+  min-height: 82px;
 
   display: flex;
   align-items: center;
@@ -402,185 +430,119 @@
 
   gap: 20px;
 
-  box-sizing: border-box;
+  padding: 18px 24px;
 
-  padding: 20px 24px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.015),
+    rgba(245, 158, 11, 0.035)
+  );
 }
 
-
-.preview-card-header > div {
+.fleet-header-text {
   display: flex;
   flex-direction: column;
 }
 
-
-.preview-card-header span:first-child {
+.fleet-label {
   color: #f59e0b;
 
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 850;
 
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
 }
 
-
-.preview-card-header h2 {
+.fleet-card-header h2 {
   margin: 6px 0 0;
 
+  color: #efefef;
+
   font-size: 23px;
+  font-weight: 850;
+}
+
+.fleet-count {
+  color: #eeeeee;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  white-space: nowrap;
 }
 
 
-.available-badge {
-  padding: 8px 14px;
-
-  border-radius: 999px;
-
-  background: #15803d;
-
-  color: white !important;
-
-  font-size: 11px !important;
-  font-weight: 800 !important;
-}
-
-
-/* ==============================
+/* ===========================
    VEHICLE IMAGE
-   ============================== */
+   =========================== */
 
-.preview-car {
-  height: 285px;
+.fleet-image {
+  position: relative;
+
+  width: 100%;
+  height: 280px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   overflow: hidden;
 
-  border-top:
-    1px solid rgba(245, 158, 11, 0.15);
+  background: #080808;
 
-  border-bottom:
-    1px solid rgba(245, 158, 11, 0.15);
+  border-top: 1px solid rgba(245, 158, 11, 0.14);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.14);
 }
 
+.fleet-photo {
+  display: block;
 
-.preview-car img {
   width: 100%;
   height: 100%;
 
-  display: block;
+  object-fit: contain;
+  object-position: center;
 
-  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.fleet-card:hover .fleet-photo {
+  transform: scale(1.025);
 }
 
 
-/* ==============================
-   VEHICLE DETAILS
-   ============================== */
+/* ===========================
+   VEHICLE MODELS
+   =========================== */
 
-.preview-details {
-  display: grid;
+.fleet-models {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+  flex-wrap: wrap;
 
   gap: 12px;
 
-  padding: 20px 24px 12px;
+  padding: 20px 24px;
+
+  background: #101113;
 }
 
-
-.preview-details > div {
-  display: flex;
-  flex-direction: column;
-
-  gap: 8px;
-
-  min-width: 0;
-
-  padding: 14px;
-
-  border: 1px solid #494949;
-  border-radius: 10px;
-
-  background:
-    rgba(255, 255, 255, 0.015);
-}
-
-
-.preview-details span {
-  color: #777777;
-
-  font-size: 10px;
-}
-
-
-.preview-details strong {
-  color: #ffffff;
-
-  font-size: 13px;
-}
-
-
-/* ==============================
-   FUEL
-   ============================== */
-
-.preview-fuel {
-  padding: 10px 24px 26px;
-}
-
-
-.fuel-heading {
-  display: flex;
-  justify-content: space-between;
-
-  margin-bottom: 11px;
-
-  color: #b3b3b3;
+.fleet-models span {
+  color: #a1a1aa;
 
   font-size: 11px;
+  font-weight: 600;
 }
 
 
-.fuel-heading strong {
-  color: #ffffff;
-}
-
-
-.fuel-track {
-  width: 100%;
-  height: 8px;
-
-  overflow: hidden;
-
-  border-radius: 999px;
-
-  background: #222222;
-}
-
-
-.fuel-value {
-  width: 75%;
-  height: 100%;
-
-  border-radius: inherit;
-
-  background:
-    linear-gradient(
-      90deg,
-      #f59e0b,
-      #9a7400
-    );
-}
-
-
-/* ==============================
+/* ===========================
    FEATURES
-   ============================== */
+   =========================== */
 
 .home-features {
   width: 100%;
-
-  box-sizing: border-box;
 
   padding:
     85px
@@ -591,13 +553,11 @@
   background: #0b0b0b;
 }
 
-
 .features-heading {
   max-width: 650px;
 
   margin-bottom: 38px;
 }
-
 
 .features-heading > span {
   color: #f59e0b;
@@ -608,7 +568,6 @@
   letter-spacing: 0.16em;
 }
 
-
 .features-heading h2 {
   margin: 12px 0;
 
@@ -616,7 +575,6 @@
 
   letter-spacing: -0.03em;
 }
-
 
 .features-heading p {
   margin: 0;
@@ -627,6 +585,10 @@
 }
 
 
+/* ===========================
+   FEATURE GRID
+   =========================== */
+
 .home-feature-grid {
   display: grid;
 
@@ -636,7 +598,6 @@
   gap: 16px;
 }
 
-
 .feature-card {
   min-width: 0;
 
@@ -645,21 +606,19 @@
   border: 1px solid #282828;
   border-radius: 14px;
 
-  background: #121212;
+  background: linear-gradient(
+    145deg,
+    #121212,
+    #0c0d0e
+  );
 
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
-
 
 .feature-card:hover {
-  border-color:
-    rgba(245, 158, 11, 0.45);
-
+  border-color: rgba(245, 158, 11, 0.45);
   transform: translateY(-4px);
 }
-
 
 .feature-icon {
   margin-bottom: 20px;
@@ -667,13 +626,13 @@
   font-size: 24px;
 }
 
-
 .feature-card h3 {
   margin: 0 0 12px;
 
+  color: #ffffff;
+
   font-size: 17px;
 }
-
 
 .feature-card p {
   min-height: 68px;
@@ -687,7 +646,6 @@
   line-height: 1.6;
 }
 
-
 .feature-card a {
   color: #f59e0b;
 
@@ -698,9 +656,9 @@
 }
 
 
-/* ==============================
+/* ===========================
    CTA
-   ============================== */
+   =========================== */
 
 .home-cta {
   display: flex;
@@ -719,14 +677,12 @@
   border: 1px solid #56420c;
   border-radius: 16px;
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(245, 158, 11, 0.08),
-      #101010
-    );
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.08),
+    #101010
+  );
 }
-
 
 .home-cta span {
   color: #f59e0b;
@@ -737,13 +693,13 @@
   letter-spacing: 0.14em;
 }
 
-
 .home-cta h2 {
   margin: 8px 0;
 
+  color: #ffffff;
+
   font-size: 27px;
 }
-
 
 .home-cta p {
   margin: 0;
@@ -752,30 +708,25 @@
 }
 
 
-/* ==============================
+/* ===========================
    RESPONSIVE
-   ============================== */
+   =========================== */
 
 @media (max-width: 1250px) {
 
   .home-hero {
     grid-template-columns: 1fr;
-
     gap: 60px;
   }
-
 
   .hero-copy {
     max-width: 850px;
   }
 
-
-  .preview-card {
+  .fleet-card {
     max-width: 850px;
-
     margin: 0;
   }
-
 
   .home-feature-grid {
     grid-template-columns:
@@ -784,74 +735,64 @@
 
 }
 
-
 @media (max-width: 700px) {
 
   .home-topbar {
-    padding:
-      12px
-      20px
-      0;
+    padding: 12px 20px 0;
   }
-
 
   .home-hero {
-    padding:
-      40px
-      20px
-      70px;
+    padding: 40px 20px 70px;
   }
-
 
   .hero-copy h1 {
-    font-size:
-      clamp(3rem, 15vw, 4.2rem);
+    font-size: clamp(3rem, 15vw, 4.2rem);
   }
-
 
   .hero-actions,
   .hero-stats {
     flex-wrap: wrap;
   }
 
-
   .hero-stats > div {
     min-width: 95px;
   }
 
-
-  .preview-details {
-    grid-template-columns: 1fr;
-  }
-
-
-  .preview-car {
+  .fleet-image {
     height: 220px;
   }
 
-
-  .home-features {
-    padding:
-      60px
-      20px;
+  .fleet-card-header {
+    padding: 16px;
   }
 
+  .fleet-card-header h2 {
+    font-size: 18px;
+  }
+
+  .fleet-models {
+    padding: 16px;
+  }
+
+  .home-features {
+    padding: 60px 20px;
+  }
 
   .home-feature-grid {
     grid-template-columns: 1fr;
   }
 
-
   .home-cta {
-    margin:
-      10px
-      20px
-      50px;
+    margin: 10px 20px 50px;
 
     flex-direction: column;
 
     align-items: flex-start;
   }
 
+  .account-btn {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
 
 }

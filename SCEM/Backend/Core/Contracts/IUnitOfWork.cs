@@ -1,8 +1,11 @@
-﻿namespace Core.Contracts;
+﻿using Base.Core.Contracts;
+using Core.Entities;
 
-using Base.Core.Contracts;
+namespace Core.Contracts;
 
 public interface IUnitOfWork : IBaseUnitOfWork
 {
-    public IMDemoRepository MDemoRepository { get; }
+    IMDemoRepository MDemoRepository { get; }
+
+    IGenericRepository<Vehicle> VehicleRepository { get; }
 }

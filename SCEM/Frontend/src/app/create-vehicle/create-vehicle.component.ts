@@ -55,10 +55,20 @@ export class CreateVehicleComponent {
 
   errorMessage = '';
 
+  isSaving = false;
 
-  addVehicle(): void {
+
+  // =========================================
+  // Neues Fahrzeug erstellen
+  // =========================================
+
+  async addVehicle(): Promise<void> {
 
     this.errorMessage = '';
+
+    if (this.isSaving) {
+      return;
+    }
 
 
     const cleanBrand =
@@ -71,11 +81,13 @@ export class CreateVehicleComponent {
       this.licensePlate.trim();
 
 
+    // =========================================
+    // Eingaben überprüfen
+    // =========================================
+
     if (
-      !cleanBrand
-      ||
-      !cleanModel
-      ||
+      !cleanBrand ||
+      !cleanModel ||
       !cleanLicensePlate
     ) {
 
@@ -87,8 +99,8 @@ export class CreateVehicleComponent {
 
 
     if (
-      this.fuelLevel < 0
-      ||
+      !Number.isFinite(this.fuelLevel) ||
+      this.fuelLevel < 0 ||
       this.fuelLevel > 100
     ) {
 
@@ -100,10 +112,9 @@ export class CreateVehicleComponent {
 
 
     if (
-      this.vehicleService
-        .licensePlateExists(
-          cleanLicensePlate
-        )
+      this.vehicleService.licensePlateExists(
+        cleanLicensePlate
+      )
     ) {
 
       this.errorMessage =
@@ -112,6 +123,10 @@ export class CreateVehicleComponent {
       return;
     }
 
+
+    // =========================================
+    // Fahrzeugdaten vorbereiten
+    // =========================================
 
     const vehicle: Vehicle = {
 
@@ -134,26 +149,64 @@ export class CreateVehicleComponent {
         this.status,
 
       statusClass:
-        this.getStatusClass(
-          this.status
-        ),
+        this.getStatusClass(this.status),
 
       image:
         this.getVehicleImage()
-
     };
 
 
-    this.vehicleService
-      .addVehicle(vehicle);
+    // =========================================
+    // Fahrzeug im Backend speichern
+    // =========================================
+
+    this.isSaving = true;
+
+    try {
+
+      const createdVehicle =
+        await this.vehicleService.addVehicle(
+          vehicle
+        );
 
 
-    this.router.navigate([
-      '/vehicles',
-      vehicle.licensePlate
-    ]);
+      console.log(
+        'Vehicle saved successfully:',
+        createdVehicle
+      );
+
+
+      // =========================================
+      // Nach erfolgreicher Speicherung
+      // Fahrzeugdetailseite öffnen
+      // =========================================
+
+      await this.router.navigate([
+        '/vehicles',
+        createdVehicle.licensePlate
+      ]);
+
+    } catch (error) {
+
+      console.error(
+        'Error creating vehicle:',
+        error
+      );
+
+      this.errorMessage =
+        'Could not save vehicle. Please try again.';
+
+    } finally {
+
+      this.isSaving = false;
+
+    }
   }
 
+
+  // =========================================
+  // Fahrzeugstatus
+  // =========================================
 
   getStatusClass(
     status: string
@@ -179,6 +232,10 @@ export class CreateVehicleComponent {
   }
 
 
+  // =========================================
+  // Fahrzeugbilder automatisch auswählen
+  // =========================================
+
   getVehicleImage(): string {
 
     const value =
@@ -198,8 +255,7 @@ export class CreateVehicleComponent {
 
 
     if (
-      value.includes('mercedes')
-      ||
+      value.includes('mercedes') ||
       value.includes('benz')
     ) {
 
@@ -208,8 +264,7 @@ export class CreateVehicleComponent {
 
 
     if (
-      value.includes('volkswagen')
-      ||
+      value.includes('volkswagen') ||
       value.includes('vw')
     ) {
 
@@ -221,7 +276,13 @@ export class CreateVehicleComponent {
   }
 
 
+  // =========================================
+  // Prüfen, ob ein Fahrzeugbild existiert
+  // =========================================
+
   hasVehicleImage(): boolean {
+
     return !!this.getVehicleImage();
+
   }
 }

@@ -36,8 +36,7 @@ import {
     './edit-vehicle.component.css'
   ]
 })
-export class EditVehicleComponent
-  implements OnInit {
+export class EditVehicleComponent implements OnInit {
 
   private readonly route =
     inject(ActivatedRoute);
@@ -50,7 +49,6 @@ export class EditVehicleComponent
 
 
   vehicle?: Vehicle;
-
 
   originalLicensePlate = '';
 
@@ -66,6 +64,8 @@ export class EditVehicleComponent
 
   errorMessage = '';
 
+  isSaving = false;
+
 
   ngOnInit(): void {
 
@@ -74,17 +74,14 @@ export class EditVehicleComponent
         'licensePlate'
       ) ?? '';
 
-
     this.vehicle =
       this.vehicleService.findVehicle(
         this.originalLicensePlate
       );
 
-
     if (!this.vehicle) {
       return;
     }
-
 
     this.brand =
       this.vehicle.brand;
@@ -103,21 +100,23 @@ export class EditVehicleComponent
   }
 
 
-  saveChanges(): void {
+  async saveChanges(): Promise<void> {
 
     this.errorMessage = '';
 
-
-    if (!this.vehicle) {
+    if (this.isSaving) {
       return;
     }
 
+    if (!this.vehicle) {
+      this.errorMessage =
+        'Vehicle not found.';
+      return;
+    }
 
     if (
-      !this.brand.trim()
-      ||
-      !this.model.trim()
-      ||
+      !this.brand.trim() ||
+      !this.model.trim() ||
       !this.licensePlate.trim()
     ) {
 
@@ -127,10 +126,9 @@ export class EditVehicleComponent
       return;
     }
 
-
     if (
-      this.fuelLevel < 0
-      ||
+      !Number.isFinite(this.fuelLevel) ||
+      this.fuelLevel < 0 ||
       this.fuelLevel > 100
     ) {
 
@@ -140,13 +138,11 @@ export class EditVehicleComponent
       return;
     }
 
-
     if (
-      this.vehicleService
-        .licensePlateExists(
-          this.licensePlate.trim(),
-          this.vehicle
-        )
+      this.vehicleService.licensePlateExists(
+        this.licensePlate.trim(),
+        this.vehicle
+      )
     ) {
 
       this.errorMessage =
@@ -155,8 +151,10 @@ export class EditVehicleComponent
       return;
     }
 
-
     const updatedVehicle: Vehicle = {
+
+      id:
+        this.vehicle.id,
 
       brand:
         this.brand.trim(),
@@ -177,32 +175,52 @@ export class EditVehicleComponent
         this.status,
 
       statusClass:
-        this.getStatusClass(
-          this.status
-        ),
+        this.getStatusClass(this.status),
 
       image:
         this.getVehicleImage()
-
     };
 
+    this.isSaving = true;
 
-    this.vehicleService.updateVehicle(
-      this.vehicle,
-      updatedVehicle
-    );
+    try {
 
+      // Änderungen dauerhaft im Backend speichern
+      await this.vehicleService.updateVehicle(
+        this.vehicle,
+        updatedVehicle
+      );
 
-    this.router.navigate([
-      '/vehicles',
-      updatedVehicle.licensePlate
-    ]);
+      console.log(
+        'Vehicle updated successfully:',
+        updatedVehicle
+      );
+
+      // Erst nach erfolgreichem Speichern weiterleiten
+      await this.router.navigate([
+        '/vehicles',
+        updatedVehicle.licensePlate
+      ]);
+
+    } catch (error) {
+
+      console.error(
+        'Error updating vehicle:',
+        error
+      );
+
+      this.errorMessage =
+        'Could not save vehicle changes. Please try again.';
+
+    } finally {
+
+      this.isSaving = false;
+
+    }
   }
 
 
-  getStatusClass(
-    status: string
-  ): string {
+  getStatusClass(status: string): string {
 
     switch (status) {
 
@@ -227,40 +245,29 @@ export class EditVehicleComponent
   getVehicleImage(): string {
 
     const value =
-      this.brand
-        .trim()
-        .toLowerCase();
-
+      this.brand.trim().toLowerCase();
 
     if (value.includes('bmw')) {
       return 'images/vehicles/bmw.png';
     }
 
-
     if (value.includes('audi')) {
       return 'images/vehicles/audi.png';
     }
 
-
     if (
-      value.includes('mercedes')
-      ||
+      value.includes('mercedes') ||
       value.includes('benz')
     ) {
-
       return 'images/vehicles/mercedes.png';
     }
 
-
     if (
-      value.includes('volkswagen')
-      ||
+      value.includes('volkswagen') ||
       value.includes('vw')
     ) {
-
       return 'images/vehicles/vw.png';
     }
-
 
     return '';
   }

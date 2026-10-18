@@ -1,17 +1,22 @@
-﻿using Core.Contracts;
+﻿using Base.Core.Contracts;
+using Base.Persistence;
+using Core.Contracts;
+using Core.Entities;
 
 namespace Persistence;
-
-using Base.Persistence;
 
 public class UnitOfWork : BaseUnitOfWork, IUnitOfWork
 {
     public IMDemoRepository MDemoRepository { get; }
 
-    public UnitOfWork(ApplicationDbContext context,
-        IMDemoRepository                   mDemoRepository
-    ) : base(context)
+    public IGenericRepository<Vehicle> VehicleRepository { get; }
+
+    public UnitOfWork(
+        ApplicationDbContext context,
+        IMDemoRepository mDemoRepository)
+        : base(context)
     {
         MDemoRepository = mDemoRepository;
+        VehicleRepository = new GenericRepository<Vehicle>(context);
     }
 }

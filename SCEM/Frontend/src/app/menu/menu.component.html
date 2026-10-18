@@ -1,327 +1,172 @@
-<aside class="sidebar">
+<nav class="scem-sidebar">
 
-  <!-- BRAND -->
+  <div class="sidebar-navigation">
 
-  <div class="sidebar-brand">
+    <!-- HOME -->
+    <a routerLink="/home"
+       routerLinkActive="active"
+       class="sidebar-link">
 
-    <div class="brand-mark">
-      <svg
-        viewBox="0 0 180 48"
-        aria-hidden="true">
-
-        <path
-          d="M11 34 C31 12, 70 8, 105 18 C127 24, 144 30, 169 34"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="3"
-          stroke-linecap="round" />
-
-        <path
-          d="M39 29 C61 21, 86 20, 111 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          opacity="0.75" />
-
+      <svg viewBox="0 0 24 24">
+        <path d="M3 10L12 3L21 10V21H3V10Z"/>
+        <path d="M9 21V13H15V21"/>
       </svg>
-    </div>
 
-    <div class="brand-text">
-      <strong>SMART</strong>
-      <span>CARSHARING</span>
-    </div>
-
-  </div>
-
-
-  <!-- NAVIGATION -->
-
-  <nav class="sidebar-nav">
-
-    <a
-      routerLink="/dashboard"
-      routerLinkActive="active"
-      class="nav-item">
-
-      <span class="nav-icon">
-
-        <svg viewBox="0 0 24 24">
-          <path
-            d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" />
-        </svg>
-
-      </span>
-
-      <span class="nav-label">
-        Dashboard
-      </span>
-
+      <span>Home</span>
     </a>
 
+    <!-- DASHBOARD -->
+    <a routerLink="/dashboard"
+       routerLinkActive="active"
+       class="sidebar-link">
 
-    <a
-      routerLink="/groups"
-      routerLinkActive="active"
-      class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
 
-      <span class="nav-icon">
-
-        <svg viewBox="0 0 24 24">
-          <circle cx="9" cy="8" r="3" />
-          <circle cx="17" cy="9" r="2.5" />
-
-          <path
-            d="M3 20c0-4 2.5-6 6-6s6 2 6 6" />
-
-          <path
-            d="M14 15c1-.8 2-.9 3-.9 2.7 0 4.5 1.7 4.5 5" />
-        </svg>
-
-      </span>
-
-      <span class="nav-label">
-        Groups
-      </span>
-
+      <span>Dashboard</span>
     </a>
 
+    <!-- GROUPS -->
+    <a routerLink="/groups"
+       routerLinkActive="active"
+       class="sidebar-link">
 
-    <a
-      routerLink="/vehicles"
-      routerLinkActive="active"
-      class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <circle cx="9" cy="8" r="3"/>
+        <path d="M3 20V18C3 15 5 13 9 13C13 13 15 15 15 18V20"/>
+        <path d="M16 5C18 5 19 7 19 9C19 11 18 12 16 12"/>
+        <path d="M18 14C21 14 22 16 22 19V20"/>
+      </svg>
 
-      <span class="nav-icon">
-
-        <svg viewBox="0 0 24 24">
-          <path
-            d="M5 16h14l-1.4-5.3A2 2 0 0 0 15.7 9H8.3a2 2 0 0 0-1.9 1.7z" />
-
-          <path
-            d="M4 16v3M20 16v3M3 16h18" />
-
-          <circle cx="7" cy="17" r="1.5" />
-          <circle cx="17" cy="17" r="1.5" />
-        </svg>
-
-      </span>
-
-      <span class="nav-label">
-        Vehicles
-      </span>
-
+      <span>Groups</span>
     </a>
 
+    <!-- VEHICLES -->
+    <a routerLink="/vehicles"
+       routerLinkActive="active"
+       class="sidebar-link">
 
-    <a
-      routerLink="/reservations"
-      routerLinkActive="active"
-      class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <path d="M5 16L7 8H17L19 16"/>
+        <path d="M3 16H21V20H3V16Z"/>
+        <path d="M5 12H19"/>
+        <circle cx="7" cy="17" r="1"/>
+        <circle cx="17" cy="17" r="1"/>
+      </svg>
 
-      <span class="nav-icon">
-
-        <svg viewBox="0 0 24 24">
-          <rect
-            x="3"
-            y="5"
-            width="18"
-            height="16"
-            rx="2" />
-
-          <path
-            d="M7 3v4M17 3v4M3 10h18" />
-
-          <path
-            d="M8 14h3M8 17h6" />
-        </svg>
-
-      </span>
-
-      <span class="nav-label">
-        Reservations
-      </span>
-
+      <span>Vehicles</span>
     </a>
 
+    <!-- RESERVATIONS -->
+    <a routerLink="/reservations"
+       routerLinkActive="active"
+       class="sidebar-link">
 
-    <a
-      routerLink="/trips"
-      routerLinkActive="active"
-      class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+        <path d="M7 3V7"/>
+        <path d="M17 3V7"/>
+        <path d="M3 10H21"/>
+        <path d="M7 14H11"/>
+        <path d="M7 17H15"/>
+      </svg>
 
-      <span class="nav-icon">
-
-        <svg viewBox="0 0 24 24">
-          <path
-            d="M6 20c3-5 3-11 1-16" />
-
-          <path
-            d="M18 20c-3-5-3-11-1-16" />
-
-          <path
-            d="M12 3v4M12 11v4M12 19v2" />
-        </svg>
-
-      </span>
-
-      <span class="nav-label">
-        Trips
-      </span>
-
+      <span>Reservations</span>
     </a>
 
+    <!-- TRIPS -->
+    <a routerLink="/trips"
+       routerLinkActive="active"
+       class="sidebar-link">
 
-    <a
-      routerLink="/expenses"
-      routerLinkActive="active"
-      class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <path d="M7 3C12 7 12 17 7 21"/>
+        <path d="M17 3C12 7 12 17 17 21"/>
+        <path d="M12 3V7"/>
+        <path d="M12 17V21"/>
+      </svg>
 
-      <span class="nav-icon">
-
-        <svg viewBox="0 0 24 24">
-          <circle
-            cx="12"
-            cy="12"
-            r="9" />
-
-          <path
-            d="M15 8.5c-.8-.8-1.8-1.2-3-1.2-2 0-3.5 1.1-3.5 2.7 0 1.6 1.1 2.3 3.7 2.8 2.1.4 3.3 1.1 3.3 2.7 0 1.7-1.5 2.8-3.6 2.8-1.5 0-2.8-.5-3.8-1.5M12 5.5v13" />
-        </svg>
-
-      </span>
-
-      <span class="nav-label">
-        Expenses
-      </span>
-
+      <span>Trips</span>
     </a>
 
+    <!-- EXPENSES -->
+    <a routerLink="/expenses"
+       routerLinkActive="active"
+       class="sidebar-link">
 
-    <a
-      routerLink="/debts"
-      routerLinkActive="active"
-      class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M15 8C14 7 13 7 12 7C10 7 9 8 9 10C9 12 15 11 15 14C15 16 13 17 12 17C10 17 9 16 8 15"/>
+        <path d="M12 5V19"/>
+      </svg>
 
-      <span class="nav-icon">
-
-        <svg viewBox="0 0 24 24">
-          <rect
-            x="4"
-            y="4"
-            width="16"
-            height="16"
-            rx="2" />
-
-          <path
-            d="M8 9h8M8 13h5M8 17h3" />
-
-          <path
-            d="m15.5 15.5 1.5 1.5 3-3" />
-        </svg>
-
-      </span>
-
-      <span class="nav-label">
-        Debts
-      </span>
-
+      <span>Expenses</span>
     </a>
 
+    <!-- DEBTS -->
+    <a routerLink="/debts"
+       routerLinkActive="active"
+       class="sidebar-link">
 
-    <a
-      routerLink="/statistics"
-      routerLinkActive="active"
-      class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <rect x="4" y="3" width="16" height="18" rx="2"/>
+        <path d="M8 8H16"/>
+        <path d="M8 12H16"/>
+        <path d="M8 16H13"/>
+      </svg>
 
-      <span class="nav-icon">
-
-        <svg viewBox="0 0 24 24">
-          <rect
-            x="4"
-            y="12"
-            width="3"
-            height="8"
-            rx="1" />
-
-          <rect
-            x="10.5"
-            y="7"
-            width="3"
-            height="13"
-            rx="1" />
-
-          <rect
-            x="17"
-            y="3"
-            width="3"
-            height="17"
-            rx="1" />
-        </svg>
-
-      </span>
-
-      <span class="nav-label">
-        Statistics
-      </span>
-
+      <span>Debts</span>
     </a>
 
+    <!-- STATISTICS -->
+    <a routerLink="/statistics"
+       routerLinkActive="active"
+       class="sidebar-link">
 
-    <a
-      routerLink="/profile"
-      routerLinkActive="active"
-      class="nav-item">
+      <svg viewBox="0 0 24 24">
+        <rect x="3" y="13" width="3" height="8"/>
+        <rect x="9" y="9" width="3" height="12"/>
+        <rect x="15" y="4" width="3" height="17"/>
+      </svg>
 
-      <span class="nav-icon">
-
-        <svg viewBox="0 0 24 24">
-          <circle
-            cx="12"
-            cy="8"
-            r="4" />
-
-          <path
-            d="M4.5 21c.7-4.3 3.2-6.5 7.5-6.5s6.8 2.2 7.5 6.5" />
-        </svg>
-
-      </span>
-
-      <span class="nav-label">
-        Profile
-      </span>
-
+      <span>Statistics</span>
     </a>
 
-  </nav>
+    <!-- PROFILE -->
+    <a routerLink="/profile"
+       routerLinkActive="active"
+       class="sidebar-link">
 
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="7" r="4"/>
+        <path d="M4 21V19C4 15 7 13 12 13C17 13 20 15 20 19V21"/>
+      </svg>
 
-  <!-- USER -->
-
-  <div class="sidebar-user">
-
-    <div class="user-avatar">
-      SJ
-    </div>
-
-    <div class="user-info">
-
-      <strong>
-        Sebastian
-      </strong>
-
-      <span>
-        Member
-      </span>
-
-    </div>
-
-    <a
-      routerLink="/profile"
-      class="user-arrow">
-      ›
+      <span>Profile</span>
     </a>
 
   </div>
 
-</aside>
+  <!-- LOGOUT -->
+  @if (isAuthenticated) {
+
+    <div class="sidebar-bottom">
+
+      <button
+        type="button"
+        class="sidebar-logout"
+        (click)="logout()">
+
+        Logout
+
+      </button>
+
+    </div>
+
+  }
+
+</nav>

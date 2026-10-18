@@ -2,32 +2,52 @@
 
   <!-- TOP BAR -->
 
-  <div class="home-topbar">
+  <header class="home-topbar">
 
-    <div></div>
+    <div class="topbar-spacer"></div>
 
     <div class="home-auth-buttons">
 
-      <button
-        type="button"
-        class="login-btn"
-        (click)="login()">
-        Login
-      </button>
+      @if (isAuthenticated) {
 
-      <button
-        type="button"
-        class="register-btn"
-        (click)="register()">
-        Register
-      </button>
+        <a
+          routerLink="/profile"
+          class="account-btn">
+
+          <span class="welcome-icon">
+            &#128075;
+          </span>
+
+          <span class="welcome-text">
+            Willkommen, {{ firstName }}!
+          </span>
+
+        </a>
+
+      } @else {
+
+        <button
+          type="button"
+          class="login-btn"
+          (click)="login()">
+          Login
+        </button>
+
+        <button
+          type="button"
+          class="register-btn"
+          (click)="register()">
+          Register
+        </button>
+
+      }
 
     </div>
 
-  </div>
+  </header>
 
 
-  <!-- HERO -->
+  <!-- HERO SECTION -->
 
   <section class="home-hero">
 
@@ -42,22 +62,24 @@
         SMART CARSHARING
       </span>
 
-
       <h1>
-        Manage Shared Vehicles
+        Manage Shared
+        <br>
+        Vehicles
 
         <span>
           Smarter.
         </span>
       </h1>
 
-
       <p>
-        Reserve vehicles, track trips, manage expenses and optimize
-        repayments with intelligent cost management and AI-powered
-        receipt recognition.
+        Reserve vehicles, track trips, manage expenses
+        and optimize repayments with intelligent cost
+        management and AI-powered receipt recognition.
       </p>
 
+
+      <!-- BUTTONS -->
 
       <div class="hero-actions">
 
@@ -76,10 +98,12 @@
       </div>
 
 
+      <!-- STATISTICS -->
+
       <div class="hero-stats">
 
         <div>
-          <strong>3</strong>
+          <strong>4</strong>
           <span>Vehicles</span>
         </div>
 
@@ -104,89 +128,54 @@
 
       <div class="preview-glow"></div>
 
+      <div class="fleet-card">
 
-      <div class="preview-card">
+        <!-- CARD HEADER -->
 
-        <div class="preview-card-header">
+        <div class="fleet-card-header">
 
-          <div>
-            <span>
-              Current Vehicle
+          <div class="fleet-header-text">
+
+            <span class="fleet-label">
+              SHARED FLEET
             </span>
 
             <h2>
-              Volkswagen Golf
+              Your vehicles at a glance
             </h2>
+
           </div>
 
-
-          <span class="available-badge">
-            Available
+          <span class="fleet-count">
+            4 Vehicles
           </span>
 
         </div>
 
 
-        <div class="preview-car">
+        <!-- VEHICLE IMAGE -->
+
+        <div class="fleet-image">
 
           <img
-            src="images/vehicles/vw.png"
-            alt="Volkswagen Golf">
+            src="/assets/images/vehicles/home-fleet.png"
+            alt="Audi, Mercedes, BMW and Volkswagen"
+            class="fleet-photo">
 
         </div>
 
 
-        <div class="preview-details">
+        <!-- VEHICLE NAMES -->
 
-          <div>
-            <span>License Plate</span>
+        <div class="fleet-models">
 
-            <strong>
-              L-123AB
-            </strong>
-          </div>
+          <span>Volkswagen Golf</span>
 
+          <span>BMW 3 Series</span>
 
-          <div>
-            <span>Fuel Level</span>
+          <span>Audi A4</span>
 
-            <strong>
-              75%
-            </strong>
-          </div>
-
-
-          <div>
-            <span>Mileage</span>
-
-            <strong>
-              48,250 km
-            </strong>
-          </div>
-
-        </div>
-
-
-        <div class="preview-fuel">
-
-          <div class="fuel-heading">
-
-            <span>
-              Fuel
-            </span>
-
-            <strong>
-              75%
-            </strong>
-
-          </div>
-
-
-          <div class="fuel-track">
-
-            <div class="fuel-value"></div>
-
-          </div>
+          <span>Mercedes C-Class</span>
 
         </div>
 
@@ -214,7 +203,8 @@
       </h2>
 
       <p>
-        Manage vehicles, reservations, trips and shared costs from one place.
+        Manage vehicles, reservations, trips and
+        shared costs from one place.
       </p>
 
     </div>
@@ -222,10 +212,12 @@
 
     <div class="home-feature-grid">
 
+      <!-- VEHICLES -->
+
       <article class="feature-card">
 
         <div class="feature-icon">
-          🚗
+          &#128663;
         </div>
 
         <h3>
@@ -233,21 +225,23 @@
         </h3>
 
         <p>
-          Keep track of your shared vehicles, availability and important
-          vehicle information.
+          Keep track of your shared vehicles,
+          availability and important vehicle information.
         </p>
 
         <a routerLink="/vehicles">
-          View Vehicles →
+          View Vehicles &rarr;
         </a>
 
       </article>
 
 
+      <!-- RESERVATIONS -->
+
       <article class="feature-card">
 
         <div class="feature-icon">
-          📅
+          &#128197;
         </div>
 
         <h3>
@@ -255,20 +249,23 @@
         </h3>
 
         <p>
-          Plan reservations and prevent scheduling conflicts between drivers.
+          Plan reservations and prevent scheduling
+          conflicts between drivers.
         </p>
 
         <a routerLink="/reservations">
-          View Reservations →
+          View Reservations &rarr;
         </a>
 
       </article>
 
 
+      <!-- TRIPS -->
+
       <article class="feature-card">
 
         <div class="feature-icon">
-          🛣️
+          &#128739;
         </div>
 
         <h3>
@@ -276,20 +273,23 @@
         </h3>
 
         <p>
-          Record completed and active trips including mileage and destinations.
+          Record completed and active trips including
+          mileage and destinations.
         </p>
 
         <a routerLink="/trips">
-          View Trips →
+          View Trips &rarr;
         </a>
 
       </article>
 
 
+      <!-- EXPENSES -->
+
       <article class="feature-card">
 
         <div class="feature-icon">
-          💳
+          &#128179;
         </div>
 
         <h3>
@@ -297,11 +297,12 @@
         </h3>
 
         <p>
-          Record shared expenses and keep track of who paid for each cost.
+          Record shared expenses and keep track of
+          who paid for each cost.
         </p>
 
         <a routerLink="/expenses">
-          View Expenses →
+          View Expenses &rarr;
         </a>
 
       </article>
@@ -326,11 +327,11 @@
       </h2>
 
       <p>
-        Keep vehicles, trips, reservations and costs organized in one system.
+        Keep vehicles, trips, reservations and costs
+        organized in one system.
       </p>
 
     </div>
-
 
     <a
       routerLink="/dashboard"

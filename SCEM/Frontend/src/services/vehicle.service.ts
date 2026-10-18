@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 export interface Vehicle {
+  id?: number;
   brand: string;
   model: string;
   name: string;
@@ -11,53 +14,69 @@ export interface Vehicle {
   image: string;
 }
 
+interface BackendVehicle {
+  id: number;
+  brand: string;
+  model: string;
+  licensePlate: string;
+  fuelLevel: number;
+  status: string;
+  image: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class VehicleService {
 
-  private readonly vehicleList: Vehicle[] = [
-    {
-      brand: 'Volkswagen',
-      model: 'Golf',
-      name: 'Volkswagen Golf',
-      licensePlate: 'L-123AB',
-      fuelLevel: 75,
-      status: 'Available',
-      statusClass: 'available',
-      image: 'images/vehicles/vw.png'
-    },
-    {
-      brand: 'BMW',
-      model: '3 Series',
-      name: 'BMW 3 Series',
-      licensePlate: 'L-456CD',
-      fuelLevel: 40,
-      status: 'In Use',
-      statusClass: 'in-use',
-      image: 'images/vehicles/bmw.png'
-    },
-    {
-      brand: 'Audi',
-      model: 'A4',
-      name: 'Audi A4',
-      licensePlate: 'L-789EF',
-      fuelLevel: 30,
-      status: 'Reserved',
-      statusClass: 'reserved',
-      image: 'images/vehicles/audi.png'
-    },
-    {
-      brand: 'Mercedes',
-      model: 'C-Class',
-      name: 'Mercedes C-Class',
-      licensePlate: 'L-321GH',
-      fuelLevel: 20,
-      status: 'Unavailable',
-      statusClass: 'unavailable',
-      image: 'images/vehicles/mercedes.png'
-    }
-  ];
+  private readonly http = inject(HttpClient);
+
+  private readonly apiUrl =
+    'http://localhost:5123/Vehicle';
+
+  private readonly vehicleList: Vehicle[] = [];
+
+  constructor() {
+    this.loadVehicles();
+  }
+
+
+  // =========================================
+  // GET - Alle Fahrzeuge aus SQLite laden
+  // =========================================
+
+  loadVehicles(): void {
+
+    this.http.get<BackendVehicle[]>(this.apiUrl)
+      .subscribe({
+
+        next: (vehicles) => {
+
+          const mappedVehicles = vehicles.map(
+            vehicle => this.mapVehicle(vehicle)
+          );
+
+          this.vehicleList.splice(
+            0,
+            this.vehicleList.length,
+            ...mappedVehicles
+          );
+
+          console.log(
+            'Vehicles loaded from backend:',
+            mappedVehicles
+          );
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Error loading vehicles from backend:',
+            error
+          );
+        }
+      });
+  }
 
 
   get vehicles(): Vehicle[] {
@@ -65,10 +84,135 @@ export class VehicleService {
   }
 
 
-  addVehicle(vehicle: Vehicle): void {
-    this.vehicleList.push(vehicle);
+  // =========================================
+  // Backend-Fahrzeug in Frontend umwandeln
+  // =========================================
+
+  private mapVehicle(
+    vehicle: BackendVehicle
+  ): Vehicle {
+
+    return {
+      id: vehicle.id,
+      brand: vehicle.brand,
+      model: vehicle.model,
+      name: `${vehicle.brand} ${vehicle.model}`,
+      licensePlate: vehicle.licensePlate,
+      fuelLevel: vehicle.fuelLevel,
+      status: vehicle.status,
+      statusClass: this.getStatusClass(vehicle.status),
+      image: vehicle.image ||
+        this.getVehicleImage(vehicle.brand)
+    };
   }
 
+
+  // =========================================
+  // Fahrzeugstatus
+  // =========================================
+
+  private getStatusClass(status: string): string {
+
+    switch (status.toLowerCase()) {
+
+      case 'available':
+        return 'available';
+
+      case 'in use':
+        return 'in-use';
+
+      case 'reserved':
+        return 'reserved';
+
+      case 'unavailable':
+        return 'unavailable';
+
+      default:
+        return 'available';
+    }
+  }
+
+
+  // =========================================
+  // Fahrzeugbilder
+  // =========================================
+
+  private getVehicleImage(brand: string): string {
+
+    const value = brand.trim().toLowerCase();
+
+    if (value.includes('bmw')) {
+      return 'images/vehicles/bmw.png';
+    }
+
+    if (value.includes('audi')) {
+      return 'images/vehicles/audi.png';
+    }
+
+    if (
+      value.includes('mercedes') ||
+      value.includes('benz')
+    ) {
+      return 'images/vehicles/mercedes.png';
+    }
+
+    if (
+      value.includes('volkswagen') ||
+      value.includes('vw')
+    ) {
+      return 'images/vehicles/vw.png';
+    }
+
+    return '';
+  }
+
+
+  // =========================================
+  // POST - Neues Fahrzeug in SQLite speichern
+  // =========================================
+
+  async addVehicle(vehicle: Vehicle): Promise<Vehicle> {
+
+    const payload = {
+      brand: vehicle.brand,
+      model: vehicle.model,
+      licensePlate: vehicle.licensePlate,
+      fuelLevel: vehicle.fuelLevel,
+      status: vehicle.status,
+      image: vehicle.image || null
+    };
+
+    // Neues Fahrzeug an das Backend senden
+
+    const createdVehicle = await firstValueFrom(
+      this.http.post<BackendVehicle>(
+        this.apiUrl,
+        payload
+      )
+    );
+
+    // Antwort des Backends umwandeln
+
+    const mappedVehicle =
+      this.mapVehicle(createdVehicle);
+
+    // Erst nach erfolgreicher Speicherung
+    // zur lokalen Liste hinzufügen
+
+    this.vehicleList.push(mappedVehicle);
+
+    console.log(
+      'Vehicle created successfully:',
+      mappedVehicle
+    );
+
+    return mappedVehicle;
+  }
+
+
+  // =========================================
+  // Fahrzeug anhand Kennzeichen finden
+  // =========================================
 
   findVehicle(
     licensePlate: string
@@ -76,12 +220,15 @@ export class VehicleService {
 
     return this.vehicleList.find(
       vehicle =>
-        vehicle.licensePlate.toLowerCase()
-        ===
+        vehicle.licensePlate.toLowerCase() ===
         licensePlate.toLowerCase()
     );
   }
 
+
+  // =========================================
+  // Doppelte Kennzeichen verhindern
+  // =========================================
 
   licensePlateExists(
     licensePlate: string,
@@ -90,54 +237,76 @@ export class VehicleService {
 
     return this.vehicleList.some(
       vehicle =>
-        vehicle !== ignoreVehicle
-        &&
-        vehicle.licensePlate.toLowerCase()
-        ===
+        vehicle !== ignoreVehicle &&
+        vehicle.licensePlate.toLowerCase() ===
         licensePlate.toLowerCase()
     );
   }
 
 
-  updateVehicle(
+  // =========================================
+  // PUT - Fahrzeug dauerhaft bearbeiten
+  // =========================================
+
+  async updateVehicle(
     vehicle: Vehicle,
     updatedVehicle: Vehicle
-  ): void {
+  ): Promise<void> {
 
-    vehicle.brand =
-      updatedVehicle.brand;
+    if (vehicle.id === undefined) {
 
-    vehicle.model =
-      updatedVehicle.model;
+      throw new Error(
+        'Vehicle has no database ID.'
+      );
+    }
 
-    vehicle.name =
-      updatedVehicle.name;
+    const id = vehicle.id;
 
-    vehicle.licensePlate =
-      updatedVehicle.licensePlate;
+    const payload = {
+      brand: updatedVehicle.brand,
+      model: updatedVehicle.model,
+      licensePlate: updatedVehicle.licensePlate,
+      fuelLevel: updatedVehicle.fuelLevel,
+      status: updatedVehicle.status,
+      image: updatedVehicle.image || null
+    };
 
-    vehicle.fuelLevel =
-      updatedVehicle.fuelLevel;
+    // Änderungen an das Backend senden
 
-    vehicle.status =
-      updatedVehicle.status;
+    await firstValueFrom(
+      this.http.put<void>(
+        `${this.apiUrl}/${id}`,
+        payload
+      )
+    );
 
-    vehicle.statusClass =
-      updatedVehicle.statusClass;
+    // Nach erfolgreicher Speicherung
+    // lokale Daten aktualisieren
 
-    vehicle.image =
-      updatedVehicle.image;
+    Object.assign(
+      vehicle,
+      updatedVehicle,
+      { id }
+    );
+
+    console.log(
+      'Vehicle updated successfully:',
+      vehicle
+    );
   }
 
 
-  deleteVehicle(
-    vehicle: Vehicle
-  ): void {
+  // =========================================
+  // DELETE - Vorübergehend nur lokal
+  // =========================================
+
+  deleteVehicle(vehicle: Vehicle): void {
 
     const index =
       this.vehicleList.indexOf(vehicle);
 
     if (index >= 0) {
+
       this.vehicleList.splice(index, 1);
     }
   }
