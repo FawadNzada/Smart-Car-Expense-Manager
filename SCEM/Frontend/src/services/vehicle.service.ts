@@ -40,9 +40,8 @@ export class VehicleService {
     this.loadVehicles();
   }
 
-
   // =========================================
-  // GET - Alle Fahrzeuge aus SQLite laden
+  // GET - Fahrzeuge aus SQLite laden
   // =========================================
 
   loadVehicles(): void {
@@ -78,14 +77,12 @@ export class VehicleService {
       });
   }
 
-
   get vehicles(): Vehicle[] {
     return this.vehicleList;
   }
 
-
   // =========================================
-  // Backend-Fahrzeug in Frontend umwandeln
+  // Backend-Daten umwandeln
   // =========================================
 
   private mapVehicle(
@@ -105,7 +102,6 @@ export class VehicleService {
         this.getVehicleImage(vehicle.brand)
     };
   }
-
 
   // =========================================
   // Fahrzeugstatus
@@ -131,7 +127,6 @@ export class VehicleService {
         return 'available';
     }
   }
-
 
   // =========================================
   // Fahrzeugbilder
@@ -166,9 +161,8 @@ export class VehicleService {
     return '';
   }
 
-
   // =========================================
-  // POST - Neues Fahrzeug in SQLite speichern
+  // POST - Fahrzeug hinzufügen
   // =========================================
 
   async addVehicle(vehicle: Vehicle): Promise<Vehicle> {
@@ -182,8 +176,6 @@ export class VehicleService {
       image: vehicle.image || null
     };
 
-    // Neues Fahrzeug an das Backend senden
-
     const createdVehicle = await firstValueFrom(
       this.http.post<BackendVehicle>(
         this.apiUrl,
@@ -191,13 +183,8 @@ export class VehicleService {
       )
     );
 
-    // Antwort des Backends umwandeln
-
     const mappedVehicle =
       this.mapVehicle(createdVehicle);
-
-    // Erst nach erfolgreicher Speicherung
-    // zur lokalen Liste hinzufügen
 
     this.vehicleList.push(mappedVehicle);
 
@@ -209,9 +196,8 @@ export class VehicleService {
     return mappedVehicle;
   }
 
-
   // =========================================
-  // Fahrzeug anhand Kennzeichen finden
+  // Fahrzeug suchen
   // =========================================
 
   findVehicle(
@@ -225,9 +211,8 @@ export class VehicleService {
     );
   }
 
-
   // =========================================
-  // Doppelte Kennzeichen verhindern
+  // Kennzeichen überprüfen
   // =========================================
 
   licensePlateExists(
@@ -243,9 +228,8 @@ export class VehicleService {
     );
   }
 
-
   // =========================================
-  // PUT - Fahrzeug dauerhaft bearbeiten
+  // PUT - Fahrzeug bearbeiten
   // =========================================
 
   async updateVehicle(
@@ -271,17 +255,12 @@ export class VehicleService {
       image: updatedVehicle.image || null
     };
 
-    // Änderungen an das Backend senden
-
     await firstValueFrom(
       this.http.put<void>(
         `${this.apiUrl}/${id}`,
         payload
       )
     );
-
-    // Nach erfolgreicher Speicherung
-    // lokale Daten aktualisieren
 
     Object.assign(
       vehicle,
@@ -295,12 +274,30 @@ export class VehicleService {
     );
   }
 
-
   // =========================================
-  // DELETE - Vorübergehend nur lokal
+  // DELETE - Fahrzeug dauerhaft löschen
   // =========================================
 
-  deleteVehicle(vehicle: Vehicle): void {
+  async deleteVehicle(vehicle: Vehicle): Promise<void> {
+
+    if (vehicle.id === undefined) {
+
+      throw new Error(
+        'Vehicle has no database ID.'
+      );
+    }
+
+    const id = vehicle.id;
+
+    // Fahrzeug aus SQLite löschen
+    await firstValueFrom(
+      this.http.delete<void>(
+        `${this.apiUrl}/${id}`
+      )
+    );
+
+    // Erst nach erfolgreicher Löschung
+    // aus der Angular-Liste entfernen
 
     const index =
       this.vehicleList.indexOf(vehicle);
@@ -309,5 +306,10 @@ export class VehicleService {
 
       this.vehicleList.splice(index, 1);
     }
+
+    console.log(
+      'Vehicle deleted successfully:',
+      id
+    );
   }
 }
