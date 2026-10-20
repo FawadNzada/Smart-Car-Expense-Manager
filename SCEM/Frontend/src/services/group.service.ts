@@ -1,4 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+
+// =========================================
+// Angular-Gruppenmodell
+// =========================================
 
 export interface Group {
   id: number;
@@ -10,39 +16,218 @@ export interface Group {
   vehicleLicensePlates: string[];
 }
 
-function dateOffset(days = 0): string {
-  const d = new Date();
-  d.setHours(12, 0, 0, 0);
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+// =========================================
+// Backend-Gruppenmodell
+// =========================================
+
+interface BackendGroup {
+  id: number;
+  name: string;
+  description: string | null;
+  ownerId: number;
+  createdAt: string;
+  vehicleLicensePlates: string[];
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class GroupService {
-  private nextId = 4;
 
-  readonly groups: Group[] = [
-    { id: 1, name: 'Family Car', description: 'Shared vehicle group for family members.', owner: 'Sebastian', createdAt: dateOffset(-30), members: ['Sebastian', 'Lisa', 'Max', 'Emily'], vehicleLicensePlates: ['L-123AB', 'L-456CD'] },
-    { id: 2, name: 'WG Linz', description: 'Shared vehicle group for the apartment.', owner: 'Lisa', createdAt: dateOffset(-20), members: ['Lisa', 'Sebastian', 'Max'], vehicleLicensePlates: ['L-789EF'] },
-    { id: 3, name: 'HTL Team', description: 'Carsharing group for the school project team.', owner: 'Sebastian', createdAt: dateOffset(-10), members: ['Sebastian', 'Lisa', 'Max', 'Emily', 'Tom'], vehicleLicensePlates: ['L-123AB', 'L-321GH'] }
-  ];
+  private readonly http = inject(HttpClient);
+
+  private readonly apiUrl =
+    'http://localhost:5123/Group';
+
+  readonly groups: Group[] = [];
+
+  private nextLocalId = -1;
+
+  constructor() {
+    this.loadGroups();
+  }
+
+  // =========================================
+  // GET - Gruppen aus SQLite laden
+  // =========================================
+
+  loadGroups(): void {
+
+    this.http.get<BackendGroup[]>(this.apiUrl)
+      .subscribe({
+
+        next: (groups) => {
+
+          const mappedGroups = groups.map(
+            group => this.mapGroup(group)
+          );
+
+          this.groups.splice(
+            0,
+            this.groups.length,
+            ...mappedGroups
+          );
+
+          console.log(
+            'Groups loaded from backend:',
+            mappedGroups
+          );
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Error loading groups:',
+            error
+          );
+        }
+      });
+  }
+
+  // =========================================
+  // Backend-Daten umwandeln
+  // =========================================
+
+  private mapGroup(group: BackendGroup): Group {
+
+    return {
+      id: group.id,
+
+      name: group.name,
+
+      description: group.description || '',
+
+      owner: 'You',
+
+      createdAt: group.createdAt.slice(0, 10),
+
+      members: [],
+
+      // NEU: Zugeordnete Fahrzeuge aus SQLite
+      vehicleLicensePlates:
+        group.vehicleLicensePlates || []
+    };
+  }
+
+  // =========================================
+  // POST - Gruppe erstellen
+  // =========================================
+
+  async createGroupInBackend(
+    name: string,
+    description: string
+  ): Promise<Group> {
+
+    const payload = {
+      name: name.trim(),
+      description: description.trim()
+    };
+
+    const createdGroup = await firstValueFrom(
+      this.http.post<BackendGroup>(
+        this.apiUrl,
+        payload
+      )
+    );
+
+    const mappedGroup = this.mapGroup(createdGroup);
+
+    this.groups.push(mappedGroup);
+
+    return mappedGroup;
+  }
+
+  // =========================================
+  // PUT - Fahrzeuge einer Gruppe zuordnen
+  // =========================================
+
+  async assignVehiclesInBackend(
+    group: Group,
+    licensePlates: string[]
+  ): Promise<void> {
+
+    if (group.id <= 0) {
+      throw new Error('Group has no valid database ID.');
+    }
+
+    const payload = {
+      licensePlates: licensePlates
+    };
+
+    // Zuordnung in SQLite speichern
+    await firstValueFrom(
+      this.http.put<void>(
+        `${this.apiUrl}/${group.id}/vehicles`,
+        payload
+      )
+    );
+
+    // Erst nach erfolgreicher Speicherung
+    // Angular-Daten aktualisieren
+
+    group.vehicleLicensePlates = [...licensePlates];
+
+    console.log(
+      'Group vehicles updated successfully:',
+      group
+    );
+  }
+
+  // =========================================
+  // Bisherige lokale Funktion
+  // =========================================
 
   addGroup(group: Omit<Group, 'id'>): Group {
-    const created = { ...group, id: this.nextId++ };
+
+    const created: Group = {
+      ...group,
+      id: this.nextLocalId--
+    };
+
     this.groups.push(created);
+
     return created;
   }
 
+  // =========================================
+  // Gruppe suchen
+  // =========================================
+
   findGroup(id: number): Group | undefined {
-    return this.groups.find(g => g.id === id);
+
+    return this.groups.find(
+      group => group.id === id
+    );
   }
+
+  // =========================================
+  // Gruppe lokal entfernen
+  // Backend-DELETE folgt später
+  // =========================================
 
   deleteGroup(group: Group): void {
+
     const index = this.groups.indexOf(group);
-    if (index >= 0) this.groups.splice(index, 1);
+
+    if (index >= 0) {
+      this.groups.splice(index, 1);
+    }
   }
 
-  groupNameExists(name: string, ignoreGroup?: Group): boolean {
-    return this.groups.some(g => g !== ignoreGroup && g.name.toLowerCase() === name.toLowerCase());
+  // =========================================
+  // Gruppennamen überprüfen
+  // =========================================
+
+  groupNameExists(
+    name: string,
+    ignoreGroup?: Group
+  ): boolean {
+
+    return this.groups.some(
+      group =>
+        group !== ignoreGroup &&
+        group.name.toLowerCase() ===
+        name.toLowerCase()
+    );
   }
 }
