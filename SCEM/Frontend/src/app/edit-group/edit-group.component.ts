@@ -42,7 +42,7 @@ export class EditGroupComponent implements OnInit {
   isSaving = false;
 
   // =========================================
-  // Fahrzeuge anzeigen
+  // FAHRZEUGE
   // =========================================
 
   get vehicles() {
@@ -60,7 +60,7 @@ export class EditGroupComponent implements OnInit {
   }
 
   // =========================================
-  // Gruppe laden
+  // GRUPPE LADEN
   // =========================================
 
   ngOnInit(): void {
@@ -88,7 +88,7 @@ export class EditGroupComponent implements OnInit {
   }
 
   // =========================================
-  // Fahrzeugauswahl überprüfen
+  // FAHRZEUGAUSWAHL
   // =========================================
 
   isVehicleSelected(licensePlate: string): boolean {
@@ -98,10 +98,6 @@ export class EditGroupComponent implements OnInit {
         plate.toLowerCase() === licensePlate.toLowerCase()
     );
   }
-
-  // =========================================
-  // Fahrzeug auswählen / entfernen
-  // =========================================
 
   toggleVehicle(
     licensePlate: string,
@@ -124,7 +120,7 @@ export class EditGroupComponent implements OnInit {
   }
 
   // =========================================
-  // Mitglieder für die Vorschau
+  // MITGLIEDER-VORSCHAU
   // =========================================
 
   parseMembers(): string[] {
@@ -141,7 +137,7 @@ export class EditGroupComponent implements OnInit {
   }
 
   // =========================================
-  // Fahrzeugzuordnung in SQLite speichern
+  // GRUPPE UND FAHRZEUGE SPEICHERN
   // =========================================
 
   async saveChanges(): Promise<void> {
@@ -158,9 +154,57 @@ export class EditGroupComponent implements OnInit {
     }
 
     this.errorMessage = '';
+
+    const cleanName = this.groupName.trim();
+    const cleanDescription = this.description.trim();
+
+    // =========================================
+    // EINGABEN PRÜFEN
+    // =========================================
+
+    if (!cleanName) {
+      this.errorMessage = 'Please enter a group name.';
+      return;
+    }
+
+    if (cleanName.length > 256) {
+      this.errorMessage = 'Group name is too long.';
+      return;
+    }
+
+    if (cleanDescription.length > 512) {
+      this.errorMessage = 'Description is too long.';
+      return;
+    }
+
+    if (
+      this.groupService.groupNameExists(
+        cleanName,
+        group
+      )
+    ) {
+      this.errorMessage =
+        'A group with this name already exists.';
+      return;
+    }
+
     this.isSaving = true;
 
     try {
+
+      // =========================================
+      // 1. GRUPPENNAME UND BESCHREIBUNG
+      // =========================================
+
+      await this.groupService.updateGroupInBackend(
+        group,
+        cleanName,
+        cleanDescription
+      );
+
+      // =========================================
+      // 2. FAHRZEUGZUORDNUNG
+      // =========================================
 
       await this.groupService.assignVehiclesInBackend(
         group,
@@ -168,9 +212,13 @@ export class EditGroupComponent implements OnInit {
       );
 
       console.log(
-        'Group vehicles saved successfully:',
+        'Group changes saved successfully:',
         group
       );
+
+      // =========================================
+      // 3. ZUR DETAILSEITE
+      // =========================================
 
       await this.router.navigate([
         '/groups',
@@ -180,12 +228,12 @@ export class EditGroupComponent implements OnInit {
     } catch (error) {
 
       console.error(
-        'Error saving group vehicles:',
+        'Error saving group changes:',
         error
       );
 
       this.errorMessage =
-        'Could not save vehicle assignments. Please try again.';
+        'Could not save all group changes. Please try again.';
 
     } finally {
 
@@ -194,7 +242,7 @@ export class EditGroupComponent implements OnInit {
   }
 
   // =========================================
-  // Initialen anzeigen
+  // INITIALEN
   // =========================================
 
   initials(name: string): string {

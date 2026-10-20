@@ -27,7 +27,7 @@ public class GroupController : ControllerBase
     }
 
     // =========================================
-    // DTO - Gruppendaten
+    // DTOs
     // =========================================
 
     public record GroupDto(
@@ -39,25 +39,33 @@ public class GroupController : ControllerBase
         List<string> VehicleLicensePlates
     );
 
-    // =========================================
-    // DTO - Neue Gruppe
-    // =========================================
-
     public record CreateGroupDto(
         string Name,
         string? Description
     );
 
-    // =========================================
-    // DTO - Fahrzeugzuordnung
-    // =========================================
+    public record UpdateGroupDto(
+        string Name,
+        string? Description
+    );
 
     public record AssignGroupVehiclesDto(
         List<string> LicensePlates
     );
 
+    public record AddGroupMemberDto(
+        string Email
+    );
+
+    public record GroupMemberDto(
+        int UserId,
+        string FirstName,
+        string LastName,
+        string Email
+    );
+
     // =========================================
-    // Entity in DTO umwandeln
+    // ENTITY -> DTO
     // =========================================
 
     private static GroupDto ToDto(Group group)
@@ -74,8 +82,18 @@ public class GroupController : ControllerBase
         );
     }
 
+    private static GroupMemberDto ToMemberDto(Core.Entities.User user)
+    {
+        return new GroupMemberDto(
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            user.Email
+        );
+    }
+
     // =========================================
-    // Keycloak-Benutzer erkennen
+    // KEYCLOAK
     // =========================================
 
     private string? GetKeycloakUserId()
@@ -83,10 +101,6 @@ public class GroupController : ControllerBase
         return User.FindFirst("sub")?.Value
             ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     }
-
-    // =========================================
-    // Angemeldeten Benutzer suchen
-    // =========================================
 
     private async Task<Core.Entities.User?> FindCurrentUserAsync()
     {
@@ -107,7 +121,7 @@ public class GroupController : ControllerBase
     }
 
     // =========================================
-    // GET - Eigene Gruppen anzeigen
+    // GET - ALLE EIGENEN GRUPPEN
     // =========================================
 
     [HttpGet]
@@ -130,7 +144,7 @@ public class GroupController : ControllerBase
     }
 
     // =========================================
-    // GET - Einzelne Gruppe anzeigen
+    // GET - GRUPPE NACH ID
     // =========================================
 
     [HttpGet("{id:int}", Name = "GetGroupById")]
@@ -157,7 +171,7 @@ public class GroupController : ControllerBase
     }
 
     // =========================================
-    // POST - Neue Gruppe erstellen
+    // POST - GRUPPE ERSTELLEN
     // =========================================
 
     [HttpPost]
@@ -167,6 +181,16 @@ public class GroupController : ControllerBase
         if (string.IsNullOrWhiteSpace(input.Name))
         {
             return BadRequest("Group name is required.");
+        }
+
+        if (input.Name.Trim().Length > 256)
+        {
+            return BadRequest("Group name is too long.");
+        }
+
+        if (input.Description?.Length > 512)
+        {
+            return BadRequest("Description is too long.");
         }
 
         var keycloakId = GetKeycloakUserId();
@@ -185,10 +209,6 @@ public class GroupController : ControllerBase
             );
 
             var currentUser = users.FirstOrDefault();
-
-            // =========================================
-            // Benutzer automatisch erstellen
-            // =========================================
 
             if (currentUser is null)
             {
@@ -235,14 +255,10 @@ public class GroupController : ControllerBase
                 await _uow.UserRepository.AddAsync(currentUser);
             }
 
-            // =========================================
-            // Gruppe erstellen
-            // =========================================
-
             var group = new Group
             {
                 Name = input.Name.Trim(),
-                Description = input.Description,
+                Description = input.Description?.Trim(),
                 Owner = currentUser,
                 CreatedAt = DateTime.UtcNow
             };
@@ -260,51 +276,28 @@ public class GroupController : ControllerBase
     }
 
     // =========================================
-    // PUT - Fahrzeuge einer Gruppe zuordnen
+    // PUT - GRUPPE BEARBEITEN
     // =========================================
 
-    [HttpPut("{id:int}/vehicles")]
-    public async Task<ActionResult> AssignVehiclesAsync(
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult> UpdateAsync(
         int id,
-        [FromBody] AssignGroupVehiclesDto input)
+        [FromBody] UpdateGroupDto input)
     {
-        // =========================================
-        // Eingaben überprüfen
-        // =========================================
-
-        if (input?.LicensePlates is null)
+        if (string.IsNullOrWhiteSpace(input.Name))
         {
-            return BadRequest(
-                "License plates are required."
-            );
+            return BadRequest("Group name is required.");
         }
 
-        var licensePlates = input.LicensePlates
-            .Select(plate => plate?.Trim() ?? "")
-            .ToList();
-
-        if (licensePlates.Any(string.IsNullOrWhiteSpace))
+        if (input.Name.Trim().Length > 256)
         {
-            return BadRequest(
-                "License plates cannot be empty."
-            );
+            return BadRequest("Group name is too long.");
         }
 
-        if (
-            licensePlates.Count !=
-            licensePlates
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .Count()
-        )
+        if (input.Description?.Length > 512)
         {
-            return BadRequest(
-                "Duplicate license plates are not allowed."
-            );
+            return BadRequest("Description is too long.");
         }
-
-        // =========================================
-        // Benutzer überprüfen
-        // =========================================
 
         var currentUser = await FindCurrentUserAsync();
 
@@ -315,30 +308,73 @@ public class GroupController : ControllerBase
 
         using (var transaction = _uow.BeginTransaction())
         {
-            // =========================================
-            // Gruppe inklusive Fahrzeuge laden
-            // =========================================
+            var group = await _uow.GroupRepository.GetByIdAsync(id);
 
+            if (group is null || group.OwnerId != currentUser.Id)
+            {
+                return NotFound();
+            }
+
+            group.Name = input.Name.Trim();
+            group.Description = input.Description?.Trim();
+
+            await transaction.CommitTransactionAsync();
+        }
+
+        return NoContent();
+    }
+
+    // =========================================
+    // PUT - FAHRZEUGE ZUORDNEN
+    // =========================================
+
+    [HttpPut("{id:int}/vehicles")]
+    public async Task<ActionResult> AssignVehiclesAsync(
+        int id,
+        [FromBody] AssignGroupVehiclesDto input)
+    {
+        if (input?.LicensePlates is null)
+        {
+            return BadRequest("License plates are required.");
+        }
+
+        var licensePlates = input.LicensePlates
+            .Select(plate => plate?.Trim() ?? "")
+            .ToList();
+
+        if (licensePlates.Any(string.IsNullOrWhiteSpace))
+        {
+            return BadRequest("License plates cannot be empty.");
+        }
+
+        if (
+            licensePlates.Count !=
+            licensePlates
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Count()
+        )
+        {
+            return BadRequest("Duplicate license plates are not allowed.");
+        }
+
+        var currentUser = await FindCurrentUserAsync();
+
+        if (currentUser is null)
+        {
+            return NotFound();
+        }
+
+        using (var transaction = _uow.BeginTransaction())
+        {
             var group = await _uow.GroupRepository.GetByIdAsync(
                 id,
                 nameof(Group.Vehicles)
             );
 
-            if (group is null)
+            if (group is null || group.OwnerId != currentUser.Id)
             {
                 return NotFound();
             }
-
-            // Nur der Besitzer darf Fahrzeuge zuordnen.
-
-            if (group.OwnerId != currentUser.Id)
-            {
-                return NotFound();
-            }
-
-            // =========================================
-            // Fahrzeuge suchen
-            // =========================================
 
             var allVehicles =
                 await _uow.VehicleRepository.GetAsync();
@@ -365,11 +401,6 @@ public class GroupController : ControllerBase
                 selectedVehicles.Add(vehicle);
             }
 
-            // =========================================
-            // Prüfen, ob ein Fahrzeug bereits
-            // einer anderen Gruppe gehört
-            // =========================================
-
             var otherGroups =
                 await _uow.GroupRepository.GetNoTrackingAsync(
                     otherGroup => otherGroup.Id != id,
@@ -393,10 +424,6 @@ public class GroupController : ControllerBase
                 }
             }
 
-            // =========================================
-            // Bisherige Zuordnung ersetzen
-            // =========================================
-
             group.Vehicles.Clear();
 
             foreach (var vehicle in selectedVehicles)
@@ -404,9 +431,219 @@ public class GroupController : ControllerBase
                 group.Vehicles.Add(vehicle);
             }
 
-            // =========================================
-            // Änderungen dauerhaft speichern
-            // =========================================
+            await transaction.CommitTransactionAsync();
+        }
+
+        return NoContent();
+    }
+
+    // =========================================
+    // GET - GRUPPENMITGLIEDER ANZEIGEN
+    // =========================================
+
+    [HttpGet("{id:int}/members")]
+    public async Task<ActionResult<IEnumerable<GroupMemberDto>>> GetMembersAsync(int id)
+    {
+        var currentUser = await FindCurrentUserAsync();
+
+        if (currentUser is null)
+        {
+            return NotFound();
+        }
+
+        var group = await _uow.GroupRepository.GetByIdAsync(
+            id,
+            nameof(Group.UserGroups)
+        );
+
+        if (group is null || group.OwnerId != currentUser.Id)
+        {
+            return NotFound();
+        }
+
+        var memberIds = group.UserGroups
+            .Select(membership => membership.UserId)
+            .ToList();
+
+        if (memberIds.Count == 0)
+        {
+            return Ok(new List<GroupMemberDto>());
+        }
+
+        var users = await _uow.UserRepository.GetNoTrackingAsync(
+            user => memberIds.Contains(user.Id)
+        );
+
+        var members = users
+            .OrderBy(user => user.FirstName)
+            .ThenBy(user => user.LastName)
+            .Select(ToMemberDto)
+            .ToList();
+
+        return Ok(members);
+    }
+
+    // =========================================
+    // POST - BENUTZER PER E-MAIL HINZUFUEGEN
+    // =========================================
+
+    [HttpPost("{id:int}/members")]
+    public async Task<ActionResult<GroupMemberDto>> AddMemberAsync(
+        int id,
+        [FromBody] AddGroupMemberDto input)
+    {
+        if (input is null || string.IsNullOrWhiteSpace(input.Email))
+        {
+            return BadRequest("Member email is required.");
+        }
+
+        var email = input.Email.Trim().ToLowerInvariant();
+
+        if (email.Length > 320)
+        {
+            return BadRequest("Email address is too long.");
+        }
+
+        var currentUser = await FindCurrentUserAsync();
+
+        if (currentUser is null)
+        {
+            return NotFound();
+        }
+
+        using (var transaction = _uow.BeginTransaction())
+        {
+            var group = await _uow.GroupRepository.GetByIdAsync(
+                id,
+                nameof(Group.UserGroups)
+            );
+
+            if (group is null || group.OwnerId != currentUser.Id)
+            {
+                return NotFound();
+            }
+
+            var users = await _uow.UserRepository.GetNoTrackingAsync(
+                user => user.Email.ToLower() == email
+            );
+
+            var member = users.FirstOrDefault();
+
+            if (member is null)
+            {
+                return NotFound(
+                    "No local user with this email exists yet. " +
+                    "The user must first have an account stored in SCEM."
+                );
+            }
+
+            if (member.Id == group.OwnerId)
+            {
+                return Conflict("The group owner is already part of the group.");
+            }
+
+            if (group.UserGroups.Any(item => item.UserId == member.Id))
+            {
+                return Conflict("This user is already a group member.");
+            }
+
+            group.UserGroups.Add(new UserGroup
+            {
+                UserId = member.Id,
+                GroupId = group.Id,
+                Group = group
+            });
+
+            await transaction.CommitTransactionAsync();
+
+            return Ok(ToMemberDto(member));
+        }
+    }
+
+    // =========================================
+    // DELETE - GRUPPENMITGLIED ENTFERNEN
+    // =========================================
+
+    [HttpDelete("{id:int}/members/{userId:int}")]
+    public async Task<ActionResult> RemoveMemberAsync(int id, int userId)
+    {
+        var currentUser = await FindCurrentUserAsync();
+
+        if (currentUser is null)
+        {
+            return NotFound();
+        }
+
+        using (var transaction = _uow.BeginTransaction())
+        {
+            var group = await _uow.GroupRepository.GetByIdAsync(
+                id,
+                nameof(Group.UserGroups)
+            );
+
+            if (group is null || group.OwnerId != currentUser.Id)
+            {
+                return NotFound();
+            }
+
+            var membership = group.UserGroups.FirstOrDefault(
+                item => item.UserId == userId
+            );
+
+            if (membership is null)
+            {
+                return NotFound("This user is not a member of this group.");
+            }
+
+            group.UserGroups.Remove(membership);
+
+            await transaction.CommitTransactionAsync();
+        }
+
+        return NoContent();
+    }
+
+    // =========================================
+    // DELETE - GRUPPE DAUERHAFT LÖSCHEN
+    // =========================================
+
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> DeleteAsync(int id)
+    {
+        var currentUser = await FindCurrentUserAsync();
+
+        if (currentUser is null)
+        {
+            return NotFound();
+        }
+
+        using (var transaction = _uow.BeginTransaction())
+        {
+            var group = await _uow.GroupRepository.GetByIdAsync(
+                id,
+                nameof(Group.Vehicles),
+                nameof(Group.UserGroups)
+            );
+
+            if (group is null || group.OwnerId != currentUser.Id)
+            {
+                return NotFound();
+            }
+
+            // Gruppen mit gespeicherten Mitgliedschaften
+            // behandeln wir später separat.
+            if (group.UserGroups.Any())
+            {
+                return Conflict(
+                    "Remove group memberships before deleting this group."
+                );
+            }
+
+            // Fahrzeuge nur aus der Gruppe entfernen.
+            // Die Fahrzeuge selbst NICHT löschen.
+            group.Vehicles.Clear();
+
+            _uow.GroupRepository.Remove(group);
 
             await transaction.CommitTransactionAsync();
         }

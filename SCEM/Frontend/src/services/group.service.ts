@@ -2,10 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
-// =========================================
-// Angular-Gruppenmodell
-// =========================================
-
 export interface Group {
   id: number;
   name: string;
@@ -15,10 +11,6 @@ export interface Group {
   members: string[];
   vehicleLicensePlates: string[];
 }
-
-// =========================================
-// Backend-Gruppenmodell
-// =========================================
 
 interface BackendGroup {
   id: number;
@@ -92,18 +84,11 @@ export class GroupService {
 
     return {
       id: group.id,
-
       name: group.name,
-
       description: group.description || '',
-
       owner: 'You',
-
       createdAt: group.createdAt.slice(0, 10),
-
       members: [],
-
-      // NEU: Zugeordnete Fahrzeuge aus SQLite
       vehicleLicensePlates:
         group.vehicleLicensePlates || []
     };
@@ -138,6 +123,36 @@ export class GroupService {
   }
 
   // =========================================
+  // PUT - Gruppennamen und Beschreibung ändern
+  // =========================================
+
+  async updateGroupInBackend(
+    group: Group,
+    name: string,
+    description: string
+  ): Promise<void> {
+
+    if (group.id <= 0) {
+      throw new Error('Group has no valid database ID.');
+    }
+
+    const payload = {
+      name: name.trim(),
+      description: description.trim()
+    };
+
+    await firstValueFrom(
+      this.http.put<void>(
+        `${this.apiUrl}/${group.id}`,
+        payload
+      )
+    );
+
+    group.name = payload.name;
+    group.description = payload.description;
+  }
+
+  // =========================================
   // PUT - Fahrzeuge einer Gruppe zuordnen
   // =========================================
 
@@ -154,7 +169,6 @@ export class GroupService {
       licensePlates: licensePlates
     };
 
-    // Zuordnung in SQLite speichern
     await firstValueFrom(
       this.http.put<void>(
         `${this.apiUrl}/${group.id}/vehicles`,
@@ -162,14 +176,41 @@ export class GroupService {
       )
     );
 
-    // Erst nach erfolgreicher Speicherung
-    // Angular-Daten aktualisieren
-
     group.vehicleLicensePlates = [...licensePlates];
+  }
+
+  // =========================================
+  // NEU: DELETE - Gruppe dauerhaft löschen
+  // =========================================
+
+  async deleteGroupInBackend(
+    group: Group
+  ): Promise<void> {
+
+    if (group.id <= 0) {
+      throw new Error('Group has no valid database ID.');
+    }
+
+    // Zuerst in SQLite löschen
+    await firstValueFrom(
+      this.http.delete<void>(
+        `${this.apiUrl}/${group.id}`
+      )
+    );
+
+    // Erst nach erfolgreicher API-Antwort
+    // aus der Angular-Liste entfernen
+    const index = this.groups.findIndex(
+      item => item.id === group.id
+    );
+
+    if (index >= 0) {
+      this.groups.splice(index, 1);
+    }
 
     console.log(
-      'Group vehicles updated successfully:',
-      group
+      'Group deleted successfully:',
+      group.id
     );
   }
 
@@ -201,8 +242,7 @@ export class GroupService {
   }
 
   // =========================================
-  // Gruppe lokal entfernen
-  // Backend-DELETE folgt später
+  // Alte lokale Löschfunktion
   // =========================================
 
   deleteGroup(group: Group): void {
