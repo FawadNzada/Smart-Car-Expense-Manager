@@ -1,6 +1,8 @@
 <div class="home-page">
 
-  <!-- TOP BAR -->
+  <!-- =========================
+       TOP BAR
+       ========================= -->
 
   <header class="home-topbar">
 
@@ -14,8 +16,8 @@
           routerLink="/profile"
           class="account-btn">
 
-          <span class="welcome-icon">
-            &#128075;
+          <span class="welcome-mark">
+            ✦
           </span>
 
           <span class="welcome-text">
@@ -30,14 +32,18 @@
           type="button"
           class="login-btn"
           (click)="login()">
+
           Login
+
         </button>
 
         <button
           type="button"
           class="register-btn"
           (click)="register()">
+
           Register
+
         </button>
 
       }
@@ -47,12 +53,11 @@
   </header>
 
 
-  <!-- HERO SECTION -->
+  <!-- =========================
+       HERO SECTION
+       ========================= -->
 
   <section class="home-hero">
-
-    <div class="hero-background-glow"></div>
-
 
     <!-- LEFT SIDE -->
 
@@ -63,19 +68,28 @@
       </span>
 
       <h1>
-        Manage Shared
+
+        Manage
         <br>
+
+        Shared
+        <br>
+
         Vehicles
 
         <span>
           Smarter.
         </span>
+
       </h1>
 
+
       <p>
+
         Reserve vehicles, track trips, manage expenses
         and optimize repayments with intelligent cost
         management and AI-powered receipt recognition.
+
       </p>
 
 
@@ -86,13 +100,17 @@
         <a
           routerLink="/dashboard"
           class="primary-btn">
+
           Get Started
+
         </a>
 
         <a
           href="#features"
           class="secondary-btn">
+
           Learn More
+
         </a>
 
       </div>
@@ -103,18 +121,27 @@
       <div class="hero-stats">
 
         <div>
+
           <strong>4</strong>
+
           <span>Vehicles</span>
+
         </div>
 
         <div>
+
           <strong>12</strong>
+
           <span>Reservations</span>
+
         </div>
 
         <div>
+
           <strong>48</strong>
+
           <span>Trips</span>
+
         </div>
 
       </div>
@@ -122,60 +149,103 @@
     </div>
 
 
-    <!-- RIGHT SIDE -->
+    <!-- =========================
+         RIGHT SIDE - BIG IMAGE
+         ========================= -->
 
-    <div class="hero-preview">
+    <div class="hero-art">
 
-      <div class="preview-glow"></div>
+      <div class="hero-art-glow"></div>
 
-      <div class="fleet-card">
+      <img
+        src="/assets/images/vehicles/home-fleet.png"
+        alt="Audi, Mercedes, BMW and Volkswagen"
+        class="hero-fleet-image">
 
-        <!-- CARD HEADER -->
+    </div>
 
-        <div class="fleet-card-header">
+  </section>
 
-          <div class="fleet-header-text">
 
-            <span class="fleet-label">
-              SHARED FLEET
-            </span>
+  <!-- =========================
+       SHARED FLEET SECTION
+       ========================= -->
 
-            <h2>
-              Your vehicles at a glance
-            </h2>
+  <section class="fleet-section">
 
-          </div>
+    <div class="fleet-card">
 
-          <span class="fleet-count">
-            4 Vehicles
-          </span>
+
+      <!-- LEFT INFORMATION -->
+
+      <div class="fleet-information">
+
+        <span class="fleet-label">
+
+          SHARED FLEET
+
+        </span>
+
+        <h2>
+
+          Your vehicles
+          <br>
+          at a glance
+
+        </h2>
+
+        <p>
+
+          Explore our shared fleet
+          and discover your next drive.
+
+        </p>
+
+        <span class="fleet-count">
+
+          {{ vehicles.length }} Vehicles
+
+        </span>
+
+      </div>
+
+
+      <!-- RIGHT CAROUSEL -->
+
+      <div class="fleet-carousel">
+
+        <div
+          class="carousel-track"
+          [class.no-transition]="!transitionEnabled()"
+          [style.transform]="'translate3d(-' + (slideIndex() * 100) + '%, 0, 0)'"
+          (transitionend)="onSlideTransitionEnd($event)">
+
+          @for (vehicle of carouselVehicles; track $index) {
+
+            <div class="carousel-slide">
+
+              <img
+                [src]="vehicle.image"
+                [alt]="vehicle.name"
+                class="carousel-car-image">
+
+            </div>
+
+          }
 
         </div>
 
 
-        <!-- VEHICLE IMAGE -->
+        <!-- GRADIENT OVERLAY -->
 
-        <div class="fleet-image">
-
-          <img
-            src="/assets/images/vehicles/home-fleet.png"
-            alt="Audi, Mercedes, BMW and Volkswagen"
-            class="fleet-photo">
-
-        </div>
+        <div class="carousel-overlay"></div>
 
 
-        <!-- VEHICLE NAMES -->
+        <!-- CURRENT VEHICLE NAME -->
 
-        <div class="fleet-models">
+        <div class="carousel-vehicle-name">
 
-          <span>Volkswagen Golf</span>
-
-          <span>BMW 3 Series</span>
-
-          <span>Audi A4</span>
-
-          <span>Mercedes C-Class</span>
+          {{ activeVehicle.name }}
 
         </div>
 
@@ -186,7 +256,9 @@
   </section>
 
 
-  <!-- FEATURES -->
+  <!-- =========================
+       FEATURES
+       ========================= -->
 
   <section
     class="home-features"
@@ -203,14 +275,17 @@
       </h2>
 
       <p>
-        Manage vehicles, reservations, trips and
-        shared costs from one place.
+
+        Manage vehicles, reservations, trips
+        and shared costs from one place.
+
       </p>
 
     </div>
 
 
     <div class="home-feature-grid">
+
 
       <!-- VEHICLES -->
 
@@ -225,8 +300,10 @@
         </h3>
 
         <p>
+
           Keep track of your shared vehicles,
           availability and important vehicle information.
+
         </p>
 
         <a routerLink="/vehicles">
@@ -249,8 +326,10 @@
         </h3>
 
         <p>
+
           Plan reservations and prevent scheduling
           conflicts between drivers.
+
         </p>
 
         <a routerLink="/reservations">
@@ -273,8 +352,10 @@
         </h3>
 
         <p>
-          Record completed and active trips including
-          mileage and destinations.
+
+          Record completed and active trips
+          including mileage and destinations.
+
         </p>
 
         <a routerLink="/trips">
@@ -297,8 +378,10 @@
         </h3>
 
         <p>
-          Record shared expenses and keep track of
-          who paid for each cost.
+
+          Record shared expenses and keep track
+          of who paid for each cost.
+
         </p>
 
         <a routerLink="/expenses">
@@ -312,7 +395,9 @@
   </section>
 
 
-  <!-- CTA -->
+  <!-- =========================
+       CALL TO ACTION
+       ========================= -->
 
   <section class="home-cta">
 
@@ -327,16 +412,21 @@
       </h2>
 
       <p>
-        Keep vehicles, trips, reservations and costs
-        organized in one system.
+
+        Keep vehicles, trips, reservations
+        and costs organized in one system.
+
       </p>
 
     </div>
 
+
     <a
       routerLink="/dashboard"
       class="primary-btn">
+
       Open Dashboard
+
     </a>
 
   </section>

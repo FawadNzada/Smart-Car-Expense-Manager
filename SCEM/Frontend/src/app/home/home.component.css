@@ -1,6 +1,6 @@
-/* ===========================
-   HOME BASE
-   =========================== */
+/* ===================================
+   BASE
+   =================================== */
 
 :host {
   display: block;
@@ -15,12 +15,13 @@
 .home-page {
   width: 100%;
   min-height: 100vh;
+
   overflow-x: hidden;
 
   background:
     radial-gradient(
-      circle at 78% 18%,
-      rgba(245, 158, 11, 0.07),
+      circle at 80% 18%,
+      rgba(245, 158, 11, 0.05),
       transparent 35%
     ),
     #080808;
@@ -29,16 +30,21 @@
 }
 
 
-/* ===========================
+/* ===================================
    TOP BAR
-   =========================== */
+   =================================== */
 
 .home-topbar {
+  position: relative;
+  z-index: 10;
+
   width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 28px 0;
+
+  padding: 20px 34px 0;
 }
 
 .home-auth-buttons {
@@ -48,18 +54,19 @@
 }
 
 
-/* ===========================
+/* ===================================
    LOGIN / REGISTER
-   =========================== */
+   =================================== */
 
 .login-btn,
 .register-btn {
   min-height: 46px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  padding: 0 20px;
+  padding: 0 24px;
 
   border-radius: 10px;
 
@@ -74,13 +81,13 @@
 
 .login-btn {
   border: 1px solid #806000;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.35);
   color: #fbbf24;
 }
 
 .login-btn:hover {
-  border-color: #f59e0b;
   background: rgba(245, 158, 11, 0.08);
+  border-color: #f59e0b;
 }
 
 .register-btn {
@@ -88,34 +95,34 @@
 
   background: linear-gradient(
     135deg,
-    #f59e0b,
-    #c98300
+    #fbbf24,
+    #d28a00
   );
 
   color: #111111;
 }
 
 .register-btn:hover {
-  background: #ffcb35;
+  background: #ffcc35;
+  transform: translateY(-2px);
 }
 
 
-/* ===========================
+/* ===================================
    WELCOME USER
-   =========================== */
+   =================================== */
 
 .account-btn,
 .account-btn:visited {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
 
   gap: 11px;
 
   min-height: 46px;
   padding: 10px 20px;
 
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  border: 1px solid rgba(245, 158, 11, 0.4);
   border-radius: 12px;
 
   background: linear-gradient(
@@ -124,7 +131,7 @@
     rgba(255, 255, 255, 0.02)
   );
 
-  color: #f5f5f5;
+  color: #ffffff;
 
   text-decoration: none;
 
@@ -137,23 +144,33 @@
 .account-btn:hover {
   border-color: #f59e0b;
   background: rgba(245, 158, 11, 0.15);
-  color: #ffffff;
-  transform: translateY(-2px);
 }
 
-.welcome-icon {
-  font-size: 20px;
+.welcome-mark {
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(245, 158, 11, 0.15);
+
+  color: #fbbf24;
+
+  font-size: 17px;
 }
 
 .welcome-text {
-  color: #f5f5f5;
   white-space: nowrap;
 }
 
 
-/* ===========================
+/* ===================================
    HERO SECTION
-   =========================== */
+   =================================== */
 
 .home-hero {
   position: relative;
@@ -163,48 +180,30 @@
   display: grid;
 
   grid-template-columns:
-    minmax(0, 1fr)
-    minmax(420px, 0.95fr);
+    minmax(0, 0.85fr)
+    minmax(0, 1.15fr);
 
   align-items: center;
 
-  gap: 55px;
+  gap: 10px;
 
   padding:
-    55px
-    clamp(38px, 5vw, 85px)
-    110px;
-}
-
-.hero-background-glow {
-  position: absolute;
-
-  width: 420px;
-  height: 420px;
-
-  top: 0;
-  right: 8%;
-
-  border-radius: 50%;
-
-  background: rgba(245, 158, 11, 0.06);
-
-  filter: blur(110px);
-
-  pointer-events: none;
+    50px
+    clamp(35px, 4vw, 75px)
+    40px;
 }
 
 
-/* ===========================
+/* ===================================
    HERO TEXT
-   =========================== */
+   =================================== */
 
 .hero-copy {
   position: relative;
-  z-index: 2;
+  z-index: 3;
 
   min-width: 0;
-  max-width: 760px;
+  max-width: 620px;
 }
 
 .hero-eyebrow {
@@ -212,12 +211,12 @@
 
   margin-bottom: 24px;
 
-  color: #f59e0b;
+  color: #fbbf24;
 
   font-size: 12px;
   font-weight: 850;
 
-  letter-spacing: 0.18em;
+  letter-spacing: 0.17em;
 }
 
 .hero-copy h1 {
@@ -225,9 +224,9 @@
 
   color: #f5f5f5;
 
-  font-size: clamp(3.5rem, 5.5vw, 6.4rem);
+  font-size: clamp(3.2rem, 5vw, 5.8rem);
 
-  line-height: 0.96;
+  line-height: 0.98;
 
   font-weight: 900;
 
@@ -237,27 +236,27 @@
 .hero-copy h1 span {
   display: block;
 
-  margin-top: 25px;
+  margin-top: 12px;
 
   color: #fbbf24;
 }
 
 .hero-copy > p {
-  max-width: 680px;
+  max-width: 560px;
 
-  margin: 30px 0;
+  margin: 26px 0;
 
   color: #a1a1aa;
 
-  font-size: 17px;
+  font-size: 15px;
 
   line-height: 1.7;
 }
 
 
-/* ===========================
+/* ===================================
    HERO BUTTONS
-   =========================== */
+   =================================== */
 
 .hero-actions {
   display: flex;
@@ -265,7 +264,7 @@
 
   gap: 14px;
 
-  margin-top: 30px;
+  margin-top: 25px;
 }
 
 .primary-btn,
@@ -276,7 +275,7 @@
   align-items: center;
   justify-content: center;
 
-  padding: 0 22px;
+  padding: 0 23px;
 
   border-radius: 10px;
 
@@ -293,7 +292,7 @@
 
   background: linear-gradient(
     135deg,
-    #f59e0b,
+    #fbbf24,
     #c98300
   );
 
@@ -303,7 +302,7 @@
 .secondary-btn {
   border: 1px solid #806000;
 
-  background: transparent;
+  background: rgba(0, 0, 0, 0.2);
 
   color: #fbbf24;
 }
@@ -314,23 +313,23 @@
 }
 
 
-/* ===========================
+/* ===================================
    HERO STATISTICS
-   =========================== */
+   =================================== */
 
 .hero-stats {
   display: flex;
-  margin-top: 46px;
+  margin-top: 38px;
 }
 
 .hero-stats > div {
-  min-width: 120px;
+  min-width: 110px;
 
   display: flex;
   flex-direction: column;
 
-  padding-right: 28px;
-  margin-right: 28px;
+  padding-right: 25px;
+  margin-right: 25px;
 
   border-right: 1px solid #454545;
 }
@@ -348,139 +347,274 @@
 }
 
 .hero-stats span {
-  color: #737373;
+  color: #858585;
   font-size: 11px;
 }
 
 
-/* ===========================
-   FLEET PREVIEW
-   =========================== */
+/* ===================================
+   BIG VEHICLE IMAGE
+   =================================== */
 
-.hero-preview {
+.hero-art {
   position: relative;
-  z-index: 2;
+  z-index: 1;
+
+  width: 100%;
+  height: 420px;
+
   min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: visible;
 }
 
-.preview-glow {
+.hero-art-glow {
   position: absolute;
 
-  width: 80%;
-  height: 75%;
+  width: 85%;
+  height: 65%;
 
+  top: 20%;
   left: 10%;
-  bottom: -8%;
 
   border-radius: 50%;
 
-  background: rgba(245, 158, 11, 0.14);
+  background: rgba(245, 158, 11, 0.11);
 
-  filter: blur(95px);
+  filter: blur(90px);
 
   pointer-events: none;
 }
 
+.hero-fleet-image {
+  position: relative;
+  z-index: 1;
 
-/* ===========================
-   FLEET CARD
-   =========================== */
+  display: block;
+
+  width: 125%;
+  max-width: none;
+
+  height: 100%;
+
+  object-fit: contain;
+  object-position: center;
+
+  transform: translateX(-4%);
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 72% 70% at 53% 53%,
+    #000000 47%,
+    rgba(0, 0, 0, 0.85) 67%,
+    transparent 100%
+  );
+
+  mask-image: radial-gradient(
+    ellipse 72% 70% at 53% 53%,
+    #000000 47%,
+    rgba(0, 0, 0, 0.85) 67%,
+    transparent 100%
+  );
+
+  filter:
+    contrast(1.06)
+    brightness(0.96);
+}
+
+
+/* ===================================
+   SHARED FLEET SECTION
+   =================================== */
+
+.fleet-section {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding:
+    25px
+    clamp(35px, 4vw, 75px)
+    90px;
+}
+
+
+/* ===================================
+   SHARED FLEET CARD
+
+   SOFTER GOLDEN BORDER
+   =================================== */
 
 .fleet-card {
   position: relative;
 
-  width: 100%;
-  max-width: 760px;
+  display: grid;
 
-  margin-left: auto;
+  grid-template-columns:
+    minmax(240px, 0.7fr)
+    minmax(0, 1.3fr);
+
+  width: min(940px, 100%);
+
+  min-height: 250px;
+
+  margin-left: clamp(0px, 6vw, 95px);
 
   overflow: hidden;
 
-  border: 1px solid rgba(245, 158, 11, 0.65);
-  border-radius: 20px;
+  border: 1px solid rgba(245, 158, 11, 0.28);
+
+  border-radius: 18px;
 
   background: linear-gradient(
-    145deg,
-    #111315,
-    #070809
+    135deg,
+    #101112,
+    #070808
   );
 
   box-shadow:
-    0 35px 80px rgba(0, 0, 0, 0.55),
-    0 0 35px rgba(245, 158, 11, 0.055);
-
-  transition: transform 0.3s ease;
-}
-
-.fleet-card:hover {
-  transform: translateY(-4px);
+    0 25px 65px rgba(0, 0, 0, 0.55),
+    0 0 18px rgba(245, 158, 11, 0.09),
+    0 0 38px rgba(245, 158, 11, 0.045),
+    inset 0 0 16px rgba(245, 158, 11, 0.025);
 }
 
 
-/* ===========================
-   FLEET HEADER
-   =========================== */
+/* ===================================
+   FLEET INFORMATION
+   =================================== */
 
-.fleet-card-header {
-  min-height: 82px;
+.fleet-information {
+  position: relative;
+  z-index: 2;
 
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
 
-  gap: 20px;
-
-  padding: 18px 24px;
+  padding: 28px 30px;
 
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.015),
-    rgba(245, 158, 11, 0.035)
+    #101113,
+    #090a0b
   );
 }
 
-.fleet-header-text {
-  display: flex;
-  flex-direction: column;
-}
-
 .fleet-label {
-  color: #f59e0b;
+  color: #fbbf24;
 
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 850;
 
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
 }
 
-.fleet-card-header h2 {
-  margin: 6px 0 0;
+.fleet-information h2 {
+  margin: 12px 0;
 
-  color: #efefef;
+  color: #ffffff;
 
-  font-size: 23px;
+  font-size: 27px;
   font-weight: 850;
+
+  line-height: 1.15;
+}
+
+.fleet-information p {
+  max-width: 260px;
+
+  margin: 0;
+
+  color: #95959b;
+
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .fleet-count {
-  color: #eeeeee;
+  display: inline-flex;
+  align-self: flex-start;
 
-  font-size: 13px;
-  font-weight: 500;
+  margin-top: 18px;
+  padding: 7px 12px;
 
-  white-space: nowrap;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 20px;
+
+  background: rgba(245, 158, 11, 0.08);
+
+  color: #fbbf24;
+
+  font-size: 11px;
+  font-weight: 700;
 }
 
 
-/* ===========================
-   VEHICLE IMAGE
-   =========================== */
+/* ===================================
+   CAROUSEL CONTAINER
+   =================================== */
 
-.fleet-image {
+.fleet-carousel {
   position: relative;
 
   width: 100%;
-  height: 280px;
+  height: 250px;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 55%,
+      rgba(245, 158, 11, 0.045),
+      transparent 75%
+    ),
+    #080808;
+}
+
+
+/* ===================================
+   CAROUSEL TRACK
+   =================================== */
+
+.carousel-track {
+  display: flex;
+
+  width: 100%;
+  height: 100%;
+
+  transition:
+    transform 700ms
+    cubic-bezier(0.22, 1, 0.36, 1);
+
+  will-change: transform;
+}
+
+.carousel-track.no-transition {
+  transition: none !important;
+}
+
+
+/* ===================================
+   CAROUSEL SLIDES
+   =================================== */
+
+.carousel-slide {
+  position: relative;
+
+  flex: 0 0 100%;
+
+  width: 100%;
+  min-width: 0;
+  height: 100%;
 
   display: flex;
   align-items: center;
@@ -488,65 +622,133 @@
 
   overflow: hidden;
 
-  background: #080808;
-
-  border-top: 1px solid rgba(245, 158, 11, 0.14);
-  border-bottom: 1px solid rgba(245, 158, 11, 0.14);
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(245, 158, 11, 0.035),
+      transparent 75%
+    ),
+    #080808;
 }
 
-.fleet-photo {
+
+/* ===================================
+   VEHICLE IMAGE
+
+   SOFT EDGE BLENDING
+   =================================== */
+
+.carousel-car-image {
   display: block;
 
-  width: 100%;
-  height: 100%;
+  width: auto;
+  max-width: 100%;
+
+  height: calc(100% - 12px);
 
   object-fit: contain;
   object-position: center;
 
-  transition: transform 0.4s ease;
+  padding: 0;
+
+  flex-shrink: 1;
+
+  /*
+    Der mittlere Bereich bleibt scharf.
+    Die äußeren Bildränder verschwinden
+    weich im schwarzen Hintergrund.
+  */
+
+  -webkit-mask-image: radial-gradient(
+    ellipse closest-side at center,
+    #000000 58%,
+    rgba(0, 0, 0, 0.95) 68%,
+    rgba(0, 0, 0, 0.55) 82%,
+    transparent 100%
+  );
+
+  mask-image: radial-gradient(
+    ellipse closest-side at center,
+    #000000 58%,
+    rgba(0, 0, 0, 0.95) 68%,
+    rgba(0, 0, 0, 0.55) 82%,
+    transparent 100%
+  );
+
+  filter:
+    brightness(0.97)
+    contrast(1.04);
 }
 
-.fleet-card:hover .fleet-photo {
-  transform: scale(1.025);
+
+/* ===================================
+   CAROUSEL OVERLAY
+
+   SOFT BACKGROUND TRANSITION
+   =================================== */
+
+.carousel-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(8, 8, 8, 0.38) 0%,
+      transparent 20%,
+      transparent 80%,
+      rgba(8, 8, 8, 0.38) 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(8, 8, 8, 0.55) 0%,
+      transparent 28%,
+      transparent 85%,
+      rgba(8, 8, 8, 0.12) 100%
+    );
 }
 
 
-/* ===========================
-   VEHICLE MODELS
-   =========================== */
+/* ===================================
+   VEHICLE NAME
+   =================================== */
 
-.fleet-models {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.carousel-vehicle-name {
+  position: absolute;
+  z-index: 4;
 
-  flex-wrap: wrap;
+  bottom: 13px;
+  left: 0;
 
-  gap: 12px;
+  width: 100%;
 
-  padding: 20px 24px;
+  text-align: center;
 
-  background: #101113;
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 850;
+
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.8);
+
+  pointer-events: none;
 }
 
-.fleet-models span {
-  color: #a1a1aa;
 
-  font-size: 11px;
-  font-weight: 600;
-}
-
-
-/* ===========================
+/* ===================================
    FEATURES
-   =========================== */
+   =================================== */
 
 .home-features {
   width: 100%;
 
   padding:
     85px
-    clamp(38px, 5vw, 85px);
+    clamp(35px, 4vw, 75px);
 
   border-top: 1px solid #1f1f1f;
 
@@ -555,7 +757,6 @@
 
 .features-heading {
   max-width: 650px;
-
   margin-bottom: 38px;
 }
 
@@ -571,6 +772,8 @@
 .features-heading h2 {
   margin: 12px 0;
 
+  color: #ffffff;
+
   font-size: 36px;
 
   letter-spacing: -0.03em;
@@ -579,15 +782,15 @@
 .features-heading p {
   margin: 0;
 
-  color: #777777;
+  color: #858585;
 
   line-height: 1.6;
 }
 
 
-/* ===========================
+/* ===================================
    FEATURE GRID
-   =========================== */
+   =================================== */
 
 .home-feature-grid {
   display: grid;
@@ -622,7 +825,6 @@
 
 .feature-icon {
   margin-bottom: 20px;
-
   font-size: 24px;
 }
 
@@ -639,10 +841,9 @@
 
   margin: 0 0 18px;
 
-  color: #777777;
+  color: #858585;
 
   font-size: 13px;
-
   line-height: 1.6;
 }
 
@@ -656,9 +857,9 @@
 }
 
 
-/* ===========================
+/* ===================================
    CTA
-   =========================== */
+   =================================== */
 
 .home-cta {
   display: flex;
@@ -669,7 +870,7 @@
 
   margin:
     10px
-    clamp(38px, 5vw, 85px)
+    clamp(35px, 4vw, 75px)
     60px;
 
   padding: 34px;
@@ -704,28 +905,36 @@
 .home-cta p {
   margin: 0;
 
-  color: #777777;
+  color: #858585;
 }
 
 
-/* ===========================
+/* ===================================
    RESPONSIVE
-   =========================== */
+   =================================== */
 
 @media (max-width: 1250px) {
 
   .home-hero {
     grid-template-columns: 1fr;
-    gap: 60px;
+    gap: 20px;
   }
 
   .hero-copy {
     max-width: 850px;
   }
 
+  .hero-art {
+    height: 360px;
+  }
+
+  .hero-fleet-image {
+    width: 100%;
+    transform: none;
+  }
+
   .fleet-card {
-    max-width: 850px;
-    margin: 0;
+    margin-left: 0;
   }
 
   .home-feature-grid {
@@ -735,6 +944,7 @@
 
 }
 
+
 @media (max-width: 700px) {
 
   .home-topbar {
@@ -742,11 +952,15 @@
   }
 
   .home-hero {
-    padding: 40px 20px 70px;
+    padding: 35px 20px 25px;
   }
 
   .hero-copy h1 {
-    font-size: clamp(3rem, 15vw, 4.2rem);
+    font-size: clamp(3rem, 12vw, 4.5rem);
+  }
+
+  .hero-copy > p {
+    font-size: 14px;
   }
 
   .hero-actions,
@@ -755,23 +969,33 @@
   }
 
   .hero-stats > div {
-    min-width: 95px;
+    min-width: 85px;
+    margin-right: 15px;
+    padding-right: 15px;
   }
 
-  .fleet-image {
-    height: 220px;
+  .hero-art {
+    height: 260px;
   }
 
-  .fleet-card-header {
-    padding: 16px;
+  .fleet-section {
+    padding: 20px 20px 70px;
   }
 
-  .fleet-card-header h2 {
-    font-size: 18px;
+  .fleet-card {
+    grid-template-columns: 1fr;
   }
 
-  .fleet-models {
-    padding: 16px;
+  .fleet-information {
+    padding: 24px;
+  }
+
+  .fleet-information h2 {
+    font-size: 23px;
+  }
+
+  .fleet-carousel {
+    height: 230px;
   }
 
   .home-features {
@@ -786,13 +1010,31 @@
     margin: 10px 20px 50px;
 
     flex-direction: column;
-
     align-items: flex-start;
   }
 
   .account-btn {
     font-size: 12px;
     padding: 8px 12px;
+  }
+
+}
+
+
+/* ===================================
+   ACCESSIBILITY
+   =================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .carousel-track {
+    transition-duration: 1ms;
+  }
+
+  .primary-btn,
+  .secondary-btn,
+  .feature-card {
+    transition: none;
   }
 
 }
