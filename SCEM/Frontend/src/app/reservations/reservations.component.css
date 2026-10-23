@@ -717,3 +717,126 @@
   }
 
 }
+/* =====================================
+   SEARCH, RESULT COUNT AND SORT
+   ===================================== */
+
+.reservation-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin: -3px 0 21px;
+}
+
+.reservation-search {
+  display: flex;
+  align-items: center;
+  flex: 1 1 300px;
+  max-width: 490px;
+  min-height: 45px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  background: linear-gradient(145deg, #121517, #090b0c);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.reservation-search:focus-within {
+  border-color: rgba(232, 176, 60, 0.42);
+  box-shadow: 0 0 0 3px rgba(232, 176, 60, 0.07);
+}
+
+.search-icon {
+  color: #d9a437;
+  font-size: 23px;
+  line-height: 1;
+  margin-right: 8px;
+}
+
+.reservation-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #f0f0f0;
+  font: inherit;
+  font-size: 11px;
+}
+
+.reservation-search input::placeholder {
+  color: #6e767a;
+}
+
+.reservation-search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.clear-search-btn {
+  border: 0;
+  padding: 4px 8px;
+  background: none;
+  color: #aab0b3;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.clear-search-btn:hover {
+  color: #f2bd4a;
+}
+
+.reservation-toolbar-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.reservation-result-count {
+  color: #80878a;
+  font-size: 10px;
+}
+
+.sort-reservations-btn,
+.empty-clear-btn,
+.empty-create-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid rgba(221, 166, 49, 0.24);
+  border-radius: 8px;
+  background: rgba(214, 149, 28, 0.07);
+  color: #e9b545;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 750;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sort-reservations-btn:hover,
+.empty-clear-btn:hover,
+.empty-create-link:hover {
+  border-color: rgba(221, 166, 49, 0.43);
+  background: rgba(214, 149, 28, 0.12);
+}
+
+.empty-clear-btn,
+.empty-create-link {
+  margin-top: 18px;
+}
+
+@media (max-width: 760px) {
+  .reservation-search {
+    max-width: none;
+    flex-basis: 100%;
+  }
+  .reservation-toolbar-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+}

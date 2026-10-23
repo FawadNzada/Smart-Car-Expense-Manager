@@ -2,6 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
+export interface GroupMember {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 export interface Group {
   id: number;
   name: string;
@@ -10,6 +17,8 @@ export interface Group {
   createdAt: string;
   members: string[];
   vehicleLicensePlates: string[];
+
+  memberDetails?: GroupMember[];
 }
 
 interface BackendGroup {
@@ -28,8 +37,7 @@ export class GroupService {
 
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl =
-    'http://localhost:5123/Group';
+  private readonly apiUrl = 'http://localhost:5123/Group';
 
   readonly groups: Group[] = [];
 
@@ -40,7 +48,7 @@ export class GroupService {
   }
 
   // =========================================
-  // GET - Gruppen aus SQLite laden
+  // GRUPPEN LADEN
   // =========================================
 
   loadGroups(): void {
@@ -60,10 +68,20 @@ export class GroupService {
             ...mappedGroups
           );
 
-          console.log(
-            'Groups loaded from backend:',
-            mappedGroups
-          );
+          // Mitglieder jeder Gruppe aus SQLite laden
+          for (const group of mappedGroups) {
+
+            void this.loadMembersInBackend(group)
+              .catch(error => {
+
+                console.error(
+                  'Error loading group members:',
+                  error
+                );
+
+              });
+          }
+
         },
 
         error: (error) => {
@@ -72,13 +90,11 @@ export class GroupService {
             'Error loading groups:',
             error
           );
+
         }
+
       });
   }
-
-  // =========================================
-  // Backend-Daten umwandeln
-  // =========================================
 
   private mapGroup(group: BackendGroup): Group {
 
@@ -90,12 +106,13 @@ export class GroupService {
       createdAt: group.createdAt.slice(0, 10),
       members: [],
       vehicleLicensePlates:
-        group.vehicleLicensePlates || []
+        group.vehicleLicensePlates || [],
+      memberDetails: []
     };
   }
 
   // =========================================
-  // POST - Gruppe erstellen
+  // GRUPPE ERSTELLEN
   // =========================================
 
   async createGroupInBackend(
@@ -123,7 +140,7 @@ export class GroupService {
   }
 
   // =========================================
-  // PUT - Gruppennamen und Beschreibung ändern
+  // GRUPPE BEARBEITEN
   // =========================================
 
   async updateGroupInBackend(
@@ -133,7 +150,7 @@ export class GroupService {
   ): Promise<void> {
 
     if (group.id <= 0) {
-      throw new Error('Group has no valid database ID.');
+      throw new Error('Invalid group ID.');
     }
 
     const payload = {
@@ -153,7 +170,7 @@ export class GroupService {
   }
 
   // =========================================
-  // PUT - Fahrzeuge einer Gruppe zuordnen
+  // FAHRZEUGE ZUORDNEN
   // =========================================
 
   async assignVehiclesInBackend(
@@ -162,17 +179,15 @@ export class GroupService {
   ): Promise<void> {
 
     if (group.id <= 0) {
-      throw new Error('Group has no valid database ID.');
+      throw new Error('Invalid group ID.');
     }
-
-    const payload = {
-      licensePlates: licensePlates
-    };
 
     await firstValueFrom(
       this.http.put<void>(
         `${this.apiUrl}/${group.id}/vehicles`,
-        payload
+        {
+          licensePlates
+        }
       )
     );
 
@@ -180,7 +195,7 @@ export class GroupService {
   }
 
   // =========================================
-  // NEU: DELETE - Gruppe dauerhaft löschen
+  // GRUPPE LÖSCHEN
   // =========================================
 
   async deleteGroupInBackend(
@@ -188,18 +203,15 @@ export class GroupService {
   ): Promise<void> {
 
     if (group.id <= 0) {
-      throw new Error('Group has no valid database ID.');
+      throw new Error('Invalid group ID.');
     }
 
-    // Zuerst in SQLite löschen
     await firstValueFrom(
       this.http.delete<void>(
         `${this.apiUrl}/${group.id}`
       )
     );
 
-    // Erst nach erfolgreicher API-Antwort
-    // aus der Angular-Liste entfernen
     const index = this.groups.findIndex(
       item => item.id === group.id
     );
@@ -207,15 +219,117 @@ export class GroupService {
     if (index >= 0) {
       this.groups.splice(index, 1);
     }
+  }
 
-    console.log(
-      'Group deleted successfully:',
-      group.id
+  // =========================================
+  // NEU: MITGLIEDER LADEN
+  // =========================================
+
+  async loadMembersInBackend(
+    group: Group
+  ): Promise<GroupMember[]> {
+
+    const members = await firstValueFrom(
+      this.http.get<GroupMember[]>(
+        `${this.apiUrl}/${group.id}/members`
+      )
+    );
+
+    this.updateLocalMembers(group, members);
+
+    return members;
+  }
+
+  // =========================================
+  // NEU: MITGLIED HINZUFÜGEN
+  // =========================================
+
+  async addMemberInBackend(
+    group: Group,
+    email: string
+  ): Promise<GroupMember> {
+
+    if (group.id <= 0) {
+      throw new Error('Invalid group ID.');
+    }
+
+    const member = await firstValueFrom(
+      this.http.post<GroupMember>(
+        `${this.apiUrl}/${group.id}/members`,
+        {
+          email: email.trim()
+        }
+      )
+    );
+
+    const updatedMembers = [
+      ...(group.memberDetails || []),
+      member
+    ];
+
+    this.updateLocalMembers(
+      group,
+      updatedMembers
+    );
+
+    return member;
+  }
+
+  // =========================================
+  // NEU: MITGLIED ENTFERNEN
+  // =========================================
+
+  async removeMemberInBackend(
+    group: Group,
+    userId: number
+  ): Promise<void> {
+
+    if (group.id <= 0) {
+      throw new Error('Invalid group ID.');
+    }
+
+    await firstValueFrom(
+      this.http.delete<void>(
+        `${this.apiUrl}/${group.id}/members/${userId}`
+      )
+    );
+
+    const updatedMembers =
+      (group.memberDetails || []).filter(
+        member => member.userId !== userId
+      );
+
+    this.updateLocalMembers(
+      group,
+      updatedMembers
     );
   }
 
   // =========================================
-  // Bisherige lokale Funktion
+  // MITGLIEDER IN ANGULAR AKTUALISIEREN
+  // =========================================
+
+  private updateLocalMembers(
+    group: Group,
+    members: GroupMember[]
+  ): void {
+
+    group.memberDetails = [...members];
+
+    group.members = members.map(member => {
+
+      const fullName = [
+        member.firstName,
+        member.lastName
+      ].filter(Boolean).join(' ').trim();
+
+      return fullName || member.email;
+
+    });
+  }
+
+  // =========================================
+  // BISHERIGE LOKALE FUNKTIONEN
   // =========================================
 
   addGroup(group: Omit<Group, 'id'>): Group {
@@ -230,20 +344,12 @@ export class GroupService {
     return created;
   }
 
-  // =========================================
-  // Gruppe suchen
-  // =========================================
-
   findGroup(id: number): Group | undefined {
 
     return this.groups.find(
       group => group.id === id
     );
   }
-
-  // =========================================
-  // Alte lokale Löschfunktion
-  // =========================================
 
   deleteGroup(group: Group): void {
 
@@ -253,10 +359,6 @@ export class GroupService {
       this.groups.splice(index, 1);
     }
   }
-
-  // =========================================
-  // Gruppennamen überprüfen
-  // =========================================
 
   groupNameExists(
     name: string,

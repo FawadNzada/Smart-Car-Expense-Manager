@@ -19,6 +19,7 @@ public class UnitOfWork : BaseUnitOfWork, IUnitOfWork
 
     public IGenericRepository<User> UserRepository { get; }
 
+    public IGenericRepository<Reservation> ReservationRepository { get; }
 
     // =========================================
     // Constructor
@@ -39,5 +40,8 @@ public class UnitOfWork : BaseUnitOfWork, IUnitOfWork
 
         UserRepository =
             new GenericRepository<User>(context);
+
+        ReservationRepository =
+            new GenericRepository<Reservation>(context);
     }
 }

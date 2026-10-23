@@ -1,8 +1,122 @@
 <div class="reservations-page">
-  <div class="reservations-header"><div><span class="eyebrow">RESERVATION MANAGEMENT</span><h1>Reservations</h1><p>Manage vehicle reservations and upcoming bookings.</p></div><a routerLink="/createreservation" class="new-reservation-btn">+ New Reservation</a></div>
-  <div class="reservation-tabs">@for(f of ['All','Upcoming','Past','Completed','Cancelled'];track f){<button [class]="tabClass(f)" (click)="setFilter(f)">{{f}}</button>}</div>
+  <div class="reservations-header">
+    <div>
+      <span class="eyebrow">RESERVATION MANAGEMENT</span>
+      <h1>Reservations</h1>
+      <p>Manage vehicle reservations and upcoming bookings.</p>
+    </div>
+
+    <a routerLink="/createreservation" class="new-reservation-btn">
+      + New Reservation
+    </a>
+  </div>
+
+  <div class="reservation-tabs" aria-label="Reservation status filters">
+    @for (filter of filters; track filter) {
+      <button
+        type="button"
+        [class]="tabClass(filter)"
+        [attr.aria-pressed]="activeFilter === filter"
+        (click)="setFilter(filter)"
+      >
+        {{ filter }}
+      </button>
+    }
+  </div>
+
+  <div class="reservation-toolbar">
+    <div class="reservation-search">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <input
+        type="search"
+        aria-label="Search reservations"
+        placeholder="Search vehicle, license plate or driver..."
+        [value]="searchTerm"
+        (input)="updateSearch($event)"
+      />
+      @if (searchTerm) {
+        <button
+          type="button"
+          class="clear-search-btn"
+          (click)="clearSearch()"
+          aria-label="Clear search"
+        >
+          ×
+        </button>
+      }
+    </div>
+
+    <div class="reservation-toolbar-right">
+      <span class="reservation-result-count">
+        {{ filteredReservations.length }} of {{ totalReservations }} reservations
+      </span>
+      <button type="button" class="sort-reservations-btn" (click)="toggleSort()">
+        {{ sortNewestFirst ? 'Newest first ↓' : 'Oldest first ↑' }}
+      </button>
+    </div>
+  </div>
+
   <div class="reservations-list">
-    @if(!filteredReservations.length){<div class="empty-state"><div class="empty-icon">📅</div><h3>No reservations found</h3><p>There are currently no reservations in this category.</p></div>}
-    @else{@for(r of filteredReservations;track r.id){<a [routerLink]="['/reservations',r.id]" class="reservation-card reservation-card-link"><div class="vehicle-image"><img [src]="r.vehicleImage" [alt]="r.vehicleName"></div><div class="reservation-main"><div class="vehicle-title-row"><div><h2>{{r.vehicleName}}</h2><span class="license-plate">{{r.licensePlate}}</span></div><span class="status-badge" [class]="'status-badge '+statusClass(r)">{{displayStatus(r)}}</span></div><div class="reservation-info-grid"><div class="info-box"><span>Driver</span><strong>{{r.driver}}</strong></div><div class="info-box"><span>Date</span><strong>{{dateLong(r.date)}}</strong></div><div class="info-box"><span>Time</span><strong>{{r.startTime}} - {{r.endTime}}</strong></div><div class="info-box"><span>Duration</span><strong>{{duration(r)}}</strong></div></div></div></a>}}
+    @if (filteredReservations.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">📅</div>
+        <h3>No reservations found</h3>
+        @if (searchTerm.trim()) {
+          <p>No bookings match your search. Try another vehicle, plate or driver.</p>
+          <button type="button" class="empty-clear-btn" (click)="clearSearch()">
+            Clear search
+          </button>
+        } @else if (activeFilter !== 'All') {
+          <p>There are currently no {{ activeFilter.toLowerCase() }} reservations.</p>
+        } @else {
+          <p>There are currently no reservations.</p>
+          <a routerLink="/createreservation" class="empty-create-link">
+            Create your first reservation
+          </a>
+        }
+      </div>
+    } @else {
+      @for (reservation of filteredReservations; track reservation.id) {
+        <a
+          [routerLink]="['/reservations', reservation.id]"
+          class="reservation-card reservation-card-link"
+        >
+          <div class="vehicle-image">
+            <img [src]="reservation.vehicleImage" [alt]="reservation.vehicleName" />
+          </div>
+
+          <div class="reservation-main">
+            <div class="vehicle-title-row">
+              <div>
+                <h2>{{ reservation.vehicleName }}</h2>
+                <span class="license-plate">{{ reservation.licensePlate }}</span>
+              </div>
+              <span [class]="'status-badge ' + statusClass(reservation)">
+                {{ displayStatus(reservation) }}
+              </span>
+            </div>
+
+            <div class="reservation-info-grid">
+              <div class="info-box">
+                <span>Driver</span>
+                <strong>{{ reservation.driver }}</strong>
+              </div>
+              <div class="info-box">
+                <span>Date</span>
+                <strong>{{ dateLong(reservation.date) }}</strong>
+              </div>
+              <div class="info-box">
+                <span>Time</span>
+                <strong>{{ reservation.startTime }} - {{ reservation.endTime }}</strong>
+              </div>
+              <div class="info-box">
+                <span>Duration</span>
+                <strong>{{ duration(reservation) }}</strong>
+              </div>
+            </div>
+          </div>
+        </a>
+      }
+    }
   </div>
 </div>

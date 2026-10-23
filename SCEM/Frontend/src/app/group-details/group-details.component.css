@@ -1254,3 +1254,214 @@
   }
 
 }
+/* =========================================
+   GROUP MEMBERS MANAGEMENT
+   Uses the existing SCEM black-and-gold design.
+   ========================================= */
+
+.add-member-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid rgba(232, 178, 65, 0.4);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f2c354, #bd7e16);
+  color: #171109;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 850;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.add-member-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(211, 146, 25, 0.18);
+}
+
+.add-member-btn:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.add-member-form {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+  background: rgba(211, 146, 25, 0.028);
+}
+
+.add-member-form label {
+  color: #e1e1e1;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.add-member-form input {
+  width: 100%;
+  min-height: 43px;
+  padding: 0 13px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: #090c0d;
+  color: #f2f2f2;
+  font-family: inherit;
+  font-size: 12px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.add-member-form input::placeholder {
+  color: #6e7477;
+}
+
+.add-member-form input:focus {
+  border-color: #d9a437;
+  box-shadow: 0 0 0 3px rgba(217, 164, 55, 0.11);
+}
+
+.add-member-form input:disabled {
+  opacity: 0.62;
+}
+
+.form-hint {
+  margin: -2px 0 0;
+  color: #898f92;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.member-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 5px;
+}
+
+.member-cancel-btn,
+.member-submit-btn {
+  min-height: 38px;
+  padding: 0 15px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.member-cancel-btn {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #141819;
+  color: #d3d6d7;
+}
+
+.member-submit-btn {
+  border: 1px solid rgba(232, 178, 65, 0.4);
+  background: linear-gradient(135deg, #f2c354, #bd7e16);
+  color: #171109;
+}
+
+.member-cancel-btn:hover:not(:disabled),
+.member-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.member-cancel-btn:disabled,
+.member-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.member-message {
+  margin: 13px 18px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.member-error {
+  border-color: rgba(239, 93, 93, 0.25);
+  background: rgba(239, 93, 93, 0.085);
+  color: #f08a8a;
+}
+
+.member-success {
+  border-color: rgba(49, 193, 128, 0.26);
+  background: rgba(49, 193, 128, 0.08);
+  color: #69dda3;
+}
+
+.member-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remove-member-btn {
+  flex-shrink: 0;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid rgba(239, 93, 93, 0.27);
+  border-radius: 8px;
+  background: rgba(239, 93, 93, 0.07);
+  color: #ef8585;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease;
+}
+
+.remove-member-btn:hover:not(:disabled) {
+  border-color: rgba(239, 93, 93, 0.45);
+  background: rgba(239, 93, 93, 0.13);
+}
+
+.remove-member-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.add-member-btn:focus-visible,
+.member-cancel-btn:focus-visible,
+.member-submit-btn:focus-visible,
+.remove-member-btn:focus-visible {
+  outline: 2px solid #f2c354;
+  outline-offset: 3px;
+}
+
+@media (max-width: 650px) {
+  .details-card .card-header {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 450px) {
+  .add-member-btn {
+    width: 100%;
+  }
+
+  .member-form-actions button {
+    flex: 1;
+  }
+
+  .member-row {
+    flex-wrap: wrap;
+  }
+
+  .remove-member-btn {
+    margin-left: 54px;
+  }
+}

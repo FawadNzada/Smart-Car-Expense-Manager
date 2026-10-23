@@ -16,4 +16,7 @@ public interface IUnitOfWork : IBaseUnitOfWork
 
     // Benutzer
     IGenericRepository<User> UserRepository { get; }
+
+    // Reservierungen
+    IGenericRepository<Reservation> ReservationRepository { get; }
 }

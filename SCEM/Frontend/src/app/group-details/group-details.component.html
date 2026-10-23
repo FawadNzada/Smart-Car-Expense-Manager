@@ -1,1 +1,482 @@
-<div class="group-details-page">@if(!group){<div class="not-found-card"><h1>Group not found</h1><a routerLink="/groups" class="primary-btn">Back to Groups</a></div>}@else{<a routerLink="/groups" class="back-link">← Back to Groups</a><div class="details-header"><div><span class="eyebrow">GROUP DETAILS</span><h1>{{group.name}}</h1><p>{{group.description}}</p></div><div class="header-actions"><a [routerLink]="['/groups/edit',group.id]" class="edit-btn">Edit Group</a><button class="delete-btn" (click)="showDeleteModal=true">Delete Group</button></div></div><div class="overview-card"><div class="group-icon">👥</div><div class="overview-main"><span class="owner-label">OWNER</span><h2>{{group.owner}}</h2><span>Created {{group.createdAt}}</span></div><div class="overview-stats"><div><strong>{{group.members.length}}</strong><span>Members</span></div><div><strong>{{assignedVehicles.length}}</strong><span>Vehicles</span></div></div></div><div class="details-grid"><div class="details-card"><div class="card-header"><div><span class="section-label">MEMBERS</span><h2>Group Members</h2></div></div><div class="member-list">@for(member of group.members;track member){<div class="member-row"><div class="member-avatar">{{initials(member)}}</div><div class="member-info"><strong>{{member}}</strong>@if(member.toLowerCase()===group.owner.toLowerCase()){<span>Group owner</span>}</div>@if(member.toLowerCase()===group.owner.toLowerCase()){<span class="owner-badge">Owner</span>}</div>}</div></div><div class="details-card"><div class="card-header"><div><span class="section-label">VEHICLES</span><h2>Assigned Vehicles</h2></div></div>@if(assignedVehicles.length===0){<div class="empty-section">No vehicles assigned.</div>}@else{<div class="vehicle-list">@for(vehicle of assignedVehicles;track vehicle.licensePlate){<a [routerLink]="['/vehicles',vehicle.licensePlate]" class="vehicle-row"><div class="vehicle-image"><img [src]="vehicle.image"></div><div class="vehicle-info"><strong>{{vehicle.name}}</strong><span>{{vehicle.licensePlate}}</span></div><span [class]="'vehicle-status '+vehicle.statusClass">{{vehicle.status}}</span></a>}</div>}</div></div>@if(showDeleteModal){<div class="modal-overlay"><div class="modal-card"><h2>Delete {{group.name}}?</h2><div class="delete-summary">{{group.members.length}} members · {{assignedVehicles.length}} vehicles</div><div class="modal-actions"><button class="modal-secondary" (click)="showDeleteModal=false">Cancel</button><button class="modal-danger" (click)="deleteGroup()">Delete Group</button></div></div></div>}}</div>
+<div class="group-details-page">
+
+  @if (!group) {
+
+    <div class="not-found-card">
+      <h1>Group not found</h1>
+
+      <a routerLink="/groups" class="primary-btn">
+        Back to Groups
+      </a>
+    </div>
+
+  } @else {
+
+    <!-- ================================= -->
+    <!-- BACK BUTTON -->
+    <!-- ================================= -->
+
+    <a routerLink="/groups" class="back-link">
+      ← Back to Groups
+    </a>
+
+    <!-- ================================= -->
+    <!-- HEADER -->
+    <!-- ================================= -->
+
+    <div class="details-header">
+
+      <div>
+        <span class="eyebrow">
+          GROUP DETAILS
+        </span>
+
+        <h1>{{ group.name }}</h1>
+
+        <p>{{ group.description }}</p>
+      </div>
+
+      <div class="header-actions">
+
+        <a
+          [routerLink]="['/groups/edit', group.id]"
+          class="edit-btn"
+        >
+          Edit Group
+        </a>
+
+        <button
+          type="button"
+          class="delete-btn"
+          (click)="showDeleteModal = true"
+        >
+          Delete Group
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- ================================= -->
+    <!-- GROUP OVERVIEW -->
+    <!-- ================================= -->
+
+    <div class="overview-card">
+
+      <div class="group-icon">
+        👥
+      </div>
+
+      <div class="overview-main">
+
+        <span class="owner-label">
+          OWNER
+        </span>
+
+        <h2>{{ group.owner }}</h2>
+
+        <span>
+          Created {{ group.createdAt }}
+        </span>
+
+      </div>
+
+      <div class="overview-stats">
+
+        <div>
+          <strong>{{ memberCount }}</strong>
+          <span>Members</span>
+        </div>
+
+        <div>
+          <strong>{{ assignedVehicles.length }}</strong>
+          <span>Vehicles</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================================= -->
+    <!-- DETAILS GRID -->
+    <!-- ================================= -->
+
+    <div class="details-grid">
+
+      <!-- =============================== -->
+      <!-- GROUP MEMBERS -->
+      <!-- =============================== -->
+
+      <div class="details-card">
+
+        <div class="card-header">
+
+          <div>
+            <span class="section-label">
+              MEMBERS
+            </span>
+
+            <h2>Group Members</h2>
+          </div>
+
+          <button
+            type="button"
+            class="add-member-btn"
+            (click)="openAddMemberForm()"
+            [disabled]="showAddMemberForm"
+          >
+            + Add Member
+          </button>
+
+        </div>
+
+        <!-- ============================= -->
+        <!-- ADD MEMBER FORM -->
+        <!-- ============================= -->
+
+        @if (showAddMemberForm) {
+
+          <form
+            class="add-member-form"
+            (ngSubmit)="addMember()"
+          >
+
+            <label for="memberEmail">
+              Member Email Address
+            </label>
+
+            <input
+              id="memberEmail"
+              name="memberEmail"
+              type="email"
+              placeholder="Enter member email"
+              [(ngModel)]="memberEmail"
+              [disabled]="isAddingMember"
+              autocomplete="off"
+              required
+            />
+
+            <p class="form-hint">
+              The user must already have an SCEM account.
+            </p>
+
+            <div class="member-form-actions">
+
+              <button
+                type="button"
+                class="member-cancel-btn"
+                (click)="closeAddMemberForm()"
+                [disabled]="isAddingMember"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="submit"
+                class="member-submit-btn"
+                [disabled]="isAddingMember"
+              >
+                @if (isAddingMember) {
+                  Adding...
+                } @else {
+                  Add Member
+                }
+              </button>
+
+            </div>
+
+          </form>
+
+        }
+
+        <!-- ============================= -->
+        <!-- MESSAGES -->
+        <!-- ============================= -->
+
+        @if (memberErrorMessage) {
+
+          <div
+            class="member-message member-error"
+            role="alert"
+          >
+            {{ memberErrorMessage }}
+          </div>
+
+        }
+
+        @if (memberSuccessMessage) {
+
+          <div
+            class="member-message member-success"
+            role="status"
+          >
+            {{ memberSuccessMessage }}
+          </div>
+
+        }
+
+        <!-- ============================= -->
+        <!-- MEMBER LIST -->
+        <!-- ============================= -->
+
+        @if (members.length === 0) {
+
+          <div class="empty-section">
+
+            <span>👥</span>
+
+            <p>
+              No members added yet.
+            </p>
+
+          </div>
+
+        } @else {
+
+          <div class="member-list">
+
+            @for (member of members; track member.userId) {
+
+              <div class="member-row">
+
+                <div class="member-avatar">
+                  {{ initials(memberName(member)) }}
+                </div>
+
+                <div class="member-info">
+
+                  <strong>
+                    {{ memberName(member) }}
+                  </strong>
+
+                  <span class="member-email">
+                    {{ member.email }}
+                  </span>
+
+                </div>
+
+                <button
+                  type="button"
+                  class="remove-member-btn"
+                  (click)="requestRemoveMember(member)"
+                  [disabled]="isRemovingMember"
+                >
+                  Remove
+                </button>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+      <!-- =============================== -->
+      <!-- ASSIGNED VEHICLES -->
+      <!-- =============================== -->
+
+      <div class="details-card">
+
+        <div class="card-header">
+
+          <div>
+
+            <span class="section-label">
+              VEHICLES
+            </span>
+
+            <h2>Assigned Vehicles</h2>
+
+          </div>
+
+        </div>
+
+        @if (assignedVehicles.length === 0) {
+
+          <div class="empty-section">
+            No vehicles assigned.
+          </div>
+
+        } @else {
+
+          <div class="vehicle-list">
+
+            @for (
+              vehicle of assignedVehicles;
+              track vehicle.licensePlate
+            ) {
+
+              <a
+                [routerLink]="[
+                  '/vehicles',
+                  vehicle.licensePlate
+                ]"
+                class="vehicle-row"
+              >
+
+                <div class="vehicle-image">
+
+                  <img
+                    [src]="vehicle.image"
+                    [alt]="vehicle.name"
+                  />
+
+                </div>
+
+                <div class="vehicle-info">
+
+                  <strong>
+                    {{ vehicle.name }}
+                  </strong>
+
+                  <span>
+                    {{ vehicle.licensePlate }}
+                  </span>
+
+                </div>
+
+                <span
+                  [class]="
+                    'vehicle-status ' +
+                    vehicle.statusClass
+                  "
+                >
+                  {{ vehicle.status }}
+                </span>
+
+              </a>
+
+            }
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+    <!-- ================================= -->
+    <!-- REMOVE MEMBER CONFIRMATION -->
+    <!-- ================================= -->
+
+    @if (memberToRemove; as selectedMember) {
+
+      <div class="modal-overlay">
+
+        <div class="modal-card">
+
+          <h2>
+            Remove Member?
+          </h2>
+
+          <p>
+            Are you sure you want to remove
+            <strong>{{ memberName(selectedMember) }}</strong>
+            from this group?
+          </p>
+
+          <div class="delete-summary">
+
+            <span>
+              {{ selectedMember.email }}
+            </span>
+
+          </div>
+
+          <div class="modal-actions">
+
+            <button
+              type="button"
+              class="modal-secondary"
+              (click)="cancelRemoveMember()"
+              [disabled]="isRemovingMember"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="modal-danger"
+              (click)="confirmRemoveMember()"
+              [disabled]="isRemovingMember"
+            >
+
+              @if (isRemovingMember) {
+                Removing...
+              } @else {
+                Remove Member
+              }
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+    <!-- ================================= -->
+    <!-- DELETE GROUP CONFIRMATION -->
+    <!-- ================================= -->
+
+    @if (showDeleteModal) {
+
+      <div class="modal-overlay">
+
+        <div class="modal-card">
+
+          <h2>
+            Delete {{ group.name }}?
+          </h2>
+
+          <div class="delete-summary">
+
+            {{ memberCount }} members
+            ·
+            {{ assignedVehicles.length }} vehicles
+
+          </div>
+
+          <div class="modal-actions">
+
+            <button
+              type="button"
+              class="modal-secondary"
+              (click)="showDeleteModal = false"
+              [disabled]="isDeleting"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="modal-danger"
+              (click)="deleteGroup()"
+              [disabled]="isDeleting"
+            >
+
+              @if (isDeleting) {
+                Deleting...
+              } @else {
+                Delete Group
+              }
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+  }
+
+</div>
