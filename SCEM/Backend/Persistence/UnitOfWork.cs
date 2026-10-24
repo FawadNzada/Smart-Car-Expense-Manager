@@ -8,7 +8,7 @@ namespace Persistence;
 public class UnitOfWork : BaseUnitOfWork, IUnitOfWork
 {
     // =========================================
-    // Repositories
+    // REPOSITORIES
     // =========================================
 
     public IMDemoRepository MDemoRepository { get; }
@@ -21,8 +21,12 @@ public class UnitOfWork : BaseUnitOfWork, IUnitOfWork
 
     public IGenericRepository<Reservation> ReservationRepository { get; }
 
+    public IGenericRepository<Trip> TripRepository { get; }
+
+    public IGenericRepository<Expense> ExpenseRepository { get; }
+
     // =========================================
-    // Constructor
+    // CONSTRUCTOR
     // =========================================
 
     public UnitOfWork(
@@ -43,5 +47,11 @@ public class UnitOfWork : BaseUnitOfWork, IUnitOfWork
 
         ReservationRepository =
             new GenericRepository<Reservation>(context);
+
+        TripRepository =
+            new GenericRepository<Trip>(context);
+
+        ExpenseRepository =
+            new GenericRepository<Expense>(context);
     }
 }

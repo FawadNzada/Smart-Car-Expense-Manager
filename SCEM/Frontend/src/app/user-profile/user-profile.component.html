@@ -10,6 +10,10 @@
 
     <div class="profile-main-card">
 
+      @if (profileLoadError) {
+        <div class="form-error" role="alert">{{ profileLoadError }}</div>
+      }
+
       <div class="profile-identity">
 
         <div class="avatar">
@@ -40,7 +44,7 @@
 
           <div class="profile-info-item">
             <span>Phone</span>
-            <strong>{{ phone }}</strong>
+            <strong>{{ phone || 'Not set' }}</strong>
           </div>
 
           <div class="profile-info-item">
@@ -76,7 +80,8 @@
 
               <input
                 type="text"
-                [(ngModel)]="editName">
+                [value]="name"
+                readonly>
             </label>
 
 
@@ -85,7 +90,8 @@
 
               <input
                 type="email"
-                [(ngModel)]="editEmail">
+                [value]="email"
+                readonly>
             </label>
 
 
@@ -103,7 +109,8 @@
 
               <input
                 type="text"
-                [(ngModel)]="editRole">
+                [value]="role"
+                readonly>
             </label>
 
           </div>
@@ -117,6 +124,11 @@
 
           }
 
+
+          <p style="color: #989da0; font-size: 12px; line-height: 1.6;">
+            Name, email and role come from Keycloak and cannot be changed here.
+            Your phone number is saved only in this browser.
+          </p>
 
           <div class="edit-actions">
 
@@ -135,7 +147,7 @@
               class="save-edit-btn"
               (click)="saveProfile()">
 
-              Save Changes
+              Save Phone
 
             </button>
 
@@ -201,9 +213,10 @@
             <button
               type="button"
               class="leave-group-btn"
-              (click)="openLeaveGroupModal()">
+              disabled
+            title="Group membership API not connected yet">
 
-              Leave Group
+              Leave Group (unavailable)
 
             </button>
 
@@ -272,6 +285,10 @@
           </span>
 
         </button>
+
+        <p style="color: #777d80; font-size: 11px; padding: 0 14px 10px;">
+          Preferences are stored in this browser.
+        </p>
 
       </div>
 
@@ -383,51 +400,5 @@
   </div>
 
 
-  <!-- LEAVE GROUP MODAL -->
-
-  @if (showLeaveGroupModal && currentGroup; as group) {
-
-    <div class="modal-overlay">
-
-      <div class="modal-card">
-
-        <h2>
-          Leave Group?
-        </h2>
-
-        <p>
-          Are you sure you want to leave
-          <strong>{{ group.name }}</strong>?
-        </p>
-
-
-        <div class="modal-actions">
-
-          <button
-            type="button"
-            class="modal-secondary"
-            (click)="cancelLeaveGroup()">
-
-            Cancel
-
-          </button>
-
-
-          <button
-            type="button"
-            class="modal-danger"
-            (click)="confirmLeaveGroup()">
-
-            Leave Group
-
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  }
 
 </div>

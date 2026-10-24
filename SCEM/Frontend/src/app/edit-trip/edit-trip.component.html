@@ -1,2 +1,389 @@
-<div class="edit-trip-page">@if(!trip){<div class="not-found-card"><h1>Trip not found</h1><a routerLink="/trips" class="primary-btn">Back to Trips</a></div>}@else{<a [routerLink]="['/trips',trip.id]" class="back-link">← Back to Trip</a><div class="edit-header"><div><span class="section-label">TRIP</span><h1>Edit Trip</h1><p>Update trip details.</p></div></div><div class="edit-layout"><div class="edit-form-card"><div class="form-group"><label>Vehicle</label><select [(ngModel)]="selectedLicensePlate">@for(v of vehicles;track v.licensePlate){<option [value]="v.licensePlate">{{v.name}}</option>}</select></div><div class="form-group"><label>Driver</label><input [(ngModel)]="driver"></div><div class="form-row"><div class="form-group"><label>Start Location</label><input [(ngModel)]="startLocation"></div><div class="form-group"><label>Destination</label><input [(ngModel)]="destination"></div></div><div class="form-group"><label>Date</label><input type="date" [(ngModel)]="tripDate"></div><div class="form-row"><div class="form-group"><label>Start Time</label><input type="time" [(ngModel)]="startTime"></div><div class="form-group"><label>End Time</label><input type="time" [(ngModel)]="endTime"></div></div><div class="form-group"><label>Start Mileage</label><input type="number" [(ngModel)]="startMileage"></div><div class="form-group"><label>Status</label><select [(ngModel)]="status"><option>Planned</option><option>Active</option><option>Completed</option><option>Cancelled</option></select></div><div class="form-group"><label>Notes</label><textarea [(ngModel)]="notes"></textarea></div>@if(errorMessage){<div class="form-error">{{errorMessage}}</div>}<div class="form-actions"><a [routerLink]="['/trips',trip.id]" class="cancel-btn">Cancel</a><button class="save-btn" (click)="saveChanges()">Save Changes</button></div></div><div class="preview-card"><span class="preview-label">LIVE PREVIEW</span>@if(selectedVehicle){<img [src]="selectedVehicle.image"><h2>{{selectedVehicle.name}}</h2><span class="plate">{{selectedVehicle.licensePlate}}</span>}<div class="preview-route"><strong>{{startLocation}}</strong><span>→</span><strong>{{destination}}</strong></div><div class="preview-status">{{status}}</div></div></div>}
+<div class="edit-trip-page">
+
+  <!-- LOADING -->
+
+  @if (isLoading) {
+
+    <div class="not-found-card">
+
+      <h1>Loading Trip...</h1>
+
+      <p>Please wait while we load your trip.</p>
+
+    </div>
+
+  } @else if (!trip) {
+
+    <!-- TRIP NOT FOUND -->
+
+    <div class="not-found-card">
+
+      <h1>Trip unavailable</h1>
+
+      <p>{{ loadError || 'Trip not found.' }}</p>
+
+      <a
+        routerLink="/trips"
+        class="primary-btn"
+      >
+        Back to Trips
+      </a>
+
+    </div>
+
+  } @else {
+
+    <!-- BACK -->
+
+    <a
+      [routerLink]="['/trips', trip.id]"
+      class="back-link"
+    >
+      ← Back to Trip
+    </a>
+
+    <!-- HEADER -->
+
+    <div class="edit-header">
+
+      <div>
+
+        <span class="section-label">
+          TRIP MANAGEMENT
+        </span>
+
+        <h1>Edit Trip</h1>
+
+        <p>
+          Update trip details and save your changes.
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- LAYOUT -->
+
+    <div class="edit-layout">
+
+      <!-- FORM -->
+
+      <div class="edit-form-card">
+
+        <!-- VEHICLE -->
+
+        <div class="form-group">
+
+          <label>Vehicle</label>
+
+          <select
+            [(ngModel)]="selectedLicensePlate"
+            [disabled]="isSaving || trip.status === 'Cancelled'"
+          >
+
+            @for (
+              vehicle of vehicles;
+              track vehicle.licensePlate
+            ) {
+
+              <option [value]="vehicle.licensePlate">
+
+                {{ vehicle.name }}
+                ({{ vehicle.licensePlate }})
+
+              </option>
+
+            }
+
+          </select>
+
+        </div>
+
+        <!-- DRIVER -->
+
+        <div class="form-group">
+
+          <label>Driver</label>
+
+          <input
+            type="text"
+            [value]="driver"
+            readonly
+          >
+
+        </div>
+
+        <!-- ROUTE -->
+
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label>Start Location</label>
+
+            <input
+              type="text"
+              [(ngModel)]="startLocation"
+              maxlength="256"
+              [disabled]="isSaving || trip.status === 'Cancelled'"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label>Destination</label>
+
+            <input
+              type="text"
+              [(ngModel)]="destination"
+              maxlength="256"
+              [disabled]="isSaving || trip.status === 'Cancelled'"
+            >
+
+          </div>
+
+        </div>
+
+        <!-- DATE -->
+
+        <div class="form-group">
+
+          <label>Date</label>
+
+          <input
+            type="date"
+            [(ngModel)]="tripDate"
+            [disabled]="isSaving || trip.status === 'Cancelled'"
+          >
+
+        </div>
+
+        <!-- TIME -->
+
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label>Start Time</label>
+
+            <input
+              type="time"
+              [(ngModel)]="startTime"
+              [disabled]="isSaving || trip.status === 'Cancelled'"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label>End Time</label>
+
+            <input
+              type="time"
+              [(ngModel)]="endTime"
+              [disabled]="isSaving || trip.status === 'Cancelled'"
+            >
+
+          </div>
+
+        </div>
+
+        <!-- START MILEAGE -->
+
+        <div class="form-group">
+
+          <label>Start Mileage</label>
+
+          <input
+            type="number"
+            min="0"
+            step="1"
+            [(ngModel)]="startMileage"
+            [disabled]="isSaving || trip.status === 'Cancelled'"
+          >
+
+        </div>
+
+        <!-- END MILEAGE -->
+
+        <div class="form-group">
+
+          <label>End Mileage</label>
+
+          <input
+            type="number"
+            [min]="startMileage"
+            step="1"
+            [(ngModel)]="endMileage"
+            [disabled]="isSaving || trip.status === 'Cancelled'"
+          >
+
+        </div>
+
+        <!-- STATUS -->
+
+        <div class="form-group">
+
+          <label>Status</label>
+
+          <select
+            [(ngModel)]="status"
+            [disabled]="isSaving || trip.status === 'Cancelled'"
+          >
+
+            <option value="Planned">
+              Planned
+            </option>
+
+            <option value="In Progress">
+              In Progress
+            </option>
+
+            <option value="Completed">
+              Completed
+            </option>
+
+            <option value="Cancelled">
+              Cancelled
+            </option>
+
+          </select>
+
+        </div>
+
+        <!-- NOTES -->
+
+        <div class="form-group">
+
+          <label>Notes</label>
+
+          <textarea
+            [(ngModel)]="notes"
+            maxlength="1024"
+            [disabled]="isSaving || trip.status === 'Cancelled'"
+          ></textarea>
+
+        </div>
+
+        <!-- ERROR -->
+
+        @if (errorMessage) {
+
+          <div
+            class="form-error"
+            role="alert"
+          >
+            {{ errorMessage }}
+          </div>
+
+        }
+
+        <!-- BUTTONS -->
+
+        <div class="form-actions">
+
+          <a
+            [routerLink]="['/trips', trip.id]"
+            class="cancel-btn"
+          >
+            Cancel
+          </a>
+
+          <button
+            type="button"
+            class="save-btn"
+            (click)="saveChanges()"
+            [disabled]="isSaving || trip.status === 'Cancelled'"
+          >
+
+            @if (isSaving) {
+
+              Saving...
+
+            } @else {
+
+              Save Changes
+
+            }
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- LIVE PREVIEW -->
+
+      <div class="preview-card">
+
+        <span class="preview-label">
+          LIVE PREVIEW
+        </span>
+
+        @if (selectedVehicle) {
+
+          <img
+            [src]="selectedVehicle.image"
+            [alt]="selectedVehicle.name"
+          >
+
+          <h2>
+            {{ selectedVehicle.name }}
+          </h2>
+
+          <span class="plate">
+            {{ selectedVehicle.licensePlate }}
+          </span>
+
+        }
+
+        <!-- ROUTE PREVIEW -->
+
+        <div class="preview-route">
+
+          <strong>
+            {{ startLocation || 'Start' }}
+          </strong>
+
+          <span>→</span>
+
+          <strong>
+            {{ destination || 'Destination' }}
+          </strong>
+
+        </div>
+
+        <!-- STATUS -->
+
+        <div class="preview-status">
+
+          {{ status }}
+
+        </div>
+
+        <!-- DISTANCE -->
+
+        <div
+          style="
+            margin: 0 22px 22px;
+            padding: 14px;
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 10px;
+            color: #e1aa37;
+            font-size: 12px;
+            font-weight: 700;
+          "
+        >
+
+          Distance: {{ distance }} km
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
 </div>

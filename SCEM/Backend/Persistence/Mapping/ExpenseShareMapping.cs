@@ -16,6 +16,12 @@ public static class ExpenseShareMapping
         entity.Property(es => es.Amount)
             .HasPrecision(18, 2);
 
+        entity.Property(es => es.IsPaid)
+            .HasDefaultValue(false);
+
+        entity.Property(es => es.PaidAt)
+            .IsRequired(false);
+
         entity.HasOne(es => es.Expense)
             .WithMany(e => e.Shares)
             .HasForeignKey(es => es.ExpenseId)

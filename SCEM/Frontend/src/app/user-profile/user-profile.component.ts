@@ -19,10 +19,7 @@ interface ProfileActivity {
 }
 
 interface SavedProfile {
-  name: string;
-  email: string;
   phone: string;
-  role: string;
 }
 
 @Component({
@@ -43,126 +40,98 @@ export class UserProfileComponent implements OnInit {
   private readonly vehicleService = inject(VehicleService);
   private readonly groupService = inject(GroupService);
 
-  private readonly profileStorageKey = 'scem-profile';
-  private readonly notificationStorageKey = 'scem-notifications';
-  private readonly darkModeStorageKey = 'scem-dark-mode';
+  private get storagePrefix(): string | null {
+    const subject = this.keycloak.subject ?? this.keycloak.tokenParsed?.sub;
+    return subject ? `scem-profile:${subject}` : null;
+  }
 
-  /*
-   * Stable demo identity.
-   * Editing the visible full name must not break
-   * Trip / Expense / Reservation matching.
-   */
-  private activityIdentity = 'Sebastian';
+  // No sample names, emails, phone numbers or fabricated registration dates.
+  private activityIdentity = '';
 
+  name = 'Loading...';
+  email = '—';
+  phone = '';
+  role = '—';
+  memberSince = 'Not available';
 
-  /* =========================
-     PROFILE
-     ========================= */
-
-  name = 'Sebastian Junior';
-  email = 'sebastian@email.com';
-  phone = '+43 660 1234567';
-  role = 'Group Member';
-  memberSince = '12 Jan 2026';
-
-
-  /* =========================
-     EDIT FORM
-     ========================= */
-
-  editName = '';
-  editEmail = '';
   editPhone = '';
-  editRole = '';
-
-
-  /* =========================
-     UI STATE
-     ========================= */
-
   editMode = false;
   errorMessage = '';
+  profileLoadError = '';
+  isProfileLoading = true;
 
   notificationsEnabled = true;
   darkModeEnabled = true;
 
+  // Kept for compatibility with the existing profile template.
   showLeaveGroupModal = false;
 
-
   /* =========================
-     INIT
+     KEYCLOAK ACCOUNT
      ========================= */
 
   async ngOnInit(): Promise<void> {
+    if (!this.keycloak.authenticated) {
+      this.name = 'Not signed in';
+      this.profileLoadError = 'Please sign in to see your account details.';
+      this.isProfileLoading = false;
+      return;
+    }
+
+    // Signed-in account data is always sourced from Keycloak.
+    // An older localStorage profile must not overwrite the real identity.
+    const token = (this.keycloak.tokenParsed ?? {}) as Record<string, unknown>;
+    const claim = (field: string): string =>
+      typeof token[field] === 'string' ? (token[field] as string).trim() : '';
+
+    let firstName = claim('given_name');
+    let lastName = claim('family_name');
+    let email = claim('email');
+    let displayedName = claim('name');
 
     try {
-
-      if (this.keycloak?.authenticated) {
-
-        const profile =
-          await this.keycloak.loadUserProfile();
-
-        if (profile.firstName) {
-
-          this.activityIdentity =
-            profile.firstName.trim();
-        }
-
-        const loadedName =
-          `${profile.firstName || ''} ${profile.lastName || ''}`.trim();
-
-        if (loadedName) {
-
-          this.name =
-            loadedName;
-        }
-
-        if (profile.email) {
-
-          this.email =
-            profile.email;
-        }
-      }
-
+      const profile = await this.keycloak.loadUserProfile();
+      firstName = profile.firstName?.trim() || firstName;
+      lastName = profile.lastName?.trim() || lastName;
+      email = profile.email?.trim() || email;
+      displayedName = `${firstName} ${lastName}`.trim() || displayedName;
     } catch {
-
-      // Demo profile stays active if Keycloak data is unavailable.
+      this.profileLoadError =
+        'Keycloak profile details could not be loaded. Showing available account claims.';
     }
+
+    this.name = displayedName || `${firstName} ${lastName}`.trim()
+      || claim('preferred_username') || 'Account';
+    this.activityIdentity = this.name;
+    this.email = email || 'Not available';
+
+    // Role labels reflect Keycloak authorization, not editable local text.
+    const realmRoles = this.keycloak.realmAccess?.roles ?? [];
+    const clientRoles = Object.values(this.keycloak.resourceAccess ?? {})
+      .flatMap(access => access.roles ?? []);
+    const roles = [...realmRoles, ...clientRoles];
+    this.role = roles.includes('AdminUser') ? 'Admin'
+      : roles.includes('NormalUser') ? 'User'
+      : 'User';
 
     this.loadLocalProfile();
     this.loadPreferences();
+    this.isProfileLoading = false;
   }
-
-
-  /* =========================
-     BROWSER
-     ========================= */
 
   private get isBrowser(): boolean {
-
-    return isPlatformBrowser(
-      this.platformId
-    );
+    return isPlatformBrowser(this.platformId);
   }
 
+  private belongsToCurrentUser(person: string): boolean {
+    const target = person.trim().toLocaleLowerCase();
+    const fullName = this.activityIdentity.trim().toLocaleLowerCase();
+    if (!target || !fullName) return false;
 
-  /* =========================
-     USER MATCHING
-     ========================= */
-
-  private belongsToCurrentUser(
-    person: string
-  ): boolean {
-
-    return (
-      person.trim().toLowerCase()
-      ===
-      this.activityIdentity
-        .trim()
-        .toLowerCase()
-    );
+    // API uses full names; older records may contain only a first name.
+    return target === fullName ||
+      (!target.includes(' ') && target === fullName.split(/\s+/)[0]);
   }
-
 
   /* =========================
      INITIALS
@@ -177,14 +146,11 @@ export class UserProfileComponent implements OnInit {
         .filter(Boolean);
 
     if (!parts.length) {
-
       return '?';
     }
 
     if (parts.length === 1) {
-
-      return parts[0][0]
-        .toUpperCase();
+      return parts[0][0].toUpperCase();
     }
 
     return (
@@ -196,159 +162,52 @@ export class UserProfileComponent implements OnInit {
 
 
   /* =========================
-     EDIT PROFILE
+     EDIT: PHONE ONLY (LOCAL)
      ========================= */
 
   startEditing(): void {
-
     this.errorMessage = '';
-
-    this.editName =
-      this.name;
-
-    this.editEmail =
-      this.email;
-
-    this.editPhone =
-      this.phone;
-
-    this.editRole =
-      this.role;
-
+    this.editPhone = this.phone;
     this.editMode = true;
   }
 
-
   cancelEditing(): void {
-
     this.errorMessage = '';
     this.editMode = false;
   }
 
-
   saveProfile(): void {
-
-    if (!this.editName.trim()) {
-
-      this.errorMessage =
-        'Name cannot be empty.';
-
+    const phone = this.editPhone.trim();
+    if (phone.length > 40) {
+      this.errorMessage = 'Phone number is too long.';
       return;
     }
 
-    if (!this.editEmail.trim()) {
-
-      this.errorMessage =
-        'Email cannot be empty.';
-
-      return;
-    }
-
-    this.name =
-      this.editName.trim();
-
-    this.email =
-      this.editEmail.trim();
-
-    this.phone =
-      this.editPhone.trim();
-
-    this.role =
-      this.editRole.trim()
-      || 'Group Member';
-
+    this.phone = phone;
     this.errorMessage = '';
     this.editMode = false;
-
     this.saveLocalProfile();
   }
 
-
-  /* =========================
-     PROFILE STORAGE
-     ========================= */
-
   private saveLocalProfile(): void {
-
-    if (!this.isBrowser) {
-
-      return;
-    }
-
-    const profile: SavedProfile = {
-
-      name:
-        this.name,
-
-      email:
-        this.email,
-
-      phone:
-        this.phone,
-
-      role:
-        this.role
-    };
-
-    localStorage.setItem(
-      this.profileStorageKey,
-      JSON.stringify(profile)
-    );
+    const prefix = this.storagePrefix;
+    if (!this.isBrowser || !prefix) return;
+    const value: SavedProfile = { phone: this.phone };
+    localStorage.setItem(`${prefix}:details`, JSON.stringify(value));
   }
-
 
   private loadLocalProfile(): void {
-
-    if (!this.isBrowser) {
-
-      return;
-    }
-
-    const stored =
-      localStorage.getItem(
-        this.profileStorageKey
-      );
-
-    if (!stored) {
-
-      return;
-    }
-
+    const prefix = this.storagePrefix;
+    if (!this.isBrowser || !prefix) return;
+    const stored = localStorage.getItem(`${prefix}:details`);
+    if (!stored) return;
     try {
-
-      const profile: SavedProfile =
-        JSON.parse(stored);
-
-      if (profile.name) {
-
-        this.name =
-          profile.name;
-      }
-
-      if (profile.email) {
-
-        this.email =
-          profile.email;
-      }
-
-      if (profile.phone) {
-
-        this.phone =
-          profile.phone;
-      }
-
-      if (profile.role) {
-
-        this.role =
-          profile.role;
-      }
-
+      const value = JSON.parse(stored) as SavedProfile;
+      if (typeof value.phone === 'string') this.phone = value.phone;
     } catch {
-
-      // Ignore invalid demo storage.
+      // Ignore invalid per-account browser preferences.
     }
   }
-
 
   /* =========================
      NOTIFICATIONS
@@ -364,7 +223,7 @@ export class UserProfileComponent implements OnInit {
 
 
   /* =========================
-     DARK MODE
+     DARK MODE PREFERENCE
      ========================= */
 
   toggleDarkMode(): void {
@@ -377,70 +236,30 @@ export class UserProfileComponent implements OnInit {
 
 
   private savePreferences(): void {
-
-    if (!this.isBrowser) {
-
-      return;
-    }
-
-    localStorage.setItem(
-      this.notificationStorageKey,
-      String(
-        this.notificationsEnabled
-      )
-    );
-
-    localStorage.setItem(
-      this.darkModeStorageKey,
-      String(
-        this.darkModeEnabled
-      )
-    );
+    const prefix = this.storagePrefix;
+    if (!this.isBrowser || !prefix) return;
+    localStorage.setItem(`${prefix}:notifications`, String(this.notificationsEnabled));
+    localStorage.setItem(`${prefix}:dark-mode`, String(this.darkModeEnabled));
   }
-
 
   private loadPreferences(): void {
-
-    if (!this.isBrowser) {
-
-      return;
-    }
-
-    const notifications =
-      localStorage.getItem(
-        this.notificationStorageKey
-      );
-
-    const darkMode =
-      localStorage.getItem(
-        this.darkModeStorageKey
-      );
-
-    if (notifications !== null) {
-
-      this.notificationsEnabled =
-        notifications === 'true';
-    }
-
-    if (darkMode !== null) {
-
-      this.darkModeEnabled =
-        darkMode === 'true';
-    }
+    const prefix = this.storagePrefix;
+    if (!this.isBrowser || !prefix) return;
+    const notifications = localStorage.getItem(`${prefix}:notifications`);
+    const darkMode = localStorage.getItem(`${prefix}:dark-mode`);
+    if (notifications !== null) this.notificationsEnabled = notifications === 'true';
+    if (darkMode !== null) this.darkModeEnabled = darkMode === 'true';
   }
 
-
   /* =========================
-     GROUPS
+     GROUP MEMBERSHIP
      ========================= */
 
   get userGroups(): Group[] {
 
     return this.groupService.groups
       .filter(group =>
-
         group.members.some(member =>
-
           this.belongsToCurrentUser(
             member
           )
@@ -452,24 +271,21 @@ export class UserProfileComponent implements OnInit {
   get currentGroup(): Group | null {
 
     /*
-     * Prefer a group where the current user
-     * is a member but not the owner.
+     * Prefer a group the user does not own,
+     * so "Leave Group" is actually meaningful.
      */
 
     const leaveableGroup =
       this.userGroups.find(group =>
-
         !this.belongsToCurrentUser(
           group.owner
         )
       );
 
-    if (leaveableGroup) {
-
-      return leaveableGroup;
-    }
 
     return (
+      leaveableGroup
+      ??
       this.userGroups[0]
       ??
       null
@@ -480,11 +296,8 @@ export class UserProfileComponent implements OnInit {
   get currentGroupMemberCount(): number {
 
     return (
-      this.currentGroup
-        ?.members
-        .length
-      ??
-      0
+      this.currentGroup?.members.length
+      ?? 0
     );
   }
 
@@ -495,9 +308,9 @@ export class UserProfileComponent implements OnInit {
       this.currentGroup;
 
     if (!group) {
-
       return false;
     }
+
 
     return this.belongsToCurrentUser(
       group.owner
@@ -505,21 +318,16 @@ export class UserProfileComponent implements OnInit {
   }
 
 
-  /* =========================
-     LEAVE GROUP
-     ========================= */
-
   openLeaveGroupModal(): void {
 
-    if (!this.currentGroup) {
-
+    if (
+      !this.currentGroup
+      ||
+      this.currentUserOwnsGroup
+    ) {
       return;
     }
 
-    if (this.currentUserOwnsGroup) {
-
-      return;
-    }
 
     this.showLeaveGroupModal = true;
   }
@@ -532,43 +340,10 @@ export class UserProfileComponent implements OnInit {
 
 
   confirmLeaveGroup(): void {
-
-    const group =
-      this.currentGroup;
-
-    if (!group) {
-
-      return;
-    }
-
-    if (
-      this.belongsToCurrentUser(
-        group.owner
-      )
-    ) {
-
-      return;
-    }
-
-    const index =
-      group.members.findIndex(member =>
-
-        this.belongsToCurrentUser(
-          member
-        )
-      );
-
-    if (index >= 0) {
-
-      group.members.splice(
-        index,
-        1
-      );
-    }
-
+    // Do not fake a database update by mutating a front-end array.
     this.showLeaveGroupModal = false;
+    this.errorMessage = 'Leaving a group will be available after the membership API is connected.';
   }
-
 
   /* =========================
      TOTAL TRIPS
@@ -578,7 +353,6 @@ export class UserProfileComponent implements OnInit {
 
     return this.tripService.trips
       .filter(trip =>
-
         this.belongsToCurrentUser(
           trip.driver
         )
@@ -595,16 +369,12 @@ export class UserProfileComponent implements OnInit {
 
     return this.expenseService.expenses
       .filter(expense =>
-
         this.belongsToCurrentUser(
           expense.paidBy
         )
       )
       .reduce(
-        (
-          sum,
-          expense
-        ) =>
+        (sum, expense) =>
           sum + expense.amount,
         0
       );
@@ -628,7 +398,6 @@ export class UserProfileComponent implements OnInit {
     return this.reservationService
       .reservations
       .filter(reservation =>
-
         this.belongsToCurrentUser(
           reservation.driver
         )
@@ -646,6 +415,7 @@ export class UserProfileComponent implements OnInit {
     const licensePlates =
       new Set<string>();
 
+
     for (
       const trip
       of this.tripService.trips
@@ -656,20 +426,20 @@ export class UserProfileComponent implements OnInit {
           trip.driver
         )
       ) {
-
         continue;
       }
+
 
       const vehicleExists =
         this.vehicleService.vehicles
           .some(vehicle =>
-
             vehicle.licensePlate
               .toLowerCase()
             ===
             trip.licensePlate
               .toLowerCase()
           );
+
 
       if (vehicleExists) {
 
@@ -679,6 +449,7 @@ export class UserProfileComponent implements OnInit {
         );
       }
     }
+
 
     return licensePlates.size;
   }
@@ -695,8 +466,6 @@ export class UserProfileComponent implements OnInit {
       ProfileActivity[] = [];
 
 
-    /* TRIPS */
-
     for (
       const trip
       of this.tripService.trips
@@ -707,14 +476,13 @@ export class UserProfileComponent implements OnInit {
           trip.driver
         )
       ) {
-
         continue;
       }
 
+
       activities.push({
 
-        icon:
-          '🚗',
+        icon: '🚗',
 
         title:
           trip.vehicleName,
@@ -740,11 +508,10 @@ export class UserProfileComponent implements OnInit {
     }
 
 
-    /* RESERVATIONS */
-
     for (
       const reservation
-      of this.reservationService.reservations
+      of this.reservationService
+        .reservations
     ) {
 
       if (
@@ -752,14 +519,13 @@ export class UserProfileComponent implements OnInit {
           reservation.driver
         )
       ) {
-
         continue;
       }
 
+
       activities.push({
 
-        icon:
-          '📅',
+        icon: '📅',
 
         title:
           reservation.vehicleName,
@@ -784,8 +550,6 @@ export class UserProfileComponent implements OnInit {
     }
 
 
-    /* EXPENSES */
-
     for (
       const expense
       of this.expenseService.expenses
@@ -796,14 +560,13 @@ export class UserProfileComponent implements OnInit {
           expense.paidBy
         )
       ) {
-
         continue;
       }
 
+
       activities.push({
 
-        icon:
-          '€',
+        icon: '€',
 
         title:
           expense.vehicleName,
@@ -829,31 +592,27 @@ export class UserProfileComponent implements OnInit {
 
 
     if (!activities.length) {
-
       return null;
     }
 
+
     activities.sort(
-      (
-        a,
-        b
-      ) =>
+      (a, b) =>
         b.timestamp
         -
         a.timestamp
     );
+
 
     return activities[0];
   }
 
 
   /* =========================
-     MONEY
+     HELPERS
      ========================= */
 
-  money(
-    value: number
-  ): string {
+  money(value: number): string {
 
     return new Intl.NumberFormat(
       'de-AT',
@@ -861,15 +620,9 @@ export class UserProfileComponent implements OnInit {
         style: 'currency',
         currency: 'EUR'
       }
-    ).format(
-      value
-    );
+    ).format(value);
   }
 
-
-  /* =========================
-     DATE HELPERS
-     ========================= */
 
   private timestamp(
     date: string,
@@ -891,6 +644,7 @@ export class UserProfileComponent implements OnInit {
         new Date()
       );
 
+
     const yesterdayDate =
       new Date();
 
@@ -898,20 +652,21 @@ export class UserProfileComponent implements OnInit {
       yesterdayDate.getDate() - 1
     );
 
+
     const yesterday =
       this.localDateString(
         yesterdayDate
       );
 
-    if (date === today) {
 
+    if (date === today) {
       return 'Today';
     }
 
     if (date === yesterday) {
-
       return 'Yesterday';
     }
+
 
     return new Intl.DateTimeFormat(
       'en-GB',
@@ -938,18 +693,13 @@ export class UserProfileComponent implements OnInit {
     const month =
       String(
         date.getMonth() + 1
-      ).padStart(
-        2,
-        '0'
-      );
+      ).padStart(2, '0');
 
     const day =
       String(
         date.getDate()
-      ).padStart(
-        2,
-        '0'
-      );
+      ).padStart(2, '0');
+
 
     return `${year}-${month}-${day}`;
   }

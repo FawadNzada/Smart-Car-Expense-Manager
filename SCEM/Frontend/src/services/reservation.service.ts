@@ -15,6 +15,14 @@ export interface Reservation {
   notes: string;
 }
 
+export interface CreateReservationInput {
+  licensePlate: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  notes: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -51,7 +59,7 @@ export class ReservationService {
           );
 
           console.log(
-            'Reservations loaded:',
+            'Reservations loaded from SQLite:',
             reservations
           );
         },
@@ -68,19 +76,19 @@ export class ReservationService {
   }
 
   // =========================================
-  // POST - RESERVIERUNG IN SQLITE ERSTELLEN
+  // POST - RESERVIERUNG ERSTELLEN
   // =========================================
 
   async createReservationInBackend(
-    reservation: Omit<Reservation, 'id'>
+    input: CreateReservationInput
   ): Promise<Reservation> {
 
     const payload = {
-      licensePlate: reservation.licensePlate,
-      date: reservation.date,
-      startTime: reservation.startTime,
-      endTime: reservation.endTime,
-      notes: reservation.notes
+      licensePlate: input.licensePlate.trim(),
+      date: input.date,
+      startTime: input.startTime,
+      endTime: input.endTime,
+      notes: input.notes.trim()
     };
 
     const created = await firstValueFrom(
@@ -90,7 +98,15 @@ export class ReservationService {
       )
     );
 
+    // Erst nach erfolgreicher API-Antwort
+    // zur Reservierungsliste hinzufügen.
+
     this.reservations.push(created);
+
+    console.log(
+      'Reservation created in SQLite:',
+      created
+    );
 
     return created;
   }
@@ -118,6 +134,11 @@ export class ReservationService {
         payload
       )
     );
+
+    console.log(
+      'Reservation updated:',
+      reservation.id
+    );
   }
 
   // =========================================
@@ -135,6 +156,11 @@ export class ReservationService {
     );
 
     reservation.status = 'Cancelled';
+
+    console.log(
+      'Reservation cancelled:',
+      reservation.id
+    );
   }
 
   // =========================================
@@ -151,7 +177,7 @@ export class ReservationService {
   }
 
   // =========================================
-  // DOPPELBUCHUNGEN PRÜFEN
+  // LOKALE KONFLIKTPRÜFUNG
   // =========================================
 
   hasConflict(
@@ -184,7 +210,7 @@ export class ReservationService {
 
   // =========================================
   // ALTE LOKALE FUNKTIONEN
-  // Werden im nächsten Schritt ersetzt
+  // BLEIBEN VORERST FÜR ANDERE SEITEN
   // =========================================
 
   addReservation(

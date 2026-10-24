@@ -1,4 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 export interface Expense {
   id: number;
@@ -13,35 +15,176 @@ export interface Expense {
   notes: string;
 }
 
-function dateOffset(days = 0): string {
-  const d = new Date();
-  d.setHours(12, 0, 0, 0);
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
-}
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ExpenseService {
-  private nextId = 4;
 
-  readonly expenses: Expense[] = [
-    { id: 1, category: 'Fuel', amount: 72.40, date: dateOffset(0), paidBy: 'Sebastian', vehicleName: 'Volkswagen Golf', licensePlate: 'L-123AB', tripId: 1, tripRoute: 'Linz → Wels', notes: 'Full tank.' },
-    { id: 2, category: 'Parking', amount: 8.50, date: dateOffset(0), paidBy: 'Lisa', vehicleName: 'BMW 3 Series', licensePlate: 'L-456CD', tripId: 2, tripRoute: 'Linz → Steyr', notes: 'Parking garage.' },
-    { id: 3, category: 'Maintenance', amount: 189.90, date: dateOffset(-2), paidBy: 'Max', vehicleName: 'Audi A4', licensePlate: 'L-789EF', tripId: null, tripRoute: '', notes: 'Oil and filter change.' }
-  ];
+  private readonly http = inject(HttpClient);
 
-  addExpense(expense: Omit<Expense, 'id'>): Expense {
-    const created = { ...expense, id: this.nextId++ };
+  private readonly apiUrl =
+    'http://localhost:5123/Expense';
+
+  readonly expenses: Expense[] = [];
+
+  private nextLocalId = -1;
+
+  // =========================================
+  // CONSTRUCTOR
+  // =========================================
+
+  constructor() {
+    this.loadExpenses();
+  }
+
+  // =========================================
+  // GET - AUSGABEN AUS SQLITE LADEN
+  // =========================================
+
+  loadExpenses(): void {
+
+    this.http.get<Expense[]>(this.apiUrl)
+      .subscribe({
+
+        next: (data) => {
+
+          this.expenses.splice(
+            0,
+            this.expenses.length,
+            ...data
+          );
+
+          console.log(
+            'Expenses loaded from SQLite:',
+            data
+          );
+        },
+
+        error: (error) => {
+
+          console.error(
+            'Error loading expenses:',
+            error
+          );
+
+        }
+
+      });
+  }
+
+  // =========================================
+  // POST - AUSGABE ERSTELLEN
+  // =========================================
+
+  async createExpenseInBackend(
+    expense: Omit<Expense, 'id'>
+  ): Promise<Expense> {
+
+    const payload = {
+      licensePlate: expense.licensePlate,
+      category: expense.category,
+      amount: expense.amount,
+      date: expense.date,
+      tripId: expense.tripId,
+      notes: expense.notes
+    };
+
+    const created = await firstValueFrom(
+      this.http.post<Expense>(
+        this.apiUrl,
+        payload
+      )
+    );
+
     this.expenses.push(created);
+
     return created;
   }
 
+  // =========================================
+  // PUT - AUSGABE BEARBEITEN
+  // =========================================
+
+  async updateExpenseInBackend(
+    expense: Expense
+  ): Promise<void> {
+
+    const payload = {
+      licensePlate: expense.licensePlate,
+      category: expense.category,
+      amount: expense.amount,
+      date: expense.date,
+      tripId: expense.tripId,
+      notes: expense.notes
+    };
+
+    await firstValueFrom(
+      this.http.put<void>(
+        `${this.apiUrl}/${expense.id}`,
+        payload
+      )
+    );
+
+    const existing = this.findExpense(expense.id);
+
+    if (existing) {
+      Object.assign(existing, expense);
+    }
+  }
+
+  // =========================================
+  // DELETE - AUSGABE LÖSCHEN
+  // =========================================
+
+  async deleteExpenseInBackend(
+    expense: Expense
+  ): Promise<void> {
+
+    await firstValueFrom(
+      this.http.delete<void>(
+        `${this.apiUrl}/${expense.id}`
+      )
+    );
+
+    this.deleteExpense(expense);
+  }
+
+  // =========================================
+  // AUSGABE SUCHEN
+  // =========================================
+
   findExpense(id: number): Expense | undefined {
-    return this.expenses.find(e => e.id === id);
+
+    return this.expenses.find(
+      expense => expense.id === id
+    );
+  }
+
+  // =========================================
+  // ALTE FUNKTIONEN
+  // VORERST FÜR BESTEHENDE KOMPONENTEN
+  // =========================================
+
+  addExpense(
+    expense: Omit<Expense, 'id'>
+  ): Expense {
+
+    const created: Expense = {
+      ...expense,
+      id: this.nextLocalId--
+    };
+
+    this.expenses.push(created);
+
+    return created;
   }
 
   deleteExpense(expense: Expense): void {
+
     const index = this.expenses.indexOf(expense);
-    if (index >= 0) this.expenses.splice(index, 1);
+
+    if (index >= 0) {
+      this.expenses.splice(index, 1);
+    }
   }
 }

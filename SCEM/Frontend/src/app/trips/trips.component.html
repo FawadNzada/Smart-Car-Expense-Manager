@@ -1,33 +1,53 @@
 <div class="trips-page">
+
   <div class="trips-header">
     <div>
       <span class="eyebrow">TRIP MANAGEMENT</span>
       <h1>Trips</h1>
       <p>Track and manage all vehicle trips.</p>
     </div>
-    <a routerLink="/createtrip" class="new-trip-btn">+ Log Trip</a>
+
+    <a routerLink="/createtrip" class="new-trip-btn">
+      + Log Trip
+    </a>
   </div>
 
+  <!-- SEARCH AND FILTER -->
+
   <div class="trip-toolbar">
+
     <div class="search-wrap">
       <span>⌕</span>
+
       <input
         type="text"
         placeholder="Search trips..."
-        [(ngModel)]="searchTerm">
+        [(ngModel)]="searchTerm"
+      >
     </div>
 
     <select [(ngModel)]="selectedVehicle">
-      <option value="All">All Vehicles</option>
+
+      <option value="All">
+        All Vehicles
+      </option>
+
       @for (vehicle of vehicleOptions; track vehicle) {
-        <option [value]="vehicle">{{ vehicle }}</option>
+        <option [value]="vehicle">
+          {{ vehicle }}
+        </option>
       }
+
     </select>
+
   </div>
 
+  <!-- TRIPS TABLE -->
+
   <div class="trip-table-card">
+
     <div class="trip-table-head">
-      <span>VEHICLE</span>
+      <span>VEHICLE / ROUTE</span>
       <span>DRIVER</span>
       <span>DATE</span>
       <span>DISTANCE</span>
@@ -35,34 +55,139 @@
     </div>
 
     @if (!filteredTrips.length) {
+
       <div class="empty-state">
         <div class="empty-icon">🚘</div>
+
         <h3>No trips found</h3>
         <p>Try another vehicle or search term.</p>
       </div>
+
     } @else {
+
       @for (t of filteredTrips; track t.id) {
-        <a [routerLink]="['/trips', t.id]" class="trip-table-row">
+
+        <a
+          [routerLink]="['/trips', t.id]"
+          class="trip-table-row"
+        >
+
+          <!-- VEHICLE -->
+
           <div class="vehicle-cell">
+
             <div class="vehicle-thumb">
-              <img [src]="t.vehicleImage" [alt]="t.vehicleName">
+              <img
+                [src]="t.vehicleImage"
+                [alt]="t.vehicleName"
+              >
             </div>
+
             <div>
-              <strong>{{ t.vehicleName }}</strong>
-              <span>{{ t.licensePlate }}</span>
+
+              <strong>
+                {{ t.vehicleName }}
+              </strong>
+
+              <span>
+                {{ t.licensePlate }}
+              </span>
+
+              <!-- ROUTE -->
+
+              <span
+                style="
+                  display: block;
+                  margin-top: 7px;
+                  color: #e0a83e;
+                  font-size: 11px;
+                  font-weight: 700;
+                "
+              >
+                {{ t.startLocation }} → {{ t.destination }}
+              </span>
+
+              <!-- TRIP STATUS -->
+
+              <span
+                style="
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 6px;
+                  margin-top: 9px;
+                  padding: 5px 10px;
+                  border-radius: 20px;
+                  font-size: 10px;
+                  font-weight: 800;
+                "
+                [style.color]="
+                  t.status === 'Completed' ? '#53d8a5' :
+                  t.status === 'Cancelled' ? '#ef7777' :
+                  t.status === 'In Progress' ? '#75a9f1' :
+                  '#edb73f'
+                "
+                [style.background-color]="
+                  t.status === 'Completed' ? 'rgba(16,185,129,0.12)' :
+                  t.status === 'Cancelled' ? 'rgba(239,68,68,0.12)' :
+                  t.status === 'In Progress' ? 'rgba(59,130,246,0.12)' :
+                  'rgba(245,158,11,0.12)'
+                "
+              >
+
+                @if (t.status === 'Completed') {
+                  ✓
+                } @else if (t.status === 'Cancelled') {
+                  ✕
+                } @else {
+                  ●
+                }
+
+                {{ t.status }}
+
+              </span>
+
             </div>
+
           </div>
+
+          <!-- DRIVER -->
 
           <div class="driver-cell">
-            <span class="driver-avatar">{{ t.driver.charAt(0) }}</span>
-            <strong>{{ t.driver }}</strong>
+
+            <span class="driver-avatar">
+              {{ t.driver.charAt(0) }}
+            </span>
+
+            <strong>
+              {{ t.driver }}
+            </strong>
+
           </div>
 
-          <strong class="table-value">{{ displayDate(t.date) }}</strong>
-          <strong class="distance-value">{{ distance(t) }}</strong>
-          <strong class="table-value">{{ duration(t) }}</strong>
+          <!-- DATE -->
+
+          <strong class="table-value">
+            {{ displayDate(t.date) }}
+          </strong>
+
+          <!-- DISTANCE -->
+
+          <strong class="distance-value">
+            {{ distance(t) }}
+          </strong>
+
+          <!-- DURATION -->
+
+          <strong class="table-value">
+            {{ duration(t) }}
+          </strong>
+
         </a>
+
       }
+
     }
+
   </div>
+
 </div>

@@ -1,115 +1,366 @@
 <div class="create-trip-page">
-  <a routerLink="/trips" class="back-link">← Back to Trips</a>
+
+  <!-- BACK -->
+
+  <a
+    routerLink="/trips"
+    class="back-link"
+  >
+    ← Back to Trips
+  </a>
+
+  <!-- HEADER -->
 
   <div class="create-header">
+
     <span>TRIP MANAGEMENT</span>
+
     <h1>New Trip</h1>
+
     <p>Create a new vehicle trip.</p>
+
   </div>
 
+  <!-- LAYOUT -->
+
   <div class="create-layout">
+
+    <!-- FORMULAR -->
+
     <div class="create-form-card">
+
+      <!-- VEHICLE -->
+
       <div class="form-group">
+
         <label>Vehicle</label>
-        <select [(ngModel)]="selectedLicensePlate">
-          <option value="">Select vehicle</option>
+
+        <select
+          [(ngModel)]="selectedLicensePlate"
+          [disabled]="isSaving"
+        >
+
+          <option value="">
+            Select vehicle
+          </option>
+
           @for (v of vehicles; track v.licensePlate) {
-            <option [value]="v.licensePlate">{{ v.name }} ({{ v.licensePlate }})</option>
+
+            <option [value]="v.licensePlate">
+              {{ v.name }} ({{ v.licensePlate }})
+            </option>
+
           }
+
         </select>
+
       </div>
 
+      <!-- DRIVER -->
+
       <div class="form-group">
+
         <label>Driver</label>
-        <input type="text" placeholder="Enter driver name" [(ngModel)]="driver">
+
+        <input
+          type="text"
+          value="Assigned automatically from your login"
+          readonly
+        >
+
       </div>
 
+      <!-- ROUTE -->
+
       <div class="form-row">
+
         <div class="form-group">
+
           <label>Start Location</label>
-          <input type="text" placeholder="e.g. Linz" [(ngModel)]="startLocation">
+
+          <input
+            type="text"
+            placeholder="e.g. Linz"
+            [(ngModel)]="startLocation"
+            [disabled]="isSaving"
+            maxlength="256"
+          >
+
         </div>
+
         <div class="form-group">
+
           <label>Destination</label>
-          <input type="text" placeholder="e.g. Salzburg" [(ngModel)]="destination">
+
+          <input
+            type="text"
+            placeholder="e.g. Wels"
+            [(ngModel)]="destination"
+            [disabled]="isSaving"
+            maxlength="256"
+          >
+
         </div>
+
       </div>
 
+      <!-- DATE -->
+
       <div class="form-group">
+
         <label>Date</label>
-        <input type="date" [(ngModel)]="tripDate">
+
+        <input
+          type="date"
+          [(ngModel)]="tripDate"
+          [disabled]="isSaving"
+        >
+
       </div>
+
+      <!-- TIME -->
 
       <div class="form-row">
+
         <div class="form-group">
+
           <label>Start Time</label>
-          <input type="time" [(ngModel)]="startTime">
+
+          <input
+            type="time"
+            [(ngModel)]="startTime"
+            [disabled]="isSaving"
+          >
+
         </div>
+
         <div class="form-group">
+
           <label>Expected End Time</label>
-          <input type="time" [(ngModel)]="endTime">
+
+          <input
+            type="time"
+            [(ngModel)]="endTime"
+            [disabled]="isSaving"
+          >
+
         </div>
+
       </div>
 
+      <!-- MILEAGE -->
+
       <div class="form-group">
+
         <label>Start Mileage</label>
-        <input type="number" min="0" [(ngModel)]="startMileage">
+
+        <input
+          type="number"
+          min="0"
+          step="1"
+          [(ngModel)]="startMileage"
+          [disabled]="isSaving"
+        >
+
       </div>
 
+      <!-- NOTES -->
+
       <div class="form-group">
+
         <label>Notes</label>
-        <textarea placeholder="Optional notes..." [(ngModel)]="notes"></textarea>
+
+        <textarea
+          placeholder="Optional notes..."
+          [(ngModel)]="notes"
+          [disabled]="isSaving"
+          maxlength="1024"
+        ></textarea>
+
       </div>
+
+      <!-- ERROR -->
 
       @if (errorMessage) {
-        <div class="form-error">{{ errorMessage }}</div>
+
+        <div
+          class="form-error"
+          role="alert"
+        >
+          {{ errorMessage }}
+        </div>
+
       }
 
+      <!-- BUTTONS -->
+
       <div class="form-actions">
-        <a routerLink="/trips" class="cancel-btn">Cancel</a>
-        <button type="button" class="create-btn" (click)="saveTrip()">Create Trip</button>
+
+        <a
+          routerLink="/trips"
+          class="cancel-btn"
+        >
+          Cancel
+        </a>
+
+        <button
+          type="button"
+          class="create-btn"
+          (click)="saveTrip()"
+          [disabled]="isSaving"
+        >
+
+          @if (isSaving) {
+
+            Saving...
+
+          } @else {
+
+            Create Trip
+
+          }
+
+        </button>
+
       </div>
+
     </div>
 
+    <!-- PREVIEW -->
+
     <div class="trip-preview-card">
-      <span class="preview-label">TRIP PREVIEW</span>
+
+      <span class="preview-label">
+        TRIP PREVIEW
+      </span>
 
       @if (selectedVehicle) {
+
+        <!-- VEHICLE IMAGE -->
+
         <div class="preview-vehicle">
-          <span class="preview-status">Planned</span>
-          <img [src]="selectedVehicle.image" [alt]="selectedVehicle.name">
+
+          <span class="preview-status">
+            Planned
+          </span>
+
+          <img
+            [src]="selectedVehicle.image"
+            [alt]="selectedVehicle.name"
+          >
+
         </div>
 
         <div class="preview-content">
-          <h2>{{ selectedVehicle.name }}</h2>
-          <span class="preview-plate">{{ selectedVehicle.licensePlate }}</span>
+
+          <h2>
+            {{ selectedVehicle.name }}
+          </h2>
+
+          <span class="preview-plate">
+            {{ selectedVehicle.licensePlate }}
+          </span>
+
+          <!-- ROUTE -->
 
           <div class="preview-route">
+
             <div>
+
               <span>FROM</span>
-              <strong>{{ startLocation || 'Start location' }}</strong>
+
+              <strong>
+                {{ startLocation || 'Start location' }}
+              </strong>
+
             </div>
-            <div class="route-arrow">→</div>
+
+            <div class="route-arrow">
+              →
+            </div>
+
             <div>
+
               <span>TO</span>
-              <strong>{{ destination || 'Destination' }}</strong>
+
+              <strong>
+                {{ destination || 'Destination' }}
+              </strong>
+
             </div>
+
           </div>
 
+          <!-- DETAILS -->
+
           <div class="preview-info">
-            <div><span>Driver</span><strong>{{ driver || 'Driver' }}</strong></div>
-            <div><span>Date</span><strong>{{ tripDate }}</strong></div>
-            <div><span>Time</span><strong>{{ startTime }} - {{ endTime }}</strong></div>
-            <div><span>Start Mileage</span><strong>{{ startMileage }} km</strong></div>
+
+            <div>
+
+              <span>Driver</span>
+
+              <strong>
+                Current User
+              </strong>
+
+            </div>
+
+            <div>
+
+              <span>Date</span>
+
+              <strong>
+                {{ tripDate }}
+              </strong>
+
+            </div>
+
+            <div>
+
+              <span>Time</span>
+
+              <strong>
+                {{ startTime }} - {{ endTime }}
+              </strong>
+
+            </div>
+
+            <div>
+
+              <span>Start Mileage</span>
+
+              <strong>
+                {{ startMileage }} km
+              </strong>
+
+            </div>
+
           </div>
+
         </div>
+
       } @else {
+
+        <!-- EMPTY PREVIEW -->
+
         <div class="empty-preview">
-          <div class="empty-preview-icon">🚘</div>
+
+          <div class="empty-preview-icon">
+            🚘
+          </div>
+
           <h3>Select a vehicle</h3>
-          <p>Your trip preview will appear here.</p>
+
+          <p>
+            Your trip preview will appear here.
+          </p>
+
         </div>
+
       }
+
     </div>
+
   </div>
+
 </div>

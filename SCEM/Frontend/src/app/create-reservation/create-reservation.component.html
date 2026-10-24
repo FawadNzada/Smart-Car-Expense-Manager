@@ -1,114 +1,198 @@
 <div class="create-reservation-page">
 
+  <!-- BACK BUTTON -->
+
   <a
     routerLink="/reservations"
-    class="back-link">
+    class="back-link"
+  >
     ← Back to Reservations
   </a>
 
+  <!-- HEADER -->
+
   <div class="create-header">
-    <span>RESERVATION MANAGEMENT</span>
+
+    <span>
+      RESERVATION MANAGEMENT
+    </span>
 
     <h1>New Reservation</h1>
 
-    <p>Create a new vehicle reservation.</p>
+    <p>
+      Create a new vehicle reservation.
+    </p>
+
   </div>
 
+  <!-- RESERVATION FORM -->
 
   <div class="reservation-form">
 
+    <!-- VEHICLE -->
+
     <div class="form-group">
-      <label for="vehicle">Vehicle</label>
+
+      <label for="vehicle">
+        Vehicle
+      </label>
 
       <select
         id="vehicle"
-        [(ngModel)]="selectedLicensePlate">
+        [(ngModel)]="selectedLicensePlate"
+        [disabled]="isSaving"
+      >
 
         <option value="">
           Select vehicle
         </option>
 
-        @for (vehicle of vehicles; track vehicle.licensePlate) {
-          <option [value]="vehicle.licensePlate">
-            {{ vehicle.name }} ({{ vehicle.licensePlate }})
+        @for (
+          vehicle of vehicles;
+          track vehicle.licensePlate
+        ) {
+
+          <option
+            [value]="vehicle.licensePlate"
+          >
+            {{ vehicle.name }}
+            ({{ vehicle.licensePlate }})
           </option>
+
         }
 
       </select>
+
     </div>
 
+    <!-- DRIVER -->
 
     <div class="form-group">
-      <label for="driver">Driver</label>
+
+      <label for="driver">
+        Driver
+      </label>
 
       <input
         id="driver"
         type="text"
-        placeholder="Enter driver name"
-        [(ngModel)]="driver">
+        value="Assigned automatically from your login"
+        disabled
+      />
+
     </div>
 
+    <!-- DATE -->
 
     <div class="form-group">
-      <label for="date">Date</label>
+
+      <label for="date">
+        Date
+      </label>
 
       <input
         id="date"
         type="date"
-        [(ngModel)]="reservationDate">
+        [(ngModel)]="reservationDate"
+        [min]="today"
+        [disabled]="isSaving"
+      />
+
     </div>
 
+    <!-- START TIME -->
 
     <div class="form-group">
-      <label for="startTime">Start Time</label>
+
+      <label for="startTime">
+        Start Time
+      </label>
 
       <input
         id="startTime"
         type="time"
-        [(ngModel)]="startTime">
+        [(ngModel)]="startTime"
+        [disabled]="isSaving"
+      />
+
     </div>
 
+    <!-- END TIME -->
 
     <div class="form-group">
-      <label for="endTime">End Time</label>
+
+      <label for="endTime">
+        End Time
+      </label>
 
       <input
         id="endTime"
         type="time"
-        [(ngModel)]="endTime">
+        [(ngModel)]="endTime"
+        [disabled]="isSaving"
+      />
+
     </div>
 
+    <!-- NOTES -->
 
     <div class="form-group notes-group">
-      <label for="notes">Notes</label>
+
+      <label for="notes">
+        Notes
+      </label>
 
       <textarea
         id="notes"
         placeholder="Optional notes..."
-        [(ngModel)]="notes"></textarea>
+        [(ngModel)]="notes"
+        [disabled]="isSaving"
+        maxlength="1024"
+      ></textarea>
+
     </div>
 
+    <!-- ERROR MESSAGE -->
 
     @if (errorMessage) {
-      <div class="form-error">
+
+      <div
+        class="form-error"
+        role="alert"
+      >
         {{ errorMessage }}
       </div>
+
     }
 
+    <!-- ACTIONS -->
 
     <div class="form-actions">
 
       <a
         routerLink="/reservations"
-        class="cancel-btn">
+        class="cancel-btn"
+      >
         Cancel
       </a>
 
       <button
         type="button"
         class="create-btn"
-        (click)="saveReservation()">
-        Create Reservation
+        (click)="saveReservation()"
+        [disabled]="isSaving"
+      >
+
+        @if (isSaving) {
+
+          Saving...
+
+        } @else {
+
+          Create Reservation
+
+        }
+
       </button>
 
     </div>

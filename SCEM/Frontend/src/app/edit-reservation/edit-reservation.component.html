@@ -1,97 +1,358 @@
 <div class="edit-reservation-page">
-  @if (!reservation) {
+
+  <!-- LOADING -->
+
+  @if (isLoading) {
+
     <div class="not-found-card">
-      <h1>Reservation not found</h1>
-      <a routerLink="/reservations" class="primary-btn">Back to Reservations</a>
+
+      <h1>Loading Reservation...</h1>
+
+      <p>Please wait while we load your reservation.</p>
+
     </div>
+
+  } @else if (!reservation) {
+
+    <!-- ERROR -->
+
+    <div class="not-found-card">
+
+      <h1>Reservation unavailable</h1>
+
+      <p>
+        {{ errorMessage || 'Reservation not found.' }}
+      </p>
+
+      <a
+        routerLink="/reservations"
+        class="primary-btn"
+      >
+        Back to Reservations
+      </a>
+
+    </div>
+
   } @else {
-    <a [routerLink]="['/reservations', reservation.id]" class="back-link">← Back to Reservation</a>
+
+    <!-- BACK -->
+
+    <a
+      [routerLink]="['/reservations', reservation.id]"
+      class="back-link"
+    >
+      ← Back to Reservation
+    </a>
+
+    <!-- HEADER -->
 
     <div class="edit-header">
-      <span class="section-label">RESERVATION MANAGEMENT</span>
+
+      <span class="section-label">
+        RESERVATION MANAGEMENT
+      </span>
+
       <h1>Edit Reservation</h1>
-      <p>Update reservation details and save your changes.</p>
+
+      <p>
+        Update reservation details and save your changes.
+      </p>
+
     </div>
 
+    <!-- CONTENT -->
+
     <div class="edit-layout">
+
+      <!-- FORM -->
+
       <div class="edit-form-card">
+
+        <!-- VEHICLE -->
+
         <div class="form-group">
-          <label>Vehicle</label>
-          <select [(ngModel)]="selectedLicensePlate">
-            @for (vehicle of vehicles; track vehicle.licensePlate) {
-              <option [value]="vehicle.licensePlate">{{ vehicle.name }} – {{ vehicle.licensePlate }}</option>
+
+          <label for="vehicle">
+            Vehicle
+          </label>
+
+          <select
+            id="vehicle"
+            [(ngModel)]="selectedLicensePlate"
+            [disabled]="isSaving"
+          >
+
+            @for (
+              vehicle of vehicles;
+              track vehicle.licensePlate
+            ) {
+
+              <option [value]="vehicle.licensePlate">
+                {{ vehicle.name }} –
+                {{ vehicle.licensePlate }}
+              </option>
+
             }
+
           </select>
+
         </div>
 
-        <div class="form-group">
-          <label>Driver</label>
-          <input type="text" [(ngModel)]="driver">
-        </div>
+        <!-- DRIVER -->
 
         <div class="form-group">
-          <label>Date</label>
-          <input type="date" [(ngModel)]="reservationDate">
+
+          <label for="driver">
+            Driver
+          </label>
+
+          <input
+            id="driver"
+            type="text"
+            [value]="driver"
+            readonly
+          />
+
         </div>
+
+        <!-- DATE -->
+
+        <div class="form-group">
+
+          <label for="date">
+            Date
+          </label>
+
+          <input
+            id="date"
+            type="date"
+            [(ngModel)]="reservationDate"
+            [disabled]="isSaving"
+          />
+
+        </div>
+
+        <!-- TIME -->
 
         <div class="form-row">
+
           <div class="form-group">
-            <label>Start Time</label>
-            <input type="time" [(ngModel)]="startTime">
+
+            <label for="startTime">
+              Start Time
+            </label>
+
+            <input
+              id="startTime"
+              type="time"
+              [(ngModel)]="startTime"
+              [disabled]="isSaving"
+            />
+
           </div>
+
           <div class="form-group">
-            <label>End Time</label>
-            <input type="time" [(ngModel)]="endTime">
+
+            <label for="endTime">
+              End Time
+            </label>
+
+            <input
+              id="endTime"
+              type="time"
+              [(ngModel)]="endTime"
+              [disabled]="isSaving"
+            />
+
           </div>
+
         </div>
 
+        <!-- STATUS -->
+
         <div class="form-group">
-          <label>Status</label>
-          <select [(ngModel)]="status">
-            <option>Planned</option>
-            <option>Upcoming</option>
-            <option>Completed</option>
-            <option>Cancelled</option>
+
+          <label for="status">
+            Status
+          </label>
+
+          <select
+            id="status"
+            [(ngModel)]="status"
+            [disabled]="isSaving"
+          >
+
+            <option value="Planned">
+              Planned
+            </option>
+
+            <option value="Upcoming">
+              Upcoming
+            </option>
+
+            <option value="Completed">
+              Completed
+            </option>
+
+            <option value="Cancelled">
+              Cancelled
+            </option>
+
           </select>
+
         </div>
 
+        <!-- NOTES -->
+
         <div class="form-group">
-          <label>Notes</label>
-          <textarea [(ngModel)]="notes"></textarea>
+
+          <label for="notes">
+            Notes
+          </label>
+
+          <textarea
+            id="notes"
+            [(ngModel)]="notes"
+            [disabled]="isSaving"
+            maxlength="1024"
+          ></textarea>
+
         </div>
+
+        <!-- ERROR -->
 
         @if (errorMessage) {
-          <div class="form-error">{{ errorMessage }}</div>
+
+          <div
+            class="form-error"
+            role="alert"
+          >
+            {{ errorMessage }}
+          </div>
+
         }
 
+        <!-- ACTIONS -->
+
         <div class="form-actions">
-          <a [routerLink]="['/reservations', reservation.id]" class="cancel-btn">Cancel</a>
-          <button type="button" class="save-btn" (click)="saveChanges()">Save Changes</button>
+
+          <a
+            [routerLink]="['/reservations', reservation.id]"
+            class="cancel-btn"
+          >
+            Cancel
+          </a>
+
+          <button
+            type="button"
+            class="save-btn"
+            (click)="saveChanges()"
+            [disabled]="isSaving || reservation.status === 'Cancelled'"
+          >
+
+            @if (isSaving) {
+
+              Saving...
+
+            } @else {
+
+              Save Changes
+
+            }
+
+          </button>
+
         </div>
+
       </div>
 
+      <!-- PREVIEW -->
+
       <div class="edit-preview-card">
-        <span class="preview-label">RESERVATION PREVIEW</span>
+
+        <span class="preview-label">
+          RESERVATION PREVIEW
+        </span>
 
         @if (selectedVehicle) {
+
           <div class="preview-vehicle">
-            <span [class]="'preview-status ' + statusClass()">{{ status }}</span>
-            <img [src]="selectedVehicle.image" [alt]="selectedVehicle.name">
+
+            <span
+              [class]="'preview-status ' + statusClass()"
+            >
+              {{ status }}
+            </span>
+
+            <img
+              [src]="selectedVehicle.image"
+              [alt]="selectedVehicle.name"
+            />
+
           </div>
 
           <div class="preview-content">
-            <h2>{{ selectedVehicle.name }}</h2>
-            <span class="preview-plate">{{ selectedVehicle.licensePlate }}</span>
+
+            <h2>
+              {{ selectedVehicle.name }}
+            </h2>
+
+            <span class="preview-plate">
+              {{ selectedVehicle.licensePlate }}
+            </span>
 
             <div class="preview-info">
-              <div><span>Driver</span><strong>{{ driver || '-' }}</strong></div>
-              <div><span>Date</span><strong>{{ dateLong(reservationDate) }}</strong></div>
-              <div><span>Time</span><strong>{{ startTime }} – {{ endTime }}</strong></div>
-              <div><span>Duration</span><strong>{{ durationText() }}</strong></div>
+
+              <div>
+
+                <span>Driver</span>
+
+                <strong>
+                  {{ driver || '-' }}
+                </strong>
+
+              </div>
+
+              <div>
+
+                <span>Date</span>
+
+                <strong>
+                  {{ dateLong(reservationDate) }}
+                </strong>
+
+              </div>
+
+              <div>
+
+                <span>Time</span>
+
+                <strong>
+                  {{ startTime }} – {{ endTime }}
+                </strong>
+
+              </div>
+
+              <div>
+
+                <span>Duration</span>
+
+                <strong>
+                  {{ durationText() }}
+                </strong>
+
+              </div>
+
             </div>
+
           </div>
+
         }
+
       </div>
+
     </div>
+
   }
+
 </div>

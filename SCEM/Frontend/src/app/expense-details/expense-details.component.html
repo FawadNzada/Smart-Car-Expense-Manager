@@ -1,1 +1,141 @@
-<div class="expense-details-page">@if(!expense){<div class="not-found-card"><h1>Expense not found</h1><a routerLink="/expenses" class="primary-btn">Back to Expenses</a></div>}@else{<a routerLink="/expenses" class="back-link">← Back to Expenses</a><div class="details-header"><div><span class="eyebrow">EXPENSE DETAILS</span><h1>{{expense.category}}</h1><p>{{expense.vehicleName}}</p></div><div class="header-amount">{{money(expense.amount)}}</div></div><div class="details-layout"><div class="vehicle-card">@if(vehicle){<img [src]="vehicle.image" [alt]="vehicle.name"><h2>{{vehicle.name}}</h2>}<div [class]="'category-header '+categoryClass(expense.category)"><div [class]="'category-icon '+categoryClass(expense.category)">{{icon(expense.category)}}</div><strong>{{expense.category}}</strong></div></div><div class="details-card"><div class="details-grid"><div class="detail-item"><span>Amount</span><strong class="money">{{money(expense.amount)}}</strong></div><div class="detail-item"><span>Date</span><strong>{{expense.date}}</strong></div><div class="detail-item"><span>Paid By</span><strong>{{expense.paidBy}}</strong></div><div class="detail-item"><span>License Plate</span><strong>{{expense.licensePlate}}</strong></div><div class="detail-item"><span>Trip</span><strong>{{expense.tripRoute||'No related trip'}}</strong></div></div><div class="notes-box"><span>Notes</span><p>{{expense.notes||'No notes.'}}</p></div><div class="expense-actions"><a [routerLink]="['/expenses/edit',expense.id]" class="edit-btn">Edit Expense</a><button class="delete-btn" (click)="showDeleteModal=true">Delete Expense</button></div></div></div>@if(showDeleteModal){<div class="modal-overlay"><div class="modal-card"><h2>Delete Expense?</h2><div class="delete-summary">{{expense.category}} · {{money(expense.amount)}}</div><div class="modal-actions"><button class="modal-secondary" (click)="showDeleteModal=false">Cancel</button><button class="modal-danger" (click)="deleteExpense()">Delete Expense</button></div></div></div>}}</div>
+<div class="expense-details-page">
+
+  @if (!expense) {
+
+    <div class="not-found-card">
+
+      <h1>Expense not found</h1>
+
+      <a routerLink="/expenses" class="primary-btn">
+        Back to Expenses
+      </a>
+
+    </div>
+
+  } @else {
+
+    <a routerLink="/expenses" class="back-link">
+      ← Back to Expenses
+    </a>
+
+    <div class="details-header">
+
+      <div>
+        <span class="eyebrow">EXPENSE DETAILS</span>
+        <h1>{{ expense.category }}</h1>
+        <p>{{ expense.vehicleName }}</p>
+      </div>
+
+      <div class="header-amount">
+        {{ money(expense.amount) }}
+      </div>
+
+    </div>
+
+    <div class="details-layout">
+
+      <div class="vehicle-card">
+
+        @if (vehicle) {
+
+          <img
+            [src]="vehicle.image"
+            [alt]="vehicle.name"
+          >
+
+          <h2>{{ vehicle.name }}</h2>
+
+        }
+
+        <div
+          [class]="'category-header ' + categoryClass(expense.category)"
+        >
+
+          <div
+            [class]="'category-icon ' + categoryClass(expense.category)"
+          >
+            {{ icon(expense.category) }}
+          </div>
+
+          <strong>{{ expense.category }}</strong>
+
+        </div>
+
+      </div>
+
+      <div class="details-card">
+
+        <div class="details-grid">
+
+          <div class="detail-item">
+            <span>Amount</span>
+            <strong class="money">
+              {{ money(expense.amount) }}
+            </strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Date</span>
+            <strong>{{ expense.date }}</strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Paid By</span>
+            <strong>{{ expense.paidBy }}</strong>
+          </div>
+
+          <div class="detail-item">
+            <span>License Plate</span>
+            <strong>{{ expense.licensePlate }}</strong>
+          </div>
+
+          <div class="detail-item">
+            <span>Trip</span>
+            <strong>
+              {{ expense.tripRoute || 'No related trip' }}
+            </strong>
+          </div>
+
+        </div>
+
+        <div class="notes-box">
+
+          <span>Notes</span>
+
+          <p>
+            {{ expense.notes || 'No notes.' }}
+          </p>
+
+        </div>
+
+        <div class="expense-actions">
+
+          <a
+            [routerLink]="['/expenses/edit', expense.id]"
+            class="edit-btn"
+          >
+            Edit Expense
+          </a>
+
+          <button
+            type="button"
+            class="delete-btn"
+            (click)="deleteExpense()"
+            [disabled]="isDeleting"
+          >
+            @if (isDeleting) {
+              Deleting...
+            } @else {
+              Delete Expense
+            }
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+</div>
