@@ -19,22 +19,22 @@
 
     <div class="summary-card">
       <span>Open Amount</span>
-      <strong>{{ money(openAmount) }}</strong>
+      <strong>{{ isLoading || hasLoadError ? '—' : money(openAmount) }}</strong>
     </div>
 
     <div class="summary-card">
       <span>Open Debts</span>
-      <strong>{{ openCount }}</strong>
+      <strong>{{ isLoading || hasLoadError ? '—' : openCount }}</strong>
     </div>
 
     <div class="summary-card">
       <span>Paid Amount</span>
-      <strong>{{ money(paidAmount) }}</strong>
+      <strong>{{ isLoading || hasLoadError ? '—' : money(paidAmount) }}</strong>
     </div>
 
     <div class="summary-card">
       <span>Paid Debts</span>
-      <strong>{{ paidCount }}</strong>
+      <strong>{{ isLoading || hasLoadError ? '—' : paidCount }}</strong>
     </div>
 
   </div>
@@ -59,11 +59,38 @@
   </div>
 
 
+  <!-- API STATUS / ACTION ERRORS -->
+
+  @if (actionError) {
+    <div class="empty-state" role="alert">
+      <p>{{ actionError }}</p>
+    </div>
+  }
+
   <!-- DEBTS -->
 
   <div class="debts-list">
 
-    @if (!filteredDebts.length) {
+    @if (isLoading) {
+
+      <div class="empty-state">
+        <div class="empty-icon">€</div>
+        <h3>Loading debts...</h3>
+        <p>Reading your saved debts from the database.</p>
+      </div>
+
+    } @else if (hasLoadError) {
+
+      <div class="empty-state" role="alert">
+        <div class="empty-icon">!</div>
+        <h3>Unable to load debts</h3>
+        <p>Check your backend connection and login.</p>
+        <button type="button" class="debt-filter-btn" (click)="refreshDebts()">
+          Try Again
+        </button>
+      </div>
+
+    } @else if (!filteredDebts.length) {
 
       <div class="empty-state">
 
@@ -72,7 +99,7 @@
         <h3>No debts found</h3>
 
         <p>
-          There are currently no expenses in this category.
+          No saved debts match the selected filter.
         </p>
 
       </div>
@@ -86,7 +113,9 @@
           class="debt-card"
           role="button"
           tabindex="0"
-          (click)="openDebt(d.id)">
+          (click)="openDebt(d.id)"
+          (keydown.enter)="openDebt(d.id)"
+          (keydown.space)="$event.preventDefault(); openDebt(d.id)">
 
           <div [class]="'debt-icon ' + statusClass(d.status)">
             {{ d.status === 'Paid' ? '✓' : '€' }}
@@ -141,8 +170,8 @@
               </div>
 
               <div class="info-box">
-                <span>Date</span>
-                <strong>{{ d.date | date:'dd MMM yyyy' }}</strong>
+                <span>Payment Date</span>
+                <strong>{{ d.date ? (d.date | date:'dd MMM yyyy') : '—' }}</strong>
               </div>
 
               <div class="info-box">
@@ -164,8 +193,9 @@
                 <button
                   type="button"
                   class="paid-btn"
+                  [disabled]="actionBusyId !== null || isLoading"
                   (click)="markAsPaid(d)">
-                  Mark as Paid
+                  {{ actionBusyId === d.id ? 'Saving...' : 'Mark as Paid' }}
                 </button>
 
               }
@@ -174,8 +204,9 @@
                 <button
                   type="button"
                   class="reopen-btn"
+                  [disabled]="actionBusyId !== null || isLoading"
                   (click)="reopenDebt(d)">
-                  Reopen
+                  {{ actionBusyId === d.id ? 'Saving...' : 'Reopen' }}
                 </button>
 
               }

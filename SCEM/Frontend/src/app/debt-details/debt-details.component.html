@@ -1,1 +1,165 @@
-<div class="debt-details-page">@if(!debt){<div class="not-found-card"><h1>Debt not found</h1><a routerLink="/debts" class="primary-btn">Back to Debts</a></div>}@else{<a routerLink="/debts" class="back-link">← Back to Debts</a><div class="details-header"><div><span class="eyebrow">DEBT DETAILS</span><h1>{{debt.fromPerson}} → {{debt.toPerson}}</h1></div><div class="header-right"><span [class]="'status-badge '+statusClass(debt.status)">{{debt.status}}</span><strong class="header-amount">{{money(debt.amount)}}</strong></div></div><div class="details-grid"><div class="people-box"><div><span>From</span><strong>{{debt.fromPerson}}</strong></div><div class="arrow">→</div><div><span>To</span><strong>{{debt.toPerson}}</strong></div></div><div class="details-card"><div class="detail-item"><span>Amount</span><strong class="money">{{money(debt.amount)}}</strong></div><div class="detail-item"><span>Date</span><strong>{{debt.date}}</strong></div><div class="detail-item"><span>Status</span><strong>{{debt.status}}</strong></div><div class="detail-item"><span>Expense</span><strong>{{debt.expenseDescription||'None'}}</strong></div><div class="description-box"><span>Description</span><p>{{debt.description}}</p></div><div class="debt-actions">@if(debt.status==='Open'){<button class="paid-btn" (click)="markAsPaid()">Mark as Paid</button>}@else{<button class="reopen-btn" (click)="reopenDebt()">Reopen</button>}<a [routerLink]="['/debts/edit',debt.id]" class="edit-btn">Edit Debt</a><button class="delete-btn" (click)="showDeleteModal=true">Delete Debt</button></div></div></div>@if(showDeleteModal){<div class="modal-overlay"><div class="modal-card"><h2>Delete Debt?</h2><div class="delete-summary">{{debt.fromPerson}} → {{debt.toPerson}} · {{money(debt.amount)}}</div><div class="modal-actions"><button class="modal-secondary" (click)="showDeleteModal=false">Cancel</button><button class="modal-danger" (click)="deleteDebt()">Delete Debt</button></div></div></div>}}</div>
+<div class="debt-details-page">
+
+  @if (isLoading && !debt) {
+
+    <div class="not-found-card">
+      <h1>Loading debt...</h1>
+      <p>Reading the debt from the database.</p>
+    </div>
+
+  } @else if (hasLoadError && !debt) {
+
+    <div class="not-found-card" role="alert">
+      <h1>Unable to load debt</h1>
+      <p>Check your backend connection and login.</p>
+      <button type="button" class="primary-btn" (click)="refreshDebts()">
+        Try Again
+      </button>
+      <a routerLink="/debts" class="back-link">← Back to Debts</a>
+    </div>
+
+  } @else if (debt; as currentDebt) {
+
+    <a routerLink="/debts" class="back-link">← Back to Debts</a>
+
+    <div class="details-header">
+      <div>
+        <span class="eyebrow">DEBT DETAILS</span>
+        <h1>{{ currentDebt.fromPerson }} → {{ currentDebt.toPerson }}</h1>
+      </div>
+
+      <div class="header-right">
+        <span [class]="'status-badge ' + statusClass(currentDebt.status)">
+          {{ currentDebt.status }}
+        </span>
+        <strong class="header-amount">{{ money(currentDebt.amount) }}</strong>
+      </div>
+    </div>
+
+    <div class="details-grid">
+
+      <div class="people-box">
+        <div>
+          <span>From</span>
+          <strong>{{ currentDebt.fromPerson }}</strong>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div>
+          <span>To</span>
+          <strong>{{ currentDebt.toPerson }}</strong>
+        </div>
+      </div>
+
+      <div class="details-card">
+
+        <div class="detail-item">
+          <span>Amount</span>
+          <strong class="money">{{ money(currentDebt.amount) }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Payment Date</span>
+          <strong>
+            {{ currentDebt.paidAt ? currentDebt.paidAt.slice(0, 10) : '—' }}
+          </strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Status</span>
+          <strong>{{ currentDebt.status }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Expense</span>
+          <strong>{{ currentDebt.expenseDescription || 'None' }}</strong>
+        </div>
+
+        <div class="description-box">
+          <span>Description</span>
+          <p>{{ currentDebt.description || 'Shared expense' }}</p>
+        </div>
+
+        @if (actionError) {
+          <div class="description-box" role="alert">
+            <p>{{ actionError }}</p>
+          </div>
+        }
+
+        <div class="debt-actions">
+
+          @if (currentDebt.status === 'Open') {
+            <button
+              type="button"
+              class="paid-btn"
+              [disabled]="isSaving"
+              (click)="markAsPaid()">
+              {{ isSaving ? 'Saving...' : 'Mark as Paid' }}
+            </button>
+
+            <button
+              type="button"
+              class="delete-btn"
+              [disabled]="isSaving"
+              (click)="showDeleteModal = true">
+              Delete Debt
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="reopen-btn"
+              [disabled]="isSaving"
+              (click)="reopenDebt()">
+              {{ isSaving ? 'Saving...' : 'Reopen' }}
+            </button>
+          }
+
+        </div>
+      </div>
+    </div>
+
+    @if (showDeleteModal && currentDebt.status === 'Open') {
+
+      <div class="modal-overlay">
+        <div class="modal-card">
+          <h2>Delete Debt?</h2>
+
+          <div class="delete-summary">
+            {{ currentDebt.fromPerson }} → {{ currentDebt.toPerson }}
+            · {{ money(currentDebt.amount) }}
+          </div>
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="modal-secondary"
+              [disabled]="isSaving"
+              (click)="showDeleteModal = false">
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="modal-danger"
+              [disabled]="isSaving"
+              (click)="deleteDebt()">
+              {{ isSaving ? 'Deleting...' : 'Delete Debt' }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+    }
+
+  } @else {
+
+    <div class="not-found-card">
+      <h1>Debt not found</h1>
+      <p>This debt does not exist or is not accessible to your account.</p>
+      <a routerLink="/debts" class="primary-btn">Back to Debts</a>
+    </div>
+
+  }
+
+</div>

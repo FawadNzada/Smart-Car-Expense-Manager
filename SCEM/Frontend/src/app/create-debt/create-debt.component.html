@@ -4,47 +4,74 @@
   <div class="create-header">
     <span class="section-label">DEBT</span>
     <h1>Add Debt</h1>
-    <p>Record a shared repayment obligation.</p>
+    <p>Create a repayment obligation linked to a saved expense.</p>
   </div>
 
   <div class="create-layout">
     <div class="create-form-card">
+
+      <div class="form-group">
+        <label>Related Expense</label>
+        <select [(ngModel)]="selectedExpenseId" [disabled]="isLoading || isSaving">
+          <option [ngValue]="0">Select an expense</option>
+          @for (e of expenses; track e.id) {
+            <option [ngValue]="e.id">
+              #{{ e.id }} – {{ e.category }} – {{ e.vehicleName }} – {{ money(e.amount) }}
+            </option>
+          }
+        </select>
+      </div>
+
       <div class="form-row">
         <div class="form-group">
-          <label>From</label>
-          <input [(ngModel)]="fromPerson" placeholder="Who owes?">
+          <label>From (Who owes?)</label>
+          <select [(ngModel)]="selectedDebtorId" [disabled]="isLoading || isSaving">
+            <option [ngValue]="0">Select a registered user</option>
+            @for (user of debtors; track user.id) {
+              <option [ngValue]="user.id">{{ user.name }}</option>
+            }
+          </select>
         </div>
+
         <div class="form-group">
-          <label>To</label>
-          <input [(ngModel)]="toPerson" placeholder="Who receives?">
+          <label>To (Who receives?)</label>
+          <input type="text" [value]="creditorName" readonly>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label>Amount</label>
-          <input type="number" step="0.01" [(ngModel)]="amount">
+          <input type="number" min="0.01" step="0.01"
+                 [(ngModel)]="amount" [disabled]="isSaving">
         </div>
+
         <div class="form-group">
-          <label>Date</label>
-          <input type="date" [(ngModel)]="debtDate">
+          <label>Expense Date</label>
+          <input type="date" [value]="selectedExpense?.date || ''" readonly>
         </div>
       </div>
 
       <div class="form-group">
-        <label>Related Expense</label>
-        <select [(ngModel)]="selectedExpenseId">
-          <option [ngValue]="0">No related expense</option>
-          @for (e of expenses; track e.id) {
-            <option [ngValue]="e.id">{{ e.category }} – {{ e.vehicleName }} – {{ e.amount }}</option>
-          }
-        </select>
+        <label>Expense Category</label>
+        <input type="text" [value]="selectedExpense?.category || 'Select an expense'" readonly>
       </div>
 
-      <div class="form-group">
-        <label>Description</label>
-        <input [(ngModel)]="description" placeholder="Shared expense">
-      </div>
+      @if (isLoading) {
+        <div class="form-error">Loading users and expenses...</div>
+      } @else {
+        @if (debtors.length === 0 && !errorMessage) {
+          <div class="form-error">
+            No other registered users found. A second Keycloak user is required
+            before you can create a debt.
+          </div>
+        }
+        @if (expenses.length === 0 && !errorMessage) {
+          <div class="form-error">
+            No saved expenses found. Create an expense first.
+          </div>
+        }
+      }
 
       @if (errorMessage) {
         <div class="form-error">{{ errorMessage }}</div>
@@ -52,7 +79,10 @@
 
       <div class="form-actions">
         <a routerLink="/debts" class="cancel-btn">Cancel</a>
-        <button type="button" class="create-btn" (click)="saveDebt()">Add Debt</button>
+        <button type="button" class="create-btn"
+                [disabled]="!canSave" (click)="saveDebt()">
+          {{ isSaving ? 'Saving...' : 'Add Debt' }}
+        </button>
       </div>
     </div>
 
@@ -62,12 +92,12 @@
       <div class="preview-people">
         <div>
           <span>FROM</span>
-          <strong>{{ fromPerson || 'From' }}</strong>
+          <strong>{{ selectedDebtor?.name || 'Select debtor' }}</strong>
         </div>
         <div class="preview-arrow">→</div>
         <div>
           <span>TO</span>
-          <strong>{{ toPerson || 'To' }}</strong>
+          <strong>{{ creditorName }}</strong>
         </div>
       </div>
 
@@ -77,9 +107,18 @@
       </div>
 
       <div class="preview-info">
-        <div><span>Date</span><strong>{{ debtDate }}</strong></div>
-        <div><span>Status</span><strong class="open-status">Open</strong></div>
-        <div><span>Description</span><strong>{{ description || 'Shared expense' }}</strong></div>
+        <div>
+          <span>Related Expense</span>
+          <strong>{{ selectedExpense ? '#' + selectedExpense.id : 'None selected' }}</strong>
+        </div>
+        <div>
+          <span>Status</span>
+          <strong class="open-status">Open</strong>
+        </div>
+        <div>
+          <span>Description</span>
+          <strong>{{ selectedExpense?.category || 'Shared expense' }}</strong>
+        </div>
       </div>
     </div>
   </div>
